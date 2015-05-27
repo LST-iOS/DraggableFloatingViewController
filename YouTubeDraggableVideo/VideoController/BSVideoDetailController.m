@@ -57,7 +57,7 @@
     // [[BSUtils sharedInstance] showLoadingMode:self];
     
     //adding demo Video -- giving a little delay to store correct frame size
-    [self performSelector:@selector(addVideo) withObject:nil afterDelay:0.8];
+    [self performSelector:@selector(addVideoView) withObject:nil afterDelay:0.8];
     
     //adding Pan Gesture
     UIPanGestureRecognizer *pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
@@ -92,7 +92,7 @@
 
 #pragma mark- Add Video on View
 
--(void)addVideo
+-(void)addVideoView
 {
     NSURL *urlString = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"sample" ofType:@"mp4"]];
     player  = [[MPMoviePlayerController alloc] initWithContentURL:urlString];
@@ -105,29 +105,33 @@
     
     [self.videoView addSubview:player.view];
     [player prepareToPlay];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerLoadStateDidChange:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerLoadStateDidChange:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
+
     [self calculateFrames];
+    [self showDonwButton];// added
 }
 
 
 
+//
+//#pragma mark- MPMoviePlayerLoadStateDidChange Notification
+//
+//- (void)MPMoviePlayerLoadStateDidChange:(NSNotification *)notification {
+//    if ((player.loadState & MPMovieLoadStatePlaythroughOK) == MPMovieLoadStatePlaythroughOK) {
+//        //add your code
+//        NSLog(@"Playing OK");
+//        [self showDonwButton];
+//        //[self.btnDown bringSubviewToFront:self.player.view];
+//    }
+//    NSLog(@"loadState=%lu",player.loadState);
+//    //[self.btnDown bringSubviewToFront:self.player.view];
+//}
 
-#pragma mark- MPMoviePlayerLoadStateDidChange Notification
 
-- (void)MPMoviePlayerLoadStateDidChange:(NSNotification *)notification {
-    if ((player.loadState & MPMovieLoadStatePlaythroughOK) == MPMovieLoadStatePlaythroughOK) {
-        //add your code
-        NSLog(@"Playing OK");
-        self.downBtn.hidden=FALSE;
-        //[self.btnDown bringSubviewToFront:self.player.view];
-    }
-    NSLog(@"loadState=%lu",player.loadState);
-    //[self.btnDown bringSubviewToFront:self.player.view];
+
+- (void) showDonwButton {
+    self.downBtn.hidden = FALSE;
 }
-
-
-
-
 
 
 

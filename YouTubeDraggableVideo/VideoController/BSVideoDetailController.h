@@ -48,6 +48,7 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 //@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnDownBottomLayout;
 //- (IBAction)btnSendAction:(id)sender;
 
+-(void)showDonwButton;
 
 @property(nonatomic)CGRect initialFirstViewFrame;
 @property(nonatomic,strong) UIPanGestureRecognizer *panRecognizer;
