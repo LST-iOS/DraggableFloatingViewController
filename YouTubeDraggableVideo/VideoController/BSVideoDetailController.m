@@ -61,6 +61,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    videoView = [[UIView alloc] init];
+    videoView.backgroundColor = [UIColor redColor];
+    
     [self setupWithWrapperView:self.ibWrapperView
               videoWrapperView:self.ibVideoWrapperView
                     foldButton:self.ibFoldBtn];
@@ -100,19 +103,15 @@
 
 #pragma mark - Button Action
 
-//- (IBAction)btnDownTapAction:(id)sender {
-//    NSLog(@"btnDownTapAction");
-//    [self minimizeViewOnPan];
-//}
-
 - (void) onTabDownButton {
     [self minimizeViewOnPan];
     NSLog(@"onTapButons");
 }
 
-
-
-
+//- (IBAction)btnDownTapAction:(id)sender {
+//    NSLog(@"btnDownTapAction");
+//    [self minimizeViewOnPan];
+//}
 
 
 
@@ -148,14 +147,10 @@
 
 //    videoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"test"]];
 
-    videoView = [[UIView alloc] init];
-    videoView.backgroundColor = [UIColor redColor];
-
     
     [videoView setFrame:videoWrapperView.frame];
     [videoWrapperView addSubview:videoView];
 
-    
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerLoadStateDidChange:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
 
 //    [player prepareToPlay];
@@ -163,7 +158,7 @@
     
     [NSTimer scheduledTimerWithTimeInterval:0.4f
                                      target:self
-                                   selector:@selector(showDonwButton)
+                                   selector:@selector(showFoldButton)
                                    userInfo:nil
                                     repeats:NO];
 }
@@ -177,7 +172,7 @@
 //    if ((player.loadState & MPMovieLoadStatePlaythroughOK) == MPMovieLoadStatePlaythroughOK) {
 //        //add your code
 //        NSLog(@"Playing OK");
-//        [self showDonwButton];
+//        [self showFoldButton];
 //        //[self.btnDown bringSubviewToFront:self.videoView];
 //    }
 //    NSLog(@"loadState=%lu",player.loadState);
@@ -186,7 +181,7 @@
 
 
 
-- (void) showDonwButton {
+- (void) showFoldButton {
     NSLog(@"show downButton");
 //    [videoWrapperView bringSubviewToFront:foldButton];
     foldButton.hidden = FALSE;
