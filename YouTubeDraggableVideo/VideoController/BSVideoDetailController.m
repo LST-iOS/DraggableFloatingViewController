@@ -43,9 +43,11 @@
     
     //Just to Check wether view  is expanded or not
     BOOL isExpandedMode;
+    
+    UIView *videoView;
 }
 
-@synthesize player;
+//@synthesize player;
 
 
 
@@ -94,17 +96,23 @@
 
 -(void)addVideoView
 {
-    NSURL *urlString = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"sample" ofType:@"mp4"]];
-    player  = [[MPMoviePlayerController alloc] initWithContentURL:urlString];
+//    NSURL *urlString = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"sample" ofType:@"mp4"]];
+//    player  = [[MPMoviePlayerController alloc] initWithContentURL:urlString];
+//    
+//    [videoView setFrame:self.videoWrapperView.frame];
+//    player.controlStyle =  MPMovieControlStyleNone;
+//    player.shouldAutoplay=YES;
+//    player.repeatMode = NO;
+//    player.scalingMode = MPMovieScalingModeAspectFit;
+//    
     
-    [player.view setFrame:self.videoWrapperView.frame];
-    player.controlStyle =  MPMovieControlStyleNone;
-    player.shouldAutoplay=YES;
-    player.repeatMode = NO;
-    player.scalingMode = MPMovieScalingModeAspectFit;
+    videoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"test"]];
+    videoView.backgroundColor = [UIColor redColor];
+    [videoView setFrame:self.videoWrapperView.frame];
+    [self.videoWrapperView addSubview:videoView];
+
     
-    [self.videoWrapperView addSubview:player.view];
-    [player prepareToPlay];
+    //    [player prepareToPlay];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerLoadStateDidChange:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
 
     [self calculateFrames];
@@ -121,10 +129,10 @@
 //        //add your code
 //        NSLog(@"Playing OK");
 //        [self showDonwButton];
-//        //[self.btnDown bringSubviewToFront:self.player.view];
+//        //[self.btnDown bringSubviewToFront:self.videoView];
 //    }
 //    NSLog(@"loadState=%lu",player.loadState);
-//    //[self.btnDown bringSubviewToFront:self.player.view];
+//    //[self.btnDown bringSubviewToFront:self.videoView];
 //}
 
 
@@ -159,8 +167,8 @@
     self.wrapperView.frame=wrapperFrame;
     menuFrame=self.wrapperView.frame;
     viewFrame=self.videoWrapperView.frame;
-    self.player.view.backgroundColor = self.videoWrapperView.backgroundColor = [UIColor clearColor];
-    //self.player.view.layer.shouldRasterize=YES;
+    videoView.backgroundColor = self.videoWrapperView.backgroundColor = [UIColor clearColor];
+    //self.videoView.layer.shouldRasterize=YES;
     // self.viewYouTube.layer.shouldRasterize=YES;
     //self.viewTable.layer.shouldRasterize=YES;
     
@@ -178,7 +186,7 @@
     [self.onView addSubview:self.wrapperView];
     [self.onView addSubview:self.videoWrapperView];
 //    [self stGrowingTextViewProperty];
-    [self.player.view addSubview:self.downBtn];
+    [videoView addSubview:self.downBtn];
     
     
     //animate Button Down
@@ -266,7 +274,7 @@
                      animations:^ {
                          self.wrapperView.frame = menuFrame;
                          self.videoWrapperView.frame=viewFrame;
-                         player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                          self.wrapperView.alpha=0;
                          transaparentVw.alpha=0.0;
                          
@@ -306,14 +314,15 @@
                          self.wrapperView.frame = wrapperFrame;
                          self.videoWrapperView.frame=videoWrapperFrame;
                          self.videoWrapperView.alpha=1;
-                         player.view.frame=videoWrapperFrame;
+                         videoView.frame=videoWrapperFrame;
                          self.wrapperView.alpha=1.0;
                          transaparentVw.alpha=1.0;
                          
                          
                      }
                      completion:^(BOOL finished) {
-                         player.controlStyle = MPMovieControlStyleDefault;
+//                         player.controlStyle = MPMovieControlStyleDefault;
+                         [self.delegate onExpanded];
                          isExpandedMode=TRUE;
                          self.downBtn.hidden=FALSE;
                      }];
@@ -323,7 +332,8 @@
 
 -(void)removeView
 {
-    [self.player stop];
+    [self.delegate onRemoveView];
+//    [self.player stop];
     [self.videoWrapperView removeFromSuperview];
     [self.wrapperView removeFromSuperview];
     [transaparentVw removeFromSuperview];
@@ -368,7 +378,8 @@
         _touchPositionInHeaderX = [recognizer locationInView:self.videoWrapperView].x;
         if(direction==UIPanGestureRecognizerDirectionDown)
         {
-            player.controlStyle=MPMovieControlStyleNone;
+//            player.controlStyle = MPMovieControlStyleNone;
+            [self.delegate onDownGesture];
         }
         
     }
@@ -471,7 +482,7 @@
                      animations:^ {
                          self.wrapperView.frame = menuFrame;
                          self.videoWrapperView.frame=viewFrame;
-                         player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                          self.wrapperView.alpha=0;
                          self.videoWrapperView.alpha=1;
                          
@@ -494,7 +505,7 @@
                      animations:^ {
                          self.wrapperView.frame = menuFrame;
                          self.videoWrapperView.frame=viewFrame;
-                         player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                          self.wrapperView.alpha=0;
                          self.videoWrapperView.alpha=1;
                          
@@ -612,7 +623,7 @@
                          animations:^ {
                              self.wrapperView.frame = menuFrame;
                              self.videoWrapperView.frame=viewFrame;
-                             player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                             videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                              self.wrapperView.alpha=0;
                              
                              
@@ -647,7 +658,7 @@
                              animations:^ {
                                  self.wrapperView.frame = menuFrame;
                                  self.videoWrapperView.frame=viewFrame;
-                                 player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                                 videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                                  
                                  CGFloat percentage = y/self.initialFirstViewFrame.size.height;
                                  self.wrapperView.alpha= transaparentVw.alpha = 1.0 - percentage;
@@ -671,7 +682,7 @@
                              animations:^ {
                                  self.wrapperView.frame = menuFrame;
                                  self.videoWrapperView.frame=viewFrame;
-                                 player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                                 videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                              }completion:nil];
             
             

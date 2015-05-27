@@ -12,6 +12,9 @@
 
 @protocol RemoveViewDelegate
 - (void)removeController;
+- (void)onExpanded;//MPMoviewControlStyleDeafult
+- (void)onRemoveView;//stop the player
+- (void)onDownGesture;//MPMoviewControlStyleNone
 @end
 
 typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
@@ -37,7 +40,7 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 @property (nonatomic, assign) id  <RemoveViewDelegate> delegate;
 
 
-@property (strong, nonatomic) MPMoviePlayerController *player;
+//@property (strong, nonatomic) MPMoviePlayerController *player;
 //@property (weak, nonatomic) IBOutlet UITableView *tblView;
 //@property (weak, nonatomic) IBOutlet UIView *viewGrowingTextView;
 //@property (weak, nonatomic) IBOutlet UITextView *txtViewGrowing;

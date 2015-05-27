@@ -27,15 +27,13 @@
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
-    if(self.secondViewController!=nil && !self.secondViewController.player.isFullscreen)
-    {
-        [self.secondViewController removeView];
-        [self.secondViewController.view removeFromSuperview];
-        self.secondViewController=nil;
-        
-        
-        
-    }
+    // FIX: rewrite after
+//    if(self.secondViewController!=nil && !self.secondViewController.player.isFullscreen)
+//    {
+//        [self.secondViewController removeView];
+//        [self.secondViewController.view removeFromSuperview];
+//        self.secondViewController=nil;
+//    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -68,13 +66,12 @@
             //load the portrait view
             if(self.secondViewController!=nil)
             {
-                
-               
-                if(!self.secondViewController.player .fullscreen)
-                {
-                    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-                [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-                }
+                // FIX: rewrite after
+//                if(!self.secondViewController.player .fullscreen)
+//                {
+//                    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+//                [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
+//                }
             }
         }
             
@@ -89,10 +86,14 @@
                 
                // if(!self.secondViewController.player.fullscreen && self.secondViewController.viewTable.alpha>=1)
                 //{
-               
-                 self.secondViewController.player.controlStyle =  MPMovieControlStyleDefault;
-                self.secondViewController.player .fullscreen = YES;
-                 
+
+                
+                // FIX: rewrite after
+//                 self.secondViewController.player.controlStyle =  MPMovieControlStyleDefault;
+//                self.secondViewController.player .fullscreen = YES;
+                
+                
+                
                       [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willExitFullscreen:) name:MPMoviePlayerWillExitFullscreenNotification object:nil];
                 //}
                /* else if( self.secondViewController.viewTable.alpha<=0)
