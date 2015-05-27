@@ -38,6 +38,14 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 
 @property (nonatomic, assign) id  <RemoveViewDelegate> delegate;
 
+-(void)showDonwButton;
+-(void)removeView;
+
+@property(nonatomic)CGRect initialFirstViewFrame;
+@property(nonatomic,strong) UIPanGestureRecognizer *panRecognizer;
+@property(nonatomic,strong) UITapGestureRecognizer *tapRecognizer;
+@property(nonatomic,strong) UIView *onView;
+
 //@property (strong, nonatomic) MPMoviePlayerController *player;
 //@property (weak, nonatomic) IBOutlet UITableView *tblView;
 //@property (weak, nonatomic) IBOutlet UIView *viewGrowingTextView;
@@ -45,12 +53,4 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 //@property (weak, nonatomic) IBOutlet UIView *viewShare;
 //@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnDownBottomLayout;
 //- (IBAction)btnSendAction:(id)sender;
-
--(void)showDonwButton;
-
-@property(nonatomic)CGRect initialFirstViewFrame;
-@property(nonatomic,strong) UIPanGestureRecognizer *panRecognizer;
-@property(nonatomic,strong) UITapGestureRecognizer *tapRecognizer;
--(void)removeView;
-@property(nonatomic,strong) UIView *onView;
 @end

@@ -264,12 +264,23 @@
 
 
 
+
+
+
+
+
+
 #pragma mark - Button Action
 
 - (IBAction)btnDownTapAction:(id)sender {
     NSLog(@"btnDownTapAction");
     [self minimizeViewOnPan];
 }
+
+
+
+
+#pragma mark- Pan Animation
 
 - (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
     NSLog(@"expandViewOnTap");
@@ -281,9 +292,6 @@
         }
     }
 }
-
-
-
 
 -(void)minimizeViewOnPan
 {
@@ -378,6 +386,12 @@
 }
 
 
+
+
+
+
+
+
 #pragma mark- Pan Gesture Delagate
 
 - (BOOL)gestureRecognizerShould:(UIGestureRecognizer *)gestureRecognizer {
@@ -392,6 +406,13 @@
 {
     return YES;
 }
+
+
+
+
+
+
+
 
 
 
