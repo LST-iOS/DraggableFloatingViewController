@@ -57,9 +57,10 @@
 
 
 
-
+//
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     [self setupWithWrapperView:self.ibWrapperView
               videoWrapperView:self.ibVideoWrapperView
                     foldButton:self.ibFoldBtn];
@@ -87,15 +88,25 @@
     UIPanGestureRecognizer *pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
     pan.delegate=self;
     [videoWrapperView addGestureRecognizer:pan];
+
     //setting view to Expanded state
     isExpandedMode=TRUE;
     
     foldButton.hidden=TRUE;
     [foldButton addTarget:self action:@selector(onTabDownButton) forControlEvents:UIControlEventTouchUpInside];
+
 }
 
 
+#pragma mark - Button Action
+
+//- (IBAction)btnDownTapAction:(id)sender {
+//    NSLog(@"btnDownTapAction");
+//    [self minimizeViewOnPan];
+//}
+
 - (void) onTabDownButton {
+    [self minimizeViewOnPan];
     NSLog(@"onTapButons");
 }
 
@@ -267,15 +278,6 @@
 
 
 
-
-
-
-#pragma mark - Button Action
-
-- (IBAction)btnDownTapAction:(id)sender {
-    NSLog(@"btnDownTapAction");
-    [self minimizeViewOnPan];
-}
 
 
 
