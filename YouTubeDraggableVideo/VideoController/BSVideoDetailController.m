@@ -61,25 +61,28 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    videoView = [[UIView alloc] init];
-    videoView.backgroundColor = [UIColor redColor];
+    UIView *vView = [[UIView alloc] init];
+    vView.backgroundColor = [UIColor redColor];
     
-    [self setupWithWrapperView:self.ibWrapperView
-              videoWrapperView:self.ibVideoWrapperView
-                    foldButton:self.ibFoldBtn];
+    [self setupWithVideoView: vView
+            videoWrapperView: self.ibVideoWrapperView
+             pageWrapperView: self.ibWrapperView
+                  foldButton: self.ibFoldBtn];
 }
 
 
 
 
 
-- (void) setupWithWrapperView:(UIView *)ibWrapperView
-             videoWrapperView:(UIView *)ibVideoWrapperView
-                   foldButton:(UIButton *)ibFoldBtn
+- (void) setupWithVideoView: (UIView *)vView
+           videoWrapperView: (UIView *)ibVideoWrapperView
+            pageWrapperView: (UIView *)ibWrapperView
+                 foldButton: (UIButton *)ibFoldBtn
 {
     
-    wrapperView = ibWrapperView;
+    videoView = vView;
     videoWrapperView = ibVideoWrapperView;
+    wrapperView = ibWrapperView;
     foldButton = ibFoldBtn;
     
     // [[BSUtils sharedInstance] showLoadingMode:self];
