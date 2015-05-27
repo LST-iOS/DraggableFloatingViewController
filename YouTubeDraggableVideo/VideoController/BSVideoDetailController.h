@@ -25,14 +25,19 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 @interface BSVideoDetailController : UIViewController<UIGestureRecognizerDelegate>//,UITextViewDelegate>
 
 
-@property (nonatomic, assign) id  <RemoveViewDelegate> delegate;
-@property (strong, nonatomic) MPMoviePlayerController *player;
-
 
 @property (weak, nonatomic) IBOutlet UIView *wrapperView;
 @property (weak, nonatomic) IBOutlet UIView *videoView;
 @property (weak, nonatomic) IBOutlet UIButton *downBtn;
 - (IBAction)btnDownTapAction:(id)sender;
+
+
+
+
+@property (nonatomic, assign) id  <RemoveViewDelegate> delegate;
+@property (strong, nonatomic) MPMoviePlayerController *player;
+
+
 
 
 

@@ -281,10 +281,6 @@
                                                 <exclude reference="TDM-PR-Qi4"/>
                                             </mask>
                                         </variation>
-                                        <connections>
-                                            <outlet property="dataSource" destination="n1I-NN-SCZ" id="56H-7R-f0p"/>
-                                            <outlet property="delegate" destination="n1I-NN-SCZ" id="UTT-yo-a7T"/>
-                                        </connections>
                                     </tableView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

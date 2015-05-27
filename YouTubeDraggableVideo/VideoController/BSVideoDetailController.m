@@ -775,53 +775,53 @@
 
 
 
-#pragma mark - UITableViewDataSource
-
-// number of section(s), now I assume there is only 1 section
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)theTableView
-{
-    return 1;
-}
-
-// number of row in the section, I assume there is only 1 row
-- (NSInteger)tableView:(UITableView *)theTableView numberOfRowsInSection:(NSInteger)section
-{
-    return 10;
-}
-
-// the cell will be returned to the tableView
-- (UITableViewCell *)tableView:(UITableView *)theTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *cellIdentifier = @"videoCommentCell";
-    UITableViewCell *cell;
-    cell = (UITableViewCell *)[theTableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    }
-    cell.backgroundColor = [UIColor clearColor];
-    cell.contentView.backgroundColor = [UIColor clearColor];
-    cell.selectionStyle=UITableViewCellSelectionStyleNone;
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 88.0;
-}
-
-
-
-#pragma mark - UITableViewDelegate
-
-// when user tap the row, what action you want to perform
-- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"selected %ld row", (long)indexPath.row);
-}
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+//#pragma mark - UITableViewDataSource
+//
+//// number of section(s), now I assume there is only 1 section
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)theTableView
+//{
+//    return 1;
+//}
+//
+//// number of row in the section, I assume there is only 1 row
+//- (NSInteger)tableView:(UITableView *)theTableView numberOfRowsInSection:(NSInteger)section
+//{
+//    return 10;
+//}
+//
+//// the cell will be returned to the tableView
+//- (UITableViewCell *)tableView:(UITableView *)theTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    static NSString *cellIdentifier = @"videoCommentCell";
+//    UITableViewCell *cell;
+//    cell = (UITableViewCell *)[theTableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//    if (cell == nil) {
+//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//    }
+//    cell.backgroundColor = [UIColor clearColor];
+//    cell.contentView.backgroundColor = [UIColor clearColor];
+//    cell.selectionStyle=UITableViewCellSelectionStyleNone;
+//    return cell;
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return 88.0;
+//}
+//
+//
+//
+//#pragma mark - UITableViewDelegate
+//
+//// when user tap the row, what action you want to perform
+//- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    NSLog(@"selected %ld row", (long)indexPath.row);
+//}
+//- (void)didReceiveMemoryWarning {
+//    [super didReceiveMemoryWarning];
+//    // Dispose of any resources that can be recreated.
+//}
 
 
 
