@@ -335,7 +335,7 @@
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
                         <outlet property="downBtn" destination="J4y-nO-xN2" id="Q5c-WZ-zEU"/>
-                        <outlet property="videoView" destination="S04-xZ-Hfl" id="mfm-pk-Xby"/>
+                        <outlet property="videoWrapperView" destination="S04-xZ-Hfl" id="If4-Qw-cQB"/>
                         <outlet property="wrapperView" destination="Ga0-Dr-fnl" id="mfd-Kc-07p"/>
                     </connections>
                 </viewController>
