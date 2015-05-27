@@ -10,6 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 
+
 @protocol RemoveViewDelegate
 - (void)removeController;
 - (void)onExpanded;//MPMoviewControlStyleDeafult
@@ -29,17 +30,18 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 
 
 
-@interface BSVideoDetailController : UIViewController<UIGestureRecognizerDelegate>//,UITextViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UIView *ibWrapperView;
-@property (weak, nonatomic) IBOutlet UIView *ibVideoWrapperView;
-@property (weak, nonatomic) IBOutlet UIButton *ibFoldBtn;
-//- (IBAction)btnDownTapAction:(id)sender;
+
+
+@interface BSVideoDetailController : UIViewController<UIGestureRecognizerDelegate>//,UITextViewDelegate>
 
 @property (nonatomic, assign) id  <RemoveViewDelegate> delegate;
 
--(void)showDonwButton;
--(void)removeView;
+- (void) setupWithVideoView: (UIView *)vView
+           videoWrapperView: (UIView *)ibVideoWrapperView
+            pageWrapperView: (UIView *)ibWrapperView
+                 foldButton: (UIButton *)ibFoldBtn;
+- (void) removeView;
 
 @property(nonatomic)CGRect initialFirstViewFrame;
 @property(nonatomic,strong) UIPanGestureRecognizer *panRecognizer;
@@ -52,5 +54,6 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 //@property (weak, nonatomic) IBOutlet UITextView *txtViewGrowing;
 //@property (weak, nonatomic) IBOutlet UIView *viewShare;
 //@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnDownBottomLayout;
+//- (IBAction)btnDownTapAction:(id)sender;
 //- (IBAction)btnSendAction:(id)sender;
 @end

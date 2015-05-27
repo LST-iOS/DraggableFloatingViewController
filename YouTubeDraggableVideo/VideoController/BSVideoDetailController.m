@@ -58,17 +58,17 @@
 
 
 //
-- (void)viewDidLoad {
-    [super viewDidLoad];
+//- (void)viewDidLoad {
+//    [super viewDidLoad];
 
-    UIView *vView = [[UIView alloc] init];
-    vView.backgroundColor = [UIColor redColor];
-    
-    [self setupWithVideoView: vView
-            videoWrapperView: self.ibVideoWrapperView
-             pageWrapperView: self.ibWrapperView
-                  foldButton: self.ibFoldBtn];
-}
+//    UIView *vView = [[UIView alloc] init];
+//    vView.backgroundColor = [UIColor redColor];
+//    
+//    [self setupWithVideoView: vView
+//            videoWrapperView: self.ibVideoWrapperView
+//             pageWrapperView: self.ibWrapperView
+//                  foldButton: self.ibFoldBtn];
+//}
 
 
 
