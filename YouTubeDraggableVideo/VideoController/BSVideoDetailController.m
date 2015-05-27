@@ -16,14 +16,12 @@
 
 
 @interface BSVideoDetailController ()
-
 @end
+
+
 
 @implementation BSVideoDetailController
 {
-    
-    
-    
     //local Frame store
     CGRect youtubeFrame;
     CGRect tblFrame;
@@ -48,19 +46,17 @@
     
     //Just to Check wether view  is expanded or not
     BOOL isExpandedMode;
-    
-    
-    
-    
 }
+
 @synthesize player;
+
+
+
 
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
     // [[BSUtils sharedInstance] showLoadingMode:self];
     
     //adding demo Video -- giving a little delay to store correct frame size
@@ -74,13 +70,11 @@
     isExpandedMode=TRUE;
     
     self.btnDown.hidden=TRUE;
-    
-    
-    
-    
-    
-    
 }
+
+
+
+
 
 #pragma mark- Status Bar Hidden function
 
@@ -88,19 +82,21 @@
     return YES;
 }
 - (NSUInteger) supportedInterfaceOrientations {
-    
     return UIInterfaceOrientationMaskPortrait;
-    
 }
 - (BOOL)shouldAutorotate
 {
     return NO;
 }
 
+
+
+
+
 #pragma mark- Add Video on View
+
 -(void)addVideo
 {
-    
     NSURL *urlString = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"sample" ofType:@"mp4"]];
     player  = [[MPMoviePlayerController alloc] initWithContentURL:urlString];
     
@@ -114,10 +110,15 @@
     [player prepareToPlay];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerLoadStateDidChange:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
     [self calculateFrames];
-    
-    
 }
+
+
+
+
+
+
 #pragma mark- Calculate Frames and Store Frame Size
+
 -(void)calculateFrames
 {
     youtubeFrame=self.viewYouTube.frame;
@@ -133,10 +134,7 @@
     frame=self.txtViewGrowing.frame;
     self.txtViewGrowing.translatesAutoresizingMaskIntoConstraints = YES;
     self.txtViewGrowing.frame=frame;
-    
-    
-    
-    
+
     
     self.viewYouTube.frame=youtubeFrame;
     self.viewTable.frame=tblFrame;
@@ -164,13 +162,11 @@
     [self.player.view addSubview:self.btnDown];
     
     
-    
     //animate Button Down
-    
-    
     self.btnDown.translatesAutoresizingMaskIntoConstraints = YES;
     self.btnDown.frame=CGRectMake( self.btnDown.frame.origin.x,  self.btnDown.frame.origin.y-22,  self.btnDown.frame.size.width,  self.btnDown.frame.size.width);
     CGRect frameBtnDown=self.btnDown.frame;
+    
     
     [UIView animateKeyframesWithDuration:2.0 delay:0.0 options:UIViewKeyframeAnimationOptionAutoreverse | UIViewKeyframeAnimationOptionRepeat|UIViewAnimationOptionAllowUserInteraction animations:^{
         [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
@@ -189,6 +185,8 @@
     } completion:nil];
     
 }
+
+
 -(void)addShadow
 {
     self.btnDown.imageView.layer.shadowColor = [UIColor whiteColor].CGColor;
@@ -197,21 +195,23 @@
     self.btnDown.imageView.layer.shadowRadius = 4.0;
     self.btnDown.imageView.clipsToBounds = NO;
 }
+
+
+
+
+
+
 #pragma mark- MPMoviePlayerLoadStateDidChange Notification
+
 - (void)MPMoviePlayerLoadStateDidChange:(NSNotification *)notification {
-    
     if ((player.loadState & MPMovieLoadStatePlaythroughOK) == MPMovieLoadStatePlaythroughOK) {
         //add your code
         NSLog(@"Playing OK");
         self.btnDown.hidden=FALSE;
-        
         //[self.btnDown bringSubviewToFront:self.player.view];
-        
-        
     }
     NSLog(@"loadState=%lu",player.loadState);
     //[self.btnDown bringSubviewToFront:self.player.view];
-    
 }
 
 
@@ -221,13 +221,11 @@
 #pragma mark- Pan Gesture Delagate
 
 - (BOOL)gestureRecognizerShould:(UIGestureRecognizer *)gestureRecognizer {
-    
     if(gestureRecognizer.view.frame.origin.y<0)
     {
         return NO;
     }
     return YES;
-    
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
@@ -236,11 +234,12 @@
 }
 
 
+
+
 #pragma mark- Pan Gesture Selector Action
 
 -(void)panAction:(UIPanGestureRecognizer *)recognizer
 {
-    
     CGFloat y = [recognizer locationInView:self.view].y;
     
     if(recognizer.state == UIGestureRecognizerStateBegan){
@@ -261,8 +260,6 @@
         
     }
     else if(recognizer.state == UIGestureRecognizerStateChanged){
-        
-        
         if(direction==UIPanGestureRecognizerDirectionDown || direction==UIPanGestureRecognizerDirectionUp)
         {
             
@@ -349,16 +346,17 @@
                 }
             }
         }
-        
-        
     }
-    
 }
+
+
+
+
+
 
 #pragma mark - Keyboard events
 
 //Handling the keyboard appear and disappering events
-
 - (void)keyboardWasShown:(NSNotification*)aNotification
 {
     //__weak typeof(self) weakSelf = self;
@@ -376,9 +374,8 @@
                      }
                      completion:^(BOOL finished) {
                      }];
-    
-    
 }
+
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification
 {
@@ -394,10 +391,18 @@
                      completion:^(BOOL finished) {
                      }];
 }
-#pragma mark -
+
+
+
+
+
 #pragma mark - Text View delegate -
 
+
+
+
 #pragma mark- View Function Methods
+
 -(void)stGrowingTextViewProperty
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -503,13 +508,10 @@
             
             BOOL isVerticalGesture = fabs(velocity.y) > fabs(velocity.x);
             
-            
-            
             CGPoint translation = [recognizer translationInView:recognizer.view];
             
             recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
                                                  recognizer.view.center.y );
-            
             
             if (!isVerticalGesture) {
                 
@@ -531,12 +533,11 @@
             [recognizer setTranslation:CGPointZero inView:recognizer.view];
         }
     }
-    
-    
-    
-    
-    
 }
+
+
+
+
 
 -(void)adjustViewOnVerticalPan:(CGFloat)trueOffset :(CGFloat)xOffset recognizer:(UIPanGestureRecognizer *)recognizer
 {
@@ -633,8 +634,10 @@
         
         [recognizer setTranslation:CGPointZero inView:recognizer.view];
     }
-    
 }
+
+
+
 -(void)detectPanDirection:(CGPoint )velocity
 {
     self.btnDown.hidden=TRUE;
@@ -661,8 +664,9 @@
         }
         
     }
-    
 }
+
+
 
 - (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
     
@@ -673,8 +677,10 @@
             [self.viewYouTube removeGestureRecognizer:recognizer];
         }
     }
-    
 }
+
+
+
 
 -(void)minimizeViewOnPan
 {
@@ -732,6 +738,9 @@
                      }];
     
 }
+
+
+
 -(void)expandViewOnPan
 {
     [self.txtViewGrowing resignFirstResponder];
@@ -753,10 +762,9 @@
                          isExpandedMode=TRUE;
                          self.btnDown.hidden=FALSE;
                      }];
-    
-    
-    
 }
+
+
 
 -(void)removeView
 {
@@ -768,7 +776,13 @@
     
 }
 
+
+
+
+
+
 #pragma mark - UITableViewDataSource
+
 // number of section(s), now I assume there is only 1 section
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)theTableView
 {
@@ -802,15 +816,16 @@
     
     return cell;
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     return 88.0;
-    
-    
 }
 
+
+
 #pragma mark - UITableViewDelegate
+
 // when user tap the row, what action you want to perform
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -821,12 +836,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+
 #pragma mark - Button Action
+
 - (IBAction)btnDownTapAction:(id)sender {
-    
     [self minimizeViewOnPan];
-    
 }
+
 - (IBAction)btnSendAction:(id)sender {
     [self.txtViewGrowing resignFirstResponder];
     self.txtViewGrowing.text=@"";
@@ -839,6 +855,5 @@
                      }completion:^(BOOL finished) {
                          
                      }];
-    
 }
 @end
