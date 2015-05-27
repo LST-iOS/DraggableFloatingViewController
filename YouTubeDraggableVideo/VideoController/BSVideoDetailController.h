@@ -29,12 +29,12 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 
 @property (weak, nonatomic) IBOutlet UIView *viewYouTube;
 @property (weak, nonatomic) IBOutlet UIView *wrapperView;
-@property (weak, nonatomic) IBOutlet UIView *viewShare;
+//@property (weak, nonatomic) IBOutlet UIView *viewShare;
 @property (weak, nonatomic) IBOutlet UIView *viewGrowingTextView;
 @property (weak, nonatomic) IBOutlet UITableView *tblView;
 @property (weak, nonatomic) IBOutlet UIButton *btnDown;
 @property (weak, nonatomic) IBOutlet UITextView *txtViewGrowing;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnDownBottomLayout;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnDownBottomLayout;
 
 - (IBAction)btnDownTapAction:(id)sender;
 - (IBAction)btnSendAction:(id)sender;

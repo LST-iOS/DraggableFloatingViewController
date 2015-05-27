@@ -371,11 +371,9 @@
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
                         <outlet property="btnDown" destination="J4y-nO-xN2" id="wTf-7v-tOc"/>
-                        <outlet property="btnDownBottomLayout" destination="x4u-Md-i30" id="hj0-Va-s1a"/>
                         <outlet property="tblView" destination="gfU-9o-R98" id="vtM-ki-Bgh"/>
                         <outlet property="txtViewGrowing" destination="oDo-GD-aOw" id="Jsz-ah-VBj"/>
                         <outlet property="viewGrowingTextView" destination="tcs-xn-Afk" id="cVb-Y7-s6o"/>
-                        <outlet property="viewShare" destination="YlA-ja-eae" id="xV0-9p-Zid"/>
                         <outlet property="viewYouTube" destination="S04-xZ-Hfl" id="wFu-hd-yVu"/>
                         <outlet property="wrapperView" destination="Ga0-Dr-fnl" id="mfd-Kc-07p"/>
                     </connections>
