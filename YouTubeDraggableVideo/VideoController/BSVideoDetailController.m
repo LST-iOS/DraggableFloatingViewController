@@ -188,7 +188,6 @@
     NSLog(@"show downButton");
 //    [videoWrapperView bringSubviewToFront:foldButton];
     foldButton.hidden = FALSE;
-    videoView.backgroundColor = [UIColor redColor];
 }
 
 
