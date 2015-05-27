@@ -138,6 +138,8 @@
 
 
 - (void) showDonwButton {
+    NSLog(@"show downButton");
+    [self.videoWrapperView bringSubviewToFront:self.downBtn];
     self.downBtn.hidden = FALSE;
 }
 
@@ -172,15 +174,15 @@
     // self.viewYouTube.layer.shouldRasterize=YES;
     //self.viewTable.layer.shouldRasterize=YES;
     
-    restrictOffset=self.initialFirstViewFrame.size.width-200;
+    restrictOffset = self.initialFirstViewFrame.size.width - 200;
     restrictTrueOffset = self.initialFirstViewFrame.size.height - 180;
-    restictYaxis=self.initialFirstViewFrame.size.height-self.videoWrapperView.frame.size.height;
+    restictYaxis = self.initialFirstViewFrame.size.height-self.videoWrapperView.frame.size.height;
     
     //[[BSUtils sharedInstance] hideLoadingMode:self];
-    self.view.hidden=TRUE;
-    transaparentVw=[[UIView alloc]initWithFrame:self.initialFirstViewFrame];
+    self.view.hidden = TRUE;
+    transaparentVw = [[UIView alloc]initWithFrame:self.initialFirstViewFrame];
     transaparentVw.backgroundColor=[UIColor blackColor];
-    transaparentVw.alpha=0.9;
+    transaparentVw.alpha = 0.9;
     [self.onView addSubview:transaparentVw];
     
     [self.onView addSubview:self.wrapperView];
@@ -198,11 +200,8 @@
     [UIView animateKeyframesWithDuration:2.0 delay:0.0 options:UIViewKeyframeAnimationOptionAutoreverse | UIViewKeyframeAnimationOptionRepeat|UIViewAnimationOptionAllowUserInteraction animations:^{
         [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
             self.downBtn.transform=CGAffineTransformMakeScale(1.5, 1.5);
-            
             [self addShadow];
             self.downBtn.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y+17, frameBtnDown.size.width, frameBtnDown.size.width);
-            
-            
         }];
         [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
             self.downBtn.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y, frameBtnDown.size.width, frameBtnDown.size.width);
@@ -210,7 +209,6 @@
             [self addShadow];
         }];
     } completion:nil];
-    
 }
 
 
@@ -230,6 +228,7 @@
 #pragma mark - Button Action
 
 - (IBAction)btnDownTapAction:(id)sender {
+    NSLog(@"btnDownTapAction");
     [self minimizeViewOnPan];
 }
 
@@ -277,8 +276,6 @@
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                          self.wrapperView.alpha=0;
                          transaparentVw.alpha=0.0;
-                         
-                         
                      }
                      completion:^(BOOL finished) {
                          //add tap gesture
@@ -485,9 +482,6 @@
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                          self.wrapperView.alpha=0;
                          self.videoWrapperView.alpha=1;
-                         
-                         
-                         
                      }
                      completion:^(BOOL finished) {
                          
