@@ -235,28 +235,28 @@
     
     [self.onView addSubview:wrapperView];
     [self.onView addSubview:videoWrapperView];
-//    [self stGrowingTextViewProperty];
     [videoView addSubview:foldButton];
-    
+    //    [self stGrowingTextViewProperty];
+
     
     //animate Button Down
     foldButton.translatesAutoresizingMaskIntoConstraints = YES;
-    foldButton.frame=CGRectMake( foldButton.frame.origin.x,  foldButton.frame.origin.y-22,  foldButton.frame.size.width,  foldButton.frame.size.width);
-    CGRect frameBtnDown=foldButton.frame;
+//    foldButton.frame=CGRectMake( foldButton.frame.origin.x,  foldButton.frame.origin.y-22,  foldButton.frame.size.width,  foldButton.frame.size.width);
+//    CGRect frameBtnDown=foldButton.frame;
     
     
-    [UIView animateKeyframesWithDuration:2.0 delay:0.0 options:UIViewKeyframeAnimationOptionAutoreverse | UIViewKeyframeAnimationOptionRepeat|UIViewAnimationOptionAllowUserInteraction animations:^{
-        [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
-            foldButton.transform=CGAffineTransformMakeScale(1.5, 1.5);
-            [self addShadow];
-            foldButton.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y+17, frameBtnDown.size.width, frameBtnDown.size.width);
-        }];
-        [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
-            foldButton.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y, frameBtnDown.size.width, frameBtnDown.size.width);
-            foldButton.transform=CGAffineTransformIdentity;
-            [self addShadow];
-        }];
-    } completion:nil];
+//    [UIView animateKeyframesWithDuration:2.0 delay:0.0 options:UIViewKeyframeAnimationOptionAutoreverse | UIViewKeyframeAnimationOptionRepeat|UIViewAnimationOptionAllowUserInteraction animations:^{
+//        [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
+//            foldButton.transform=CGAffineTransformMakeScale(1.5, 1.5);
+//            [self addShadow];
+//            foldButton.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y+17, frameBtnDown.size.width, frameBtnDown.size.width);
+//        }];
+//        [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
+//            foldButton.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y, frameBtnDown.size.width, frameBtnDown.size.width);
+//            foldButton.transform=CGAffineTransformIdentity;
+//            [self addShadow];
+//        }];
+//    } completion:nil];
 }
 
 
