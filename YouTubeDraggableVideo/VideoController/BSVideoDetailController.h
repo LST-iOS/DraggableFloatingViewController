@@ -17,6 +17,8 @@
 - (void)onDownGesture;//MPMoviewControlStyleNone
 @end
 
+
+
 typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     UIPanGestureRecognizerDirectionUndefined,
     UIPanGestureRecognizerDirectionUp,
@@ -25,20 +27,16 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     UIPanGestureRecognizerDirectionRight
 };
 
+
+
 @interface BSVideoDetailController : UIViewController<UIGestureRecognizerDelegate>//,UITextViewDelegate>
 
-
-
-@property (weak, nonatomic) IBOutlet UIView *wrapperView;
-@property (weak, nonatomic) IBOutlet UIView *videoWrapperView;
-@property (weak, nonatomic) IBOutlet UIButton *downBtn;
-- (IBAction)btnDownTapAction:(id)sender;
-
-
-
+@property (weak, nonatomic) IBOutlet UIView *ibWrapperView;
+@property (weak, nonatomic) IBOutlet UIView *ibVideoWrapperView;
+@property (weak, nonatomic) IBOutlet UIButton *ibFoldBtn;
+//- (IBAction)btnDownTapAction:(id)sender;
 
 @property (nonatomic, assign) id  <RemoveViewDelegate> delegate;
-
 
 //@property (strong, nonatomic) MPMoviePlayerController *player;
 //@property (weak, nonatomic) IBOutlet UITableView *tblView;

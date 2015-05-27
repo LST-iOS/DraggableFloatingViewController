@@ -307,7 +307,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="btnDownTapAction:" destination="n1I-NN-SCZ" eventType="touchUpInside" id="R7P-d5-w9w"/>
+                                            <action selector="btnDownTapAction:" destination="n1I-NN-SCZ" eventType="touchUpInside" id="hNY-9d-DrD"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -334,9 +334,9 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
-                        <outlet property="downBtn" destination="J4y-nO-xN2" id="Q5c-WZ-zEU"/>
-                        <outlet property="videoWrapperView" destination="S04-xZ-Hfl" id="If4-Qw-cQB"/>
-                        <outlet property="wrapperView" destination="Ga0-Dr-fnl" id="mfd-Kc-07p"/>
+                        <outlet property="ibFoldBtn" destination="J4y-nO-xN2" id="Cgw-hF-hDT"/>
+                        <outlet property="ibVideoWrapperView" destination="S04-xZ-Hfl" id="J97-B7-4zG"/>
+                        <outlet property="ibWrapperView" destination="Ga0-Dr-fnl" id="4L1-r2-55S"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ETu-wA-gWj" userLabel="First Responder" sceneMemberID="firstResponder"/>

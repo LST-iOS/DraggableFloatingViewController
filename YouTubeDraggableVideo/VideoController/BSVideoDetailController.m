@@ -45,6 +45,10 @@
     BOOL isExpandedMode;
     
     UIView *videoView;
+    
+    UIView *wrapperView;
+    UIView *videoWrapperView;
+    UIButton *foldButton;
 }
 
 //@synthesize player;
@@ -56,6 +60,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setupWithWrapperView:self.ibWrapperView
+              videoWrapperView:self.ibVideoWrapperView
+                    foldButton:self.ibFoldBtn];
+}
+
+
+
+
+
+- (void) setupWithWrapperView:(UIView *)ibWrapperView
+             videoWrapperView:(UIView *)ibVideoWrapperView
+                   foldButton:(UIButton *)ibFoldBtn
+{
+    
+    wrapperView = ibWrapperView;
+    videoWrapperView = ibVideoWrapperView;
+    foldButton = ibFoldBtn;
+    
     // [[BSUtils sharedInstance] showLoadingMode:self];
     
     //adding demo Video -- giving a little delay to store correct frame size
@@ -64,12 +86,21 @@
     //adding Pan Gesture
     UIPanGestureRecognizer *pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
     pan.delegate=self;
-    [self.videoWrapperView addGestureRecognizer:pan];
+    [videoWrapperView addGestureRecognizer:pan];
     //setting view to Expanded state
     isExpandedMode=TRUE;
     
-    self.downBtn.hidden=TRUE;
+    foldButton.hidden=TRUE;
+    [foldButton addTarget:self action:@selector(onTabDownButton) forControlEvents:UIControlEventTouchUpInside];
 }
+
+
+- (void) onTabDownButton {
+    NSLog(@"onTapButons");
+}
+
+
+
 
 
 
@@ -97,26 +128,33 @@
 -(void)addVideoView
 {
 //    NSURL *urlString = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"sample" ofType:@"mp4"]];
-//    player  = [[MPMoviePlayerController alloc] initWithContentURL:urlString];
-//    
-//    [videoView setFrame:self.videoWrapperView.frame];
+//    MPMoviePlayerController *player  = [[MPMoviePlayerController alloc] initWithContentURL:urlString];
 //    player.controlStyle =  MPMovieControlStyleNone;
 //    player.shouldAutoplay=YES;
 //    player.repeatMode = NO;
 //    player.scalingMode = MPMovieScalingModeAspectFit;
-//    
-    
-    videoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"test"]];
+//    videoView = player.view;
+
+//    videoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"test"]];
+
+    videoView = [[UIView alloc] init];
     videoView.backgroundColor = [UIColor redColor];
-    [videoView setFrame:self.videoWrapperView.frame];
-    [self.videoWrapperView addSubview:videoView];
 
     
-    //    [player prepareToPlay];
+    [videoView setFrame:videoWrapperView.frame];
+    [videoWrapperView addSubview:videoView];
+
+    
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerLoadStateDidChange:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
 
+//    [player prepareToPlay];
     [self calculateFrames];
-    [self showDonwButton];// added
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.4f
+                                     target:self
+                                   selector:@selector(showDonwButton)
+                                   userInfo:nil
+                                    repeats:NO];
 }
 
 
@@ -139,8 +177,9 @@
 
 - (void) showDonwButton {
     NSLog(@"show downButton");
-    [self.videoWrapperView bringSubviewToFront:self.downBtn];
-    self.downBtn.hidden = FALSE;
+//    [videoWrapperView bringSubviewToFront:foldButton];
+    foldButton.hidden = FALSE;
+    videoView.backgroundColor = [UIColor redColor];
 }
 
 
@@ -150,12 +189,12 @@
 
 -(void)calculateFrames
 {
-    videoWrapperFrame=self.videoWrapperView.frame;
-    wrapperFrame=self.wrapperView.frame;
+    videoWrapperFrame=videoWrapperView.frame;
+    wrapperFrame=wrapperView.frame;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
     
-    self.videoWrapperView.translatesAutoresizingMaskIntoConstraints = YES;
-    self.wrapperView.translatesAutoresizingMaskIntoConstraints = YES;
+    videoWrapperView.translatesAutoresizingMaskIntoConstraints = YES;
+    wrapperView.translatesAutoresizingMaskIntoConstraints = YES;
 //    CGRect frame=self.viewGrowingTextView.frame;
 //    growingTextViewFrame=self.viewGrowingTextView.frame;
 //    self.viewGrowingTextView.translatesAutoresizingMaskIntoConstraints = YES;
@@ -165,18 +204,18 @@
 //    self.txtViewGrowing.frame=frame;
 
     
-    self.videoWrapperView.frame=videoWrapperFrame;
-    self.wrapperView.frame=wrapperFrame;
-    menuFrame=self.wrapperView.frame;
-    viewFrame=self.videoWrapperView.frame;
-    videoView.backgroundColor = self.videoWrapperView.backgroundColor = [UIColor clearColor];
+    videoWrapperView.frame=videoWrapperFrame;
+    wrapperView.frame=wrapperFrame;
+    menuFrame=wrapperView.frame;
+    viewFrame=videoWrapperView.frame;
+    videoView.backgroundColor = videoWrapperView.backgroundColor = [UIColor clearColor];
     //self.videoView.layer.shouldRasterize=YES;
     // self.viewYouTube.layer.shouldRasterize=YES;
     //self.viewTable.layer.shouldRasterize=YES;
     
     restrictOffset = self.initialFirstViewFrame.size.width - 200;
     restrictTrueOffset = self.initialFirstViewFrame.size.height - 180;
-    restictYaxis = self.initialFirstViewFrame.size.height-self.videoWrapperView.frame.size.height;
+    restictYaxis = self.initialFirstViewFrame.size.height-videoWrapperView.frame.size.height;
     
     //[[BSUtils sharedInstance] hideLoadingMode:self];
     self.view.hidden = TRUE;
@@ -185,27 +224,27 @@
     transaparentVw.alpha = 0.9;
     [self.onView addSubview:transaparentVw];
     
-    [self.onView addSubview:self.wrapperView];
-    [self.onView addSubview:self.videoWrapperView];
+    [self.onView addSubview:wrapperView];
+    [self.onView addSubview:videoWrapperView];
 //    [self stGrowingTextViewProperty];
-    [videoView addSubview:self.downBtn];
+    [videoView addSubview:foldButton];
     
     
     //animate Button Down
-    self.downBtn.translatesAutoresizingMaskIntoConstraints = YES;
-    self.downBtn.frame=CGRectMake( self.downBtn.frame.origin.x,  self.downBtn.frame.origin.y-22,  self.downBtn.frame.size.width,  self.downBtn.frame.size.width);
-    CGRect frameBtnDown=self.downBtn.frame;
+    foldButton.translatesAutoresizingMaskIntoConstraints = YES;
+    foldButton.frame=CGRectMake( foldButton.frame.origin.x,  foldButton.frame.origin.y-22,  foldButton.frame.size.width,  foldButton.frame.size.width);
+    CGRect frameBtnDown=foldButton.frame;
     
     
     [UIView animateKeyframesWithDuration:2.0 delay:0.0 options:UIViewKeyframeAnimationOptionAutoreverse | UIViewKeyframeAnimationOptionRepeat|UIViewAnimationOptionAllowUserInteraction animations:^{
         [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
-            self.downBtn.transform=CGAffineTransformMakeScale(1.5, 1.5);
+            foldButton.transform=CGAffineTransformMakeScale(1.5, 1.5);
             [self addShadow];
-            self.downBtn.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y+17, frameBtnDown.size.width, frameBtnDown.size.width);
+            foldButton.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y+17, frameBtnDown.size.width, frameBtnDown.size.width);
         }];
         [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
-            self.downBtn.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y, frameBtnDown.size.width, frameBtnDown.size.width);
-            self.downBtn.transform=CGAffineTransformIdentity;
+            foldButton.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y, frameBtnDown.size.width, frameBtnDown.size.width);
+            foldButton.transform=CGAffineTransformIdentity;
             [self addShadow];
         }];
     } completion:nil];
@@ -214,11 +253,11 @@
 
 -(void)addShadow
 {
-    self.downBtn.imageView.layer.shadowColor = [UIColor whiteColor].CGColor;
-    self.downBtn.imageView.layer.shadowOffset = CGSizeMake(0, 1);
-    self.downBtn.imageView.layer.shadowOpacity = 1;
-    self.downBtn.imageView.layer.shadowRadius = 4.0;
-    self.downBtn.imageView.clipsToBounds = NO;
+    foldButton.imageView.layer.shadowColor = [UIColor whiteColor].CGColor;
+    foldButton.imageView.layer.shadowOffset = CGSizeMake(0, 1);
+    foldButton.imageView.layer.shadowOpacity = 1;
+    foldButton.imageView.layer.shadowRadius = 4.0;
+    foldButton.imageView.clipsToBounds = NO;
 }
 
 
@@ -233,12 +272,12 @@
 }
 
 - (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
-    
+    NSLog(@"expandViewOnTap");
     [self expandViewOnPan];
-    for (UIGestureRecognizer *recognizer in self.videoWrapperView.gestureRecognizers) {
+    for (UIGestureRecognizer *recognizer in videoWrapperView.gestureRecognizers) {
         
         if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-            [self.videoWrapperView removeGestureRecognizer:recognizer];
+            [videoWrapperView removeGestureRecognizer:recognizer];
         }
     }
 }
@@ -248,7 +287,7 @@
 
 -(void)minimizeViewOnPan
 {
-    self.downBtn.hidden=TRUE;
+    foldButton.hidden=TRUE;
     //    [self.txtViewGrowing resignFirstResponder];
     CGFloat trueOffset = self.initialFirstViewFrame.size.height - 100;
     CGFloat xOffset = self.initialFirstViewFrame.size.width-160;
@@ -271,10 +310,10 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         self.wrapperView.frame = menuFrame;
-                         self.videoWrapperView.frame=viewFrame;
+                         wrapperView.frame = menuFrame;
+                         videoWrapperView.frame=viewFrame;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
-                         self.wrapperView.alpha=0;
+                         wrapperView.alpha=0;
                          transaparentVw.alpha=0.0;
                      }
                      completion:^(BOOL finished) {
@@ -285,11 +324,11 @@
                              self.tapRecognizer= [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
                              self.tapRecognizer.numberOfTapsRequired=1;
                              self.tapRecognizer.delegate=self;
-                             [self.videoWrapperView addGestureRecognizer:self.tapRecognizer];
+                             [videoWrapperView addGestureRecognizer:self.tapRecognizer];
                          }
                          
                          isExpandedMode=FALSE;
-                         minimizedVideoFrame=self.videoWrapperView.frame;
+                         minimizedVideoFrame=videoWrapperView.frame;
                          
                          if(direction==UIPanGestureRecognizerDirectionDown)
                          {
@@ -303,16 +342,16 @@
 
 -(void)expandViewOnPan
 {
-    //    [self.txtViewGrowing resignFirstResponder];
+//        [self.txtViewGrowing resignFirstResponder];
     [UIView animateWithDuration:0.5
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         self.wrapperView.frame = wrapperFrame;
-                         self.videoWrapperView.frame=videoWrapperFrame;
-                         self.videoWrapperView.alpha=1;
+                         wrapperView.frame = wrapperFrame;
+                         videoWrapperView.frame=videoWrapperFrame;
+                         videoWrapperView.alpha=1;
                          videoView.frame=videoWrapperFrame;
-                         self.wrapperView.alpha=1.0;
+                         wrapperView.alpha=1.0;
                          transaparentVw.alpha=1.0;
                          
                          
@@ -321,7 +360,7 @@
 //                         player.controlStyle = MPMovieControlStyleDefault;
                          [self.delegate onExpanded];
                          isExpandedMode=TRUE;
-                         self.downBtn.hidden=FALSE;
+                         foldButton.hidden=FALSE;
                      }];
 }
 
@@ -331,8 +370,8 @@
 {
     [self.delegate onRemoveView];
 //    [self.player stop];
-    [self.videoWrapperView removeFromSuperview];
-    [self.wrapperView removeFromSuperview];
+    [videoWrapperView removeFromSuperview];
+    [wrapperView removeFromSuperview];
     [transaparentVw removeFromSuperview];
     
     
@@ -371,8 +410,8 @@
         [self detectPanDirection:velocity];
         
         //Snag the Y position of the touch when panning begins
-        _touchPositionInHeaderY = [recognizer locationInView:self.videoWrapperView].y;
-        _touchPositionInHeaderX = [recognizer locationInView:self.videoWrapperView].x;
+        _touchPositionInHeaderY = [recognizer locationInView:videoWrapperView].y;
+        _touchPositionInHeaderX = [recognizer locationInView:videoWrapperView].x;
         if(direction==UIPanGestureRecognizerDirectionDown)
         {
 //            player.controlStyle = MPMovieControlStyleNone;
@@ -426,7 +465,7 @@
         
         else if (direction==UIPanGestureRecognizerDirectionLeft)
         {
-            if(self.wrapperView.alpha<=0)
+            if(wrapperView.alpha<=0)
             {
                 
                 if(recognizer.view.frame.origin.x<0)
@@ -446,7 +485,7 @@
         
         else if (direction==UIPanGestureRecognizerDirectionRight)
         {
-            if(self.wrapperView.alpha<=0)
+            if(wrapperView.alpha<=0)
             {
                 
                 
@@ -477,11 +516,11 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         self.wrapperView.frame = menuFrame;
-                         self.videoWrapperView.frame=viewFrame;
+                         wrapperView.frame = menuFrame;
+                         videoWrapperView.frame=viewFrame;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
-                         self.wrapperView.alpha=0;
-                         self.videoWrapperView.alpha=1;
+                         wrapperView.alpha=0;
+                         videoWrapperView.alpha=1;
                      }
                      completion:^(BOOL finished) {
                          
@@ -497,11 +536,11 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         self.wrapperView.frame = menuFrame;
-                         self.videoWrapperView.frame=viewFrame;
+                         wrapperView.frame = menuFrame;
+                         videoWrapperView.frame=viewFrame;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
-                         self.wrapperView.alpha=0;
-                         self.videoWrapperView.alpha=1;
+                         wrapperView.alpha=0;
+                         videoWrapperView.alpha=1;
                          
                          
                          
@@ -521,7 +560,7 @@
     
     if (direction==UIPanGestureRecognizerDirectionLeft)
     {
-        if(self.wrapperView.alpha<=0)
+        if(wrapperView.alpha<=0)
         {
             
             NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
@@ -550,7 +589,7 @@
     }
     else if (direction==UIPanGestureRecognizerDirectionRight)
     {
-        if(self.wrapperView.alpha<=0)
+        if(wrapperView.alpha<=0)
         {
             
             NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
@@ -615,16 +654,16 @@
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^ {
-                             self.wrapperView.frame = menuFrame;
-                             self.videoWrapperView.frame=viewFrame;
+                             wrapperView.frame = menuFrame;
+                             videoWrapperView.frame=viewFrame;
                              videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
-                             self.wrapperView.alpha=0;
+                             wrapperView.alpha=0;
                              
                              
                              
                          }
                          completion:^(BOOL finished) {
-                             minimizedVideoFrame=self.videoWrapperView.frame;
+                             minimizedVideoFrame=videoWrapperView.frame;
                              
                              isExpandedMode=FALSE;
                          }];
@@ -642,20 +681,20 @@
         viewFrame.size.height=200-xOffset*0.5;
         viewFrame.origin.y=trueOffset;
         viewFrame.origin.x=xOffset;
-        float restrictY=self.initialFirstViewFrame.size.height-self.videoWrapperView.frame.size.height-10;
+        float restrictY=self.initialFirstViewFrame.size.height-videoWrapperView.frame.size.height-10;
         
         
-        if (self.wrapperView.frame.origin.y<restrictY && self.wrapperView.frame.origin.y>0) {
+        if (wrapperView.frame.origin.y<restrictY && wrapperView.frame.origin.y>0) {
             [UIView animateWithDuration:0.09
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
-                                 self.wrapperView.frame = menuFrame;
-                                 self.videoWrapperView.frame=viewFrame;
+                                 wrapperView.frame = menuFrame;
+                                 videoWrapperView.frame=viewFrame;
                                  videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                                  
                                  CGFloat percentage = y/self.initialFirstViewFrame.size.height;
-                                 self.wrapperView.alpha= transaparentVw.alpha = 1.0 - percentage;
+                                 wrapperView.alpha= transaparentVw.alpha = 1.0 - percentage;
                                  
                                  
                                  
@@ -674,8 +713,8 @@
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
-                                 self.wrapperView.frame = menuFrame;
-                                 self.videoWrapperView.frame=viewFrame;
+                                 wrapperView.frame = menuFrame;
+                                 videoWrapperView.frame=viewFrame;
                                  videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                              }completion:nil];
             
@@ -690,7 +729,7 @@
 
 -(void)detectPanDirection:(CGPoint )velocity
 {
-    self.downBtn.hidden=TRUE;
+    foldButton.hidden=TRUE;
     BOOL isVerticalGesture = fabs(velocity.y) > fabs(velocity.x);
     
     if (isVerticalGesture) {
