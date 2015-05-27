@@ -21,10 +21,10 @@
         </mutableArray>
     </customFonts>
     <scenes>
-        <!--Video View Controller-->
+        <!--Video Detail View Controller-->
         <scene sceneID="ak9-wg-5yK">
             <objects>
-                <viewController storyboardIdentifier="BSVideoDetailController" id="n1I-NN-SCZ" customClass="VideoViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BSVideoDetailController" id="n1I-NN-SCZ" customClass="VideoDetailViewController" customModule="YouTubeDraggableVideo" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9Af-Ef-Ddf"/>
                         <viewControllerLayoutGuide type="bottom" id="yTV-wD-na9"/>
@@ -331,9 +331,9 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
-                        <outlet property="ibFoldBtn" destination="J4y-nO-xN2" id="Cgw-hF-hDT"/>
-                        <outlet property="ibPageWrapperView" destination="Ga0-Dr-fnl" id="x73-gM-SBg"/>
-                        <outlet property="ibVideoWrapperView" destination="S04-xZ-Hfl" id="J97-B7-4zG"/>
+                        <outlet property="ibFoldButton" destination="J4y-nO-xN2" id="KOm-OJ-24F"/>
+                        <outlet property="ibPageWrapperView" destination="Ga0-Dr-fnl" id="y5g-Fq-Ad4"/>
+                        <outlet property="ibVideoWrapperView" destination="S04-xZ-Hfl" id="hRp-5A-UQZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ETu-wA-gWj" userLabel="First Responder" sceneMemberID="firstResponder"/>
