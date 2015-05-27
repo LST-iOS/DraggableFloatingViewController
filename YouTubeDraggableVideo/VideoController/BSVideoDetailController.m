@@ -12,9 +12,6 @@
 
 
 
-
-
-
 @interface BSVideoDetailController ()
 @end
 
@@ -115,6 +112,24 @@
 
 
 
+#pragma mark- MPMoviePlayerLoadStateDidChange Notification
+
+- (void)MPMoviePlayerLoadStateDidChange:(NSNotification *)notification {
+    if ((player.loadState & MPMovieLoadStatePlaythroughOK) == MPMovieLoadStatePlaythroughOK) {
+        //add your code
+        NSLog(@"Playing OK");
+        self.downBtn.hidden=FALSE;
+        //[self.btnDown bringSubviewToFront:self.player.view];
+    }
+    NSLog(@"loadState=%lu",player.loadState);
+    //[self.btnDown bringSubviewToFront:self.player.view];
+}
+
+
+
+
+
+
 
 
 #pragma mark- Calculate Frames and Store Frame Size
@@ -200,22 +215,117 @@
 
 
 
+#pragma mark - Button Action
 
-#pragma mark- MPMoviePlayerLoadStateDidChange Notification
+- (IBAction)btnDownTapAction:(id)sender {
+    [self minimizeViewOnPan];
+}
 
-- (void)MPMoviePlayerLoadStateDidChange:(NSNotification *)notification {
-    if ((player.loadState & MPMovieLoadStatePlaythroughOK) == MPMovieLoadStatePlaythroughOK) {
-        //add your code
-        NSLog(@"Playing OK");
-        self.downBtn.hidden=FALSE;
-        //[self.btnDown bringSubviewToFront:self.player.view];
+- (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
+    
+    [self expandViewOnPan];
+    for (UIGestureRecognizer *recognizer in self.videoView.gestureRecognizers) {
+        
+        if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+            [self.videoView removeGestureRecognizer:recognizer];
+        }
     }
-    NSLog(@"loadState=%lu",player.loadState);
-    //[self.btnDown bringSubviewToFront:self.player.view];
 }
 
 
 
+
+-(void)minimizeViewOnPan
+{
+    self.downBtn.hidden=TRUE;
+    //    [self.txtViewGrowing resignFirstResponder];
+    CGFloat trueOffset = self.initialFirstViewFrame.size.height - 100;
+    CGFloat xOffset = self.initialFirstViewFrame.size.width-160;
+    
+    //Use this offset to adjust the position of your view accordingly
+    menuFrame.origin.y = trueOffset;
+    menuFrame.origin.x = xOffset;
+    menuFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
+    //menuFrame.size.height=200-xOffset*0.5;
+    
+    // viewFrame.origin.y = trueOffset;
+    //viewFrame.origin.x = xOffset;
+    viewFrame.size.width=self.view.bounds.size.width-xOffset;
+    viewFrame.size.height=200-xOffset*0.5;
+    viewFrame.origin.y=trueOffset;
+    viewFrame.origin.x=xOffset;
+    
+    
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         self.wrapperView.frame = menuFrame;
+                         self.videoView.frame=viewFrame;
+                         player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                         self.wrapperView.alpha=0;
+                         transaparentVw.alpha=0.0;
+                         
+                         
+                     }
+                     completion:^(BOOL finished) {
+                         //add tap gesture
+                         self.tapRecognizer=nil;
+                         if(self.tapRecognizer==nil)
+                         {
+                             self.tapRecognizer= [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
+                             self.tapRecognizer.numberOfTapsRequired=1;
+                             self.tapRecognizer.delegate=self;
+                             [self.videoView addGestureRecognizer:self.tapRecognizer];
+                         }
+                         
+                         isExpandedMode=FALSE;
+                         minimizedVideoFrame=self.videoView.frame;
+                         
+                         if(direction==UIPanGestureRecognizerDirectionDown)
+                         {
+                             [self.onView bringSubviewToFront:self.view];
+                         }
+                     }];
+    
+}
+
+
+
+-(void)expandViewOnPan
+{
+    //    [self.txtViewGrowing resignFirstResponder];
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         self.wrapperView.frame = wrapperFrame;
+                         self.videoView.frame=videoFrame;
+                         self.videoView.alpha=1;
+                         player.view.frame=videoFrame;
+                         self.wrapperView.alpha=1.0;
+                         transaparentVw.alpha=1.0;
+                         
+                         
+                     }
+                     completion:^(BOOL finished) {
+                         player.controlStyle = MPMovieControlStyleDefault;
+                         isExpandedMode=TRUE;
+                         self.downBtn.hidden=FALSE;
+                     }];
+}
+
+
+
+-(void)removeView
+{
+    [self.player stop];
+    [self.videoView removeFromSuperview];
+    [self.wrapperView removeFromSuperview];
+    [transaparentVw removeFromSuperview];
+    
+    
+}
 
 
 #pragma mark- Pan Gesture Delagate
@@ -349,71 +459,6 @@
 
 
 
-//
-//#pragma mark - Keyboard events
-//
-////Handling the keyboard appear and disappering events
-//- (void)keyboardWasShown:(NSNotification*)aNotification
-//{
-//    //__weak typeof(self) weakSelf = self;
-//    NSDictionary* info = [aNotification userInfo];
-////    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-//    [UIView animateWithDuration:0.3f
-//                          delay:0.0f
-//                        options:UIViewAnimationOptionCurveEaseIn
-//                     animations:^{
-////                         float yPosition=self.view.frame.size.height- kbSize.height- self.viewGrowingTextView.frame.size.height;
-////                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
-//                         
-//                         //                         [weakSelf.registerScrView setContentOffset:CGPointMake(0, (weakSelf.userNameTxtfld.frame.origin.y+weakSelf.userNameTxtfld.frame.size.height)-kbSize.height) animated:YES];
-//                         
-//                     }
-//                     completion:^(BOOL finished) {
-//                     }];
-//}
-//
-//
-//- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-//{
-//    // __weak typeof(self) weakSelf = self;
-//    //NSDictionary* info = [aNotification userInfo];
-//    [UIView animateWithDuration:0.3f
-//                          delay:0.0f
-//                        options:UIViewAnimationOptionCurveEaseIn
-//                     animations:^{
-//                         float yPosition=self.view.frame.size.height-self.viewGrowingTextView.frame.size.height;
-//                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
-//                     }
-//                     completion:^(BOOL finished) {
-//                     }];
-//}
-//
-//
-
-
-
-#pragma mark - Text View delegate -
-
-
-
-//
-//#pragma mark- View Function Methods
-//
-//-(void)stGrowingTextViewProperty
-//{
-//    [[NSNotificationCenter defaultCenter] removeObserver:self
-//                                                    name:UIContentSizeCategoryDidChangeNotification
-//                                                  object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-//    
-//    
-//    
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
-//    
-//}
-//
 -(void)animateViewToRight:(UIPanGestureRecognizer *)recognizer{
 //    [self.txtViewGrowing resignFirstResponder];
     [UIView animateWithDuration:0.25
@@ -664,112 +709,6 @@
 
 
 
-- (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
-    
-    [self expandViewOnPan];
-    for (UIGestureRecognizer *recognizer in self.videoView.gestureRecognizers) {
-        
-        if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-            [self.videoView removeGestureRecognizer:recognizer];
-        }
-    }
-}
-
-
-
-
--(void)minimizeViewOnPan
-{
-    self.downBtn.hidden=TRUE;
-//    [self.txtViewGrowing resignFirstResponder];
-    CGFloat trueOffset = self.initialFirstViewFrame.size.height - 100;
-    CGFloat xOffset = self.initialFirstViewFrame.size.width-160;
-    
-    //Use this offset to adjust the position of your view accordingly
-    menuFrame.origin.y = trueOffset;
-    menuFrame.origin.x = xOffset;
-    menuFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
-    //menuFrame.size.height=200-xOffset*0.5;
-    
-    // viewFrame.origin.y = trueOffset;
-    //viewFrame.origin.x = xOffset;
-    viewFrame.size.width=self.view.bounds.size.width-xOffset;
-    viewFrame.size.height=200-xOffset*0.5;
-    viewFrame.origin.y=trueOffset;
-    viewFrame.origin.x=xOffset;
-    
-    
-    [UIView animateWithDuration:0.5
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^ {
-                         self.wrapperView.frame = menuFrame;
-                         self.videoView.frame=viewFrame;
-                         player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
-                         self.wrapperView.alpha=0;
-                         transaparentVw.alpha=0.0;
-                         
-                         
-                     }
-                     completion:^(BOOL finished) {
-                         //add tap gesture
-                         self.tapRecognizer=nil;
-                         if(self.tapRecognizer==nil)
-                         {
-                             self.tapRecognizer= [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
-                             self.tapRecognizer.numberOfTapsRequired=1;
-                             self.tapRecognizer.delegate=self;
-                             [self.videoView addGestureRecognizer:self.tapRecognizer];
-                         }
-                         
-                         isExpandedMode=FALSE;
-                         minimizedVideoFrame=self.videoView.frame;
-                         
-                         if(direction==UIPanGestureRecognizerDirectionDown)
-                         {
-                             [self.onView bringSubviewToFront:self.view];
-                         }
-                     }];
-    
-}
-
-
-
--(void)expandViewOnPan
-{
-//    [self.txtViewGrowing resignFirstResponder];
-    [UIView animateWithDuration:0.5
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^ {
-                         self.wrapperView.frame = wrapperFrame;
-                         self.videoView.frame=videoFrame;
-                         self.videoView.alpha=1;
-                         player.view.frame=videoFrame;
-                         self.wrapperView.alpha=1.0;
-                         transaparentVw.alpha=1.0;
-                         
-                         
-                     }
-                     completion:^(BOOL finished) {
-                         player.controlStyle = MPMovieControlStyleDefault;
-                         isExpandedMode=TRUE;
-                         self.downBtn.hidden=FALSE;
-                     }];
-}
-
-
-
--(void)removeView
-{
-    [self.player stop];
-    [self.videoView removeFromSuperview];
-    [self.wrapperView removeFromSuperview];
-    [transaparentVw removeFromSuperview];
-    
-    
-}
-
 
 
 
@@ -826,11 +765,6 @@
 
 
 
-#pragma mark - Button Action
-
-- (IBAction)btnDownTapAction:(id)sender {
-    [self minimizeViewOnPan];
-}
 
 //- (IBAction)btnSendAction:(id)sender {
 //    [self.txtViewGrowing resignFirstResponder];
@@ -845,4 +779,70 @@
 //                         
 //                     }];
 //}
+
+
+
+//
+//#pragma mark - Keyboard events
+//
+////Handling the keyboard appear and disappering events
+//- (void)keyboardWasShown:(NSNotification*)aNotification
+//{
+//    //__weak typeof(self) weakSelf = self;
+//    NSDictionary* info = [aNotification userInfo];
+////    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+//    [UIView animateWithDuration:0.3f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionCurveEaseIn
+//                     animations:^{
+////                         float yPosition=self.view.frame.size.height- kbSize.height- self.viewGrowingTextView.frame.size.height;
+////                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
+//
+//                         //                         [weakSelf.registerScrView setContentOffset:CGPointMake(0, (weakSelf.userNameTxtfld.frame.origin.y+weakSelf.userNameTxtfld.frame.size.height)-kbSize.height) animated:YES];
+//
+//                     }
+//                     completion:^(BOOL finished) {
+//                     }];
+//}
+//
+//
+//- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+//{
+//    // __weak typeof(self) weakSelf = self;
+//    //NSDictionary* info = [aNotification userInfo];
+//    [UIView animateWithDuration:0.3f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionCurveEaseIn
+//                     animations:^{
+//                         float yPosition=self.view.frame.size.height-self.viewGrowingTextView.frame.size.height;
+//                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
+//                     }
+//                     completion:^(BOOL finished) {
+//                     }];
+//}
+//
+//
+
+
+
+//#pragma mark - Text View delegate -
+//
+//#pragma mark- View Function Methods
+//
+//-(void)stGrowingTextViewProperty
+//{
+//    [[NSNotificationCenter defaultCenter] removeObserver:self
+//                                                    name:UIContentSizeCategoryDidChangeNotification
+//                                                  object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+//
+//
+//
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+//
+//}
+//
+
 @end
