@@ -23,12 +23,12 @@
 @implementation BSVideoDetailController
 {
     //local Frame store
-    CGRect youtubeFrame;
-    CGRect tblFrame;
+    CGRect videoFrame;
+    CGRect minimizedVideoFrame;
+    CGRect wrapperFrame;
     CGRect menuFrame;
     CGRect viewFrame;
-    CGRect minimizedYouTubeFrame;
-    CGRect growingTextViewFrame;;
+//    CGRect growingTextViewFrame;;
     
     //local touch location
     CGFloat _touchPositionInHeaderY;
@@ -65,11 +65,11 @@
     //adding Pan Gesture
     UIPanGestureRecognizer *pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
     pan.delegate=self;
-    [self.viewYouTube addGestureRecognizer:pan];
+    [self.videoView addGestureRecognizer:pan];
     //setting view to Expanded state
     isExpandedMode=TRUE;
     
-    self.btnDown.hidden=TRUE;
+    self.downBtn.hidden=TRUE;
 }
 
 
@@ -100,13 +100,13 @@
     NSURL *urlString = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"sample" ofType:@"mp4"]];
     player  = [[MPMoviePlayerController alloc] initWithContentURL:urlString];
     
-    [player.view setFrame:self.viewYouTube.frame];
+    [player.view setFrame:self.videoView.frame];
     player.controlStyle =  MPMovieControlStyleNone;
     player.shouldAutoplay=YES;
     player.repeatMode = NO;
     player.scalingMode = MPMovieScalingModeAspectFit;
     
-    [self.viewYouTube addSubview:player.view];
+    [self.videoView addSubview:player.view];
     [player prepareToPlay];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerLoadStateDidChange:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
     [self calculateFrames];
@@ -121,33 +121,33 @@
 
 -(void)calculateFrames
 {
-    youtubeFrame=self.viewYouTube.frame;
-    tblFrame=self.wrapperView.frame;
+    videoFrame=self.videoView.frame;
+    wrapperFrame=self.wrapperView.frame;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
     
-    self.viewYouTube.translatesAutoresizingMaskIntoConstraints = YES;
+    self.videoView.translatesAutoresizingMaskIntoConstraints = YES;
     self.wrapperView.translatesAutoresizingMaskIntoConstraints = YES;
-    CGRect frame=self.viewGrowingTextView.frame;
-    growingTextViewFrame=self.viewGrowingTextView.frame;
-    self.viewGrowingTextView.translatesAutoresizingMaskIntoConstraints = YES;
-    self.viewGrowingTextView.frame=frame;
-    frame=self.txtViewGrowing.frame;
-    self.txtViewGrowing.translatesAutoresizingMaskIntoConstraints = YES;
-    self.txtViewGrowing.frame=frame;
+//    CGRect frame=self.viewGrowingTextView.frame;
+//    growingTextViewFrame=self.viewGrowingTextView.frame;
+//    self.viewGrowingTextView.translatesAutoresizingMaskIntoConstraints = YES;
+//    self.viewGrowingTextView.frame=frame;
+//    frame=self.txtViewGrowing.frame;
+//    self.txtViewGrowing.translatesAutoresizingMaskIntoConstraints = YES;
+//    self.txtViewGrowing.frame=frame;
 
     
-    self.viewYouTube.frame=youtubeFrame;
-    self.wrapperView.frame=tblFrame;
+    self.videoView.frame=videoFrame;
+    self.wrapperView.frame=wrapperFrame;
     menuFrame=self.wrapperView.frame;
-    viewFrame=self.viewYouTube.frame;
-    self.player.view.backgroundColor = self.viewYouTube.backgroundColor = [UIColor clearColor];
+    viewFrame=self.videoView.frame;
+    self.player.view.backgroundColor = self.videoView.backgroundColor = [UIColor clearColor];
     //self.player.view.layer.shouldRasterize=YES;
     // self.viewYouTube.layer.shouldRasterize=YES;
     //self.viewTable.layer.shouldRasterize=YES;
     
     restrictOffset=self.initialFirstViewFrame.size.width-200;
     restrictTrueOffset = self.initialFirstViewFrame.size.height - 180;
-    restictYaxis=self.initialFirstViewFrame.size.height-self.viewYouTube.frame.size.height;
+    restictYaxis=self.initialFirstViewFrame.size.height-self.videoView.frame.size.height;
     
     //[[BSUtils sharedInstance] hideLoadingMode:self];
     self.view.hidden=TRUE;
@@ -157,29 +157,29 @@
     [self.onView addSubview:transaparentVw];
     
     [self.onView addSubview:self.wrapperView];
-    [self.onView addSubview:self.viewYouTube];
-    [self stGrowingTextViewProperty];
-    [self.player.view addSubview:self.btnDown];
+    [self.onView addSubview:self.videoView];
+//    [self stGrowingTextViewProperty];
+    [self.player.view addSubview:self.downBtn];
     
     
     //animate Button Down
-    self.btnDown.translatesAutoresizingMaskIntoConstraints = YES;
-    self.btnDown.frame=CGRectMake( self.btnDown.frame.origin.x,  self.btnDown.frame.origin.y-22,  self.btnDown.frame.size.width,  self.btnDown.frame.size.width);
-    CGRect frameBtnDown=self.btnDown.frame;
+    self.downBtn.translatesAutoresizingMaskIntoConstraints = YES;
+    self.downBtn.frame=CGRectMake( self.downBtn.frame.origin.x,  self.downBtn.frame.origin.y-22,  self.downBtn.frame.size.width,  self.downBtn.frame.size.width);
+    CGRect frameBtnDown=self.downBtn.frame;
     
     
     [UIView animateKeyframesWithDuration:2.0 delay:0.0 options:UIViewKeyframeAnimationOptionAutoreverse | UIViewKeyframeAnimationOptionRepeat|UIViewAnimationOptionAllowUserInteraction animations:^{
         [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
-            self.btnDown.transform=CGAffineTransformMakeScale(1.5, 1.5);
+            self.downBtn.transform=CGAffineTransformMakeScale(1.5, 1.5);
             
             [self addShadow];
-            self.btnDown.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y+17, frameBtnDown.size.width, frameBtnDown.size.width);
+            self.downBtn.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y+17, frameBtnDown.size.width, frameBtnDown.size.width);
             
             
         }];
         [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
-            self.btnDown.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y, frameBtnDown.size.width, frameBtnDown.size.width);
-            self.btnDown.transform=CGAffineTransformIdentity;
+            self.downBtn.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y, frameBtnDown.size.width, frameBtnDown.size.width);
+            self.downBtn.transform=CGAffineTransformIdentity;
             [self addShadow];
         }];
     } completion:nil];
@@ -189,11 +189,11 @@
 
 -(void)addShadow
 {
-    self.btnDown.imageView.layer.shadowColor = [UIColor whiteColor].CGColor;
-    self.btnDown.imageView.layer.shadowOffset = CGSizeMake(0, 1);
-    self.btnDown.imageView.layer.shadowOpacity = 1;
-    self.btnDown.imageView.layer.shadowRadius = 4.0;
-    self.btnDown.imageView.clipsToBounds = NO;
+    self.downBtn.imageView.layer.shadowColor = [UIColor whiteColor].CGColor;
+    self.downBtn.imageView.layer.shadowOffset = CGSizeMake(0, 1);
+    self.downBtn.imageView.layer.shadowOpacity = 1;
+    self.downBtn.imageView.layer.shadowRadius = 4.0;
+    self.downBtn.imageView.clipsToBounds = NO;
 }
 
 
@@ -207,7 +207,7 @@
     if ((player.loadState & MPMovieLoadStatePlaythroughOK) == MPMovieLoadStatePlaythroughOK) {
         //add your code
         NSLog(@"Playing OK");
-        self.btnDown.hidden=FALSE;
+        self.downBtn.hidden=FALSE;
         //[self.btnDown bringSubviewToFront:self.player.view];
     }
     NSLog(@"loadState=%lu",player.loadState);
@@ -250,29 +250,25 @@
         [self detectPanDirection:velocity];
         
         //Snag the Y position of the touch when panning begins
-        _touchPositionInHeaderY = [recognizer locationInView:self.viewYouTube].y;
-        _touchPositionInHeaderX = [recognizer locationInView:self.viewYouTube].x;
+        _touchPositionInHeaderY = [recognizer locationInView:self.videoView].y;
+        _touchPositionInHeaderX = [recognizer locationInView:self.videoView].x;
         if(direction==UIPanGestureRecognizerDirectionDown)
         {
             player.controlStyle=MPMovieControlStyleNone;
-            
         }
         
     }
     else if(recognizer.state == UIGestureRecognizerStateChanged){
         if(direction==UIPanGestureRecognizerDirectionDown || direction==UIPanGestureRecognizerDirectionUp)
         {
-            
             CGFloat trueOffset = y - _touchPositionInHeaderY;
             CGFloat xOffset = (y - _touchPositionInHeaderY)*0.35;
             [self adjustViewOnVerticalPan:trueOffset :xOffset recognizer:recognizer];
-            
         }
         else if (direction==UIPanGestureRecognizerDirectionRight || direction==UIPanGestureRecognizerDirectionLeft)
         {
             [self adjustViewOnHorizontalPan:recognizer];
         }
-        
     }
     else if(recognizer.state == UIGestureRecognizerStateEnded){
         
@@ -353,46 +349,46 @@
 
 
 
-
-#pragma mark - Keyboard events
-
-//Handling the keyboard appear and disappering events
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
-    //__weak typeof(self) weakSelf = self;
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         float yPosition=self.view.frame.size.height- kbSize.height- self.viewGrowingTextView.frame.size.height;
-                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
-                         
-                         //                         [weakSelf.registerScrView setContentOffset:CGPointMake(0, (weakSelf.userNameTxtfld.frame.origin.y+weakSelf.userNameTxtfld.frame.size.height)-kbSize.height) animated:YES];
-                         
-                     }
-                     completion:^(BOOL finished) {
-                     }];
-}
-
-
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-{
-    // __weak typeof(self) weakSelf = self;
-    //NSDictionary* info = [aNotification userInfo];
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         float yPosition=self.view.frame.size.height-self.viewGrowingTextView.frame.size.height;
-                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
-                     }
-                     completion:^(BOOL finished) {
-                     }];
-}
-
-
+//
+//#pragma mark - Keyboard events
+//
+////Handling the keyboard appear and disappering events
+//- (void)keyboardWasShown:(NSNotification*)aNotification
+//{
+//    //__weak typeof(self) weakSelf = self;
+//    NSDictionary* info = [aNotification userInfo];
+////    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+//    [UIView animateWithDuration:0.3f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionCurveEaseIn
+//                     animations:^{
+////                         float yPosition=self.view.frame.size.height- kbSize.height- self.viewGrowingTextView.frame.size.height;
+////                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
+//                         
+//                         //                         [weakSelf.registerScrView setContentOffset:CGPointMake(0, (weakSelf.userNameTxtfld.frame.origin.y+weakSelf.userNameTxtfld.frame.size.height)-kbSize.height) animated:YES];
+//                         
+//                     }
+//                     completion:^(BOOL finished) {
+//                     }];
+//}
+//
+//
+//- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+//{
+//    // __weak typeof(self) weakSelf = self;
+//    //NSDictionary* info = [aNotification userInfo];
+//    [UIView animateWithDuration:0.3f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionCurveEaseIn
+//                     animations:^{
+//                         float yPosition=self.view.frame.size.height-self.viewGrowingTextView.frame.size.height;
+//                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
+//                     }
+//                     completion:^(BOOL finished) {
+//                     }];
+//}
+//
+//
 
 
 
@@ -400,35 +396,35 @@
 
 
 
-
-#pragma mark- View Function Methods
-
--(void)stGrowingTextViewProperty
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIContentSizeCategoryDidChangeNotification
-                                                  object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-    
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
-    
-}
-
+//
+//#pragma mark- View Function Methods
+//
+//-(void)stGrowingTextViewProperty
+//{
+//    [[NSNotificationCenter defaultCenter] removeObserver:self
+//                                                    name:UIContentSizeCategoryDidChangeNotification
+//                                                  object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+//    
+//    
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+//    
+//}
+//
 -(void)animateViewToRight:(UIPanGestureRecognizer *)recognizer{
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     [UIView animateWithDuration:0.25
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
                          self.wrapperView.frame = menuFrame;
-                         self.viewYouTube.frame=viewFrame;
+                         self.videoView.frame=viewFrame;
                          player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                          self.wrapperView.alpha=0;
-                         self.viewYouTube.alpha=1;
+                         self.videoView.alpha=1;
                          
                          
                          
@@ -441,17 +437,17 @@
 }
 
 -(void)animateViewToLeft:(UIPanGestureRecognizer *)recognizer{
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     
     [UIView animateWithDuration:0.25
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
                          self.wrapperView.frame = menuFrame;
-                         self.viewYouTube.frame=viewFrame;
+                         self.videoView.frame=viewFrame;
                          player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                          self.wrapperView.alpha=0;
-                         self.viewYouTube.alpha=1;
+                         self.videoView.alpha=1;
                          
                          
                          
@@ -466,7 +462,7 @@
 
 
 -(void)adjustViewOnHorizontalPan:(UIPanGestureRecognizer *)recognizer {
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     CGFloat x = [recognizer locationInView:self.view].x;
     
     if (direction==UIPanGestureRecognizerDirectionLeft)
@@ -541,7 +537,7 @@
 
 -(void)adjustViewOnVerticalPan:(CGFloat)trueOffset :(CGFloat)xOffset recognizer:(UIPanGestureRecognizer *)recognizer
 {
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     CGFloat y = [recognizer locationInView:self.view].y;
     
     if(trueOffset>=restrictTrueOffset+60||xOffset>=restrictOffset+60)
@@ -566,7 +562,7 @@
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^ {
                              self.wrapperView.frame = menuFrame;
-                             self.viewYouTube.frame=viewFrame;
+                             self.videoView.frame=viewFrame;
                              player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                              self.wrapperView.alpha=0;
                              
@@ -574,7 +570,7 @@
                              
                          }
                          completion:^(BOOL finished) {
-                             minimizedYouTubeFrame=self.viewYouTube.frame;
+                             minimizedVideoFrame=self.videoView.frame;
                              
                              isExpandedMode=FALSE;
                          }];
@@ -592,7 +588,7 @@
         viewFrame.size.height=200-xOffset*0.5;
         viewFrame.origin.y=trueOffset;
         viewFrame.origin.x=xOffset;
-        float restrictY=self.initialFirstViewFrame.size.height-self.viewYouTube.frame.size.height-10;
+        float restrictY=self.initialFirstViewFrame.size.height-self.videoView.frame.size.height-10;
         
         
         if (self.wrapperView.frame.origin.y<restrictY && self.wrapperView.frame.origin.y>0) {
@@ -601,7 +597,7 @@
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
                                  self.wrapperView.frame = menuFrame;
-                                 self.viewYouTube.frame=viewFrame;
+                                 self.videoView.frame=viewFrame;
                                  player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                                  
                                  CGFloat percentage = y/self.initialFirstViewFrame.size.height;
@@ -625,7 +621,7 @@
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
                                  self.wrapperView.frame = menuFrame;
-                                 self.viewYouTube.frame=viewFrame;
+                                 self.videoView.frame=viewFrame;
                                  player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                              }completion:nil];
             
@@ -640,7 +636,7 @@
 
 -(void)detectPanDirection:(CGPoint )velocity
 {
-    self.btnDown.hidden=TRUE;
+    self.downBtn.hidden=TRUE;
     BOOL isVerticalGesture = fabs(velocity.y) > fabs(velocity.x);
     
     if (isVerticalGesture) {
@@ -671,10 +667,10 @@
 - (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
     
     [self expandViewOnPan];
-    for (UIGestureRecognizer *recognizer in self.viewYouTube.gestureRecognizers) {
+    for (UIGestureRecognizer *recognizer in self.videoView.gestureRecognizers) {
         
         if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-            [self.viewYouTube removeGestureRecognizer:recognizer];
+            [self.videoView removeGestureRecognizer:recognizer];
         }
     }
 }
@@ -684,8 +680,8 @@
 
 -(void)minimizeViewOnPan
 {
-    self.btnDown.hidden=TRUE;
-    [self.txtViewGrowing resignFirstResponder];
+    self.downBtn.hidden=TRUE;
+//    [self.txtViewGrowing resignFirstResponder];
     CGFloat trueOffset = self.initialFirstViewFrame.size.height - 100;
     CGFloat xOffset = self.initialFirstViewFrame.size.width-160;
     
@@ -708,7 +704,7 @@
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
                          self.wrapperView.frame = menuFrame;
-                         self.viewYouTube.frame=viewFrame;
+                         self.videoView.frame=viewFrame;
                          player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                          self.wrapperView.alpha=0;
                          transaparentVw.alpha=0.0;
@@ -723,11 +719,11 @@
                              self.tapRecognizer= [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
                              self.tapRecognizer.numberOfTapsRequired=1;
                              self.tapRecognizer.delegate=self;
-                             [self.viewYouTube addGestureRecognizer:self.tapRecognizer];
+                             [self.videoView addGestureRecognizer:self.tapRecognizer];
                          }
                          
                          isExpandedMode=FALSE;
-                         minimizedYouTubeFrame=self.viewYouTube.frame;
+                         minimizedVideoFrame=self.videoView.frame;
                          
                          if(direction==UIPanGestureRecognizerDirectionDown)
                          {
@@ -741,15 +737,15 @@
 
 -(void)expandViewOnPan
 {
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     [UIView animateWithDuration:0.5
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         self.wrapperView.frame = tblFrame;
-                         self.viewYouTube.frame=youtubeFrame;
-                         self.viewYouTube.alpha=1;
-                         player.view.frame=youtubeFrame;
+                         self.wrapperView.frame = wrapperFrame;
+                         self.videoView.frame=videoFrame;
+                         self.videoView.alpha=1;
+                         player.view.frame=videoFrame;
                          self.wrapperView.alpha=1.0;
                          transaparentVw.alpha=1.0;
                          
@@ -758,7 +754,7 @@
                      completion:^(BOOL finished) {
                          player.controlStyle = MPMovieControlStyleDefault;
                          isExpandedMode=TRUE;
-                         self.btnDown.hidden=FALSE;
+                         self.downBtn.hidden=FALSE;
                      }];
 }
 
@@ -767,7 +763,7 @@
 -(void)removeView
 {
     [self.player stop];
-    [self.viewYouTube removeFromSuperview];
+    [self.videoView removeFromSuperview];
     [self.wrapperView removeFromSuperview];
     [transaparentVw removeFromSuperview];
     
@@ -828,23 +824,25 @@
 }
 
 
+
+
 #pragma mark - Button Action
 
 - (IBAction)btnDownTapAction:(id)sender {
     [self minimizeViewOnPan];
 }
 
-- (IBAction)btnSendAction:(id)sender {
-    [self.txtViewGrowing resignFirstResponder];
-    self.txtViewGrowing.text=@"";
-    [UIView animateWithDuration:0.2f
-                          delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         
-                         self.viewGrowingTextView.frame=growingTextViewFrame;
-                     }completion:^(BOOL finished) {
-                         
-                     }];
-}
+//- (IBAction)btnSendAction:(id)sender {
+//    [self.txtViewGrowing resignFirstResponder];
+//    self.txtViewGrowing.text=@"";
+//    [UIView animateWithDuration:0.2f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionCurveEaseIn
+//                     animations:^{
+//                         
+//                         self.viewGrowingTextView.frame=growingTextViewFrame;
+//                     }completion:^(BOOL finished) {
+//                         
+//                     }];
+//}
 @end
