@@ -122,11 +122,11 @@
 -(void)calculateFrames
 {
     youtubeFrame=self.viewYouTube.frame;
-    tblFrame=self.viewTable.frame;
+    tblFrame=self.wrapperView.frame;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
     
     self.viewYouTube.translatesAutoresizingMaskIntoConstraints = YES;
-    self.viewTable.translatesAutoresizingMaskIntoConstraints = YES;
+    self.wrapperView.translatesAutoresizingMaskIntoConstraints = YES;
     CGRect frame=self.viewGrowingTextView.frame;
     growingTextViewFrame=self.viewGrowingTextView.frame;
     self.viewGrowingTextView.translatesAutoresizingMaskIntoConstraints = YES;
@@ -137,10 +137,10 @@
 
     
     self.viewYouTube.frame=youtubeFrame;
-    self.viewTable.frame=tblFrame;
-    menuFrame=self.viewTable.frame;
+    self.wrapperView.frame=tblFrame;
+    menuFrame=self.wrapperView.frame;
     viewFrame=self.viewYouTube.frame;
-    self.player.view.backgroundColor=self.viewYouTube.backgroundColor=[UIColor clearColor];
+    self.player.view.backgroundColor = self.viewYouTube.backgroundColor = [UIColor clearColor];
     //self.player.view.layer.shouldRasterize=YES;
     // self.viewYouTube.layer.shouldRasterize=YES;
     //self.viewTable.layer.shouldRasterize=YES;
@@ -156,7 +156,7 @@
     transaparentVw.alpha=0.9;
     [self.onView addSubview:transaparentVw];
     
-    [self.onView addSubview:self.viewTable];
+    [self.onView addSubview:self.wrapperView];
     [self.onView addSubview:self.viewYouTube];
     [self stGrowingTextViewProperty];
     [self.player.view addSubview:self.btnDown];
@@ -308,7 +308,7 @@
         
         else if (direction==UIPanGestureRecognizerDirectionLeft)
         {
-            if(self.viewTable.alpha<=0)
+            if(self.wrapperView.alpha<=0)
             {
                 
                 if(recognizer.view.frame.origin.x<0)
@@ -328,7 +328,7 @@
         
         else if (direction==UIPanGestureRecognizerDirectionRight)
         {
-            if(self.viewTable.alpha<=0)
+            if(self.wrapperView.alpha<=0)
             {
                 
                 
@@ -424,10 +424,10 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         self.viewTable.frame = menuFrame;
+                         self.wrapperView.frame = menuFrame;
                          self.viewYouTube.frame=viewFrame;
                          player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
-                         self.viewTable.alpha=0;
+                         self.wrapperView.alpha=0;
                          self.viewYouTube.alpha=1;
                          
                          
@@ -447,10 +447,10 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         self.viewTable.frame = menuFrame;
+                         self.wrapperView.frame = menuFrame;
                          self.viewYouTube.frame=viewFrame;
                          player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
-                         self.viewTable.alpha=0;
+                         self.wrapperView.alpha=0;
                          self.viewYouTube.alpha=1;
                          
                          
@@ -471,7 +471,7 @@
     
     if (direction==UIPanGestureRecognizerDirectionLeft)
     {
-        if(self.viewTable.alpha<=0)
+        if(self.wrapperView.alpha<=0)
         {
             
             NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
@@ -500,7 +500,7 @@
     }
     else if (direction==UIPanGestureRecognizerDirectionRight)
     {
-        if(self.viewTable.alpha<=0)
+        if(self.wrapperView.alpha<=0)
         {
             
             NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
@@ -565,10 +565,10 @@
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^ {
-                             self.viewTable.frame = menuFrame;
+                             self.wrapperView.frame = menuFrame;
                              self.viewYouTube.frame=viewFrame;
                              player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
-                             self.viewTable.alpha=0;
+                             self.wrapperView.alpha=0;
                              
                              
                              
@@ -595,17 +595,17 @@
         float restrictY=self.initialFirstViewFrame.size.height-self.viewYouTube.frame.size.height-10;
         
         
-        if (self.viewTable.frame.origin.y<restrictY && self.viewTable.frame.origin.y>0) {
+        if (self.wrapperView.frame.origin.y<restrictY && self.wrapperView.frame.origin.y>0) {
             [UIView animateWithDuration:0.09
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
-                                 self.viewTable.frame = menuFrame;
+                                 self.wrapperView.frame = menuFrame;
                                  self.viewYouTube.frame=viewFrame;
                                  player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                                  
                                  CGFloat percentage = y/self.initialFirstViewFrame.size.height;
-                                 self.viewTable.alpha= transaparentVw.alpha = 1.0 - percentage;
+                                 self.wrapperView.alpha= transaparentVw.alpha = 1.0 - percentage;
                                  
                                  
                                  
@@ -624,7 +624,7 @@
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
-                                 self.viewTable.frame = menuFrame;
+                                 self.wrapperView.frame = menuFrame;
                                  self.viewYouTube.frame=viewFrame;
                                  player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
                              }completion:nil];
@@ -703,16 +703,14 @@
     viewFrame.origin.x=xOffset;
     
     
-    
-    
     [UIView animateWithDuration:0.5
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         self.viewTable.frame = menuFrame;
+                         self.wrapperView.frame = menuFrame;
                          self.viewYouTube.frame=viewFrame;
                          player.view.frame=CGRectMake( player.view.frame.origin.x,  player.view.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
-                         self.viewTable.alpha=0;
+                         self.wrapperView.alpha=0;
                          transaparentVw.alpha=0.0;
                          
                          
@@ -748,11 +746,11 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         self.viewTable.frame = tblFrame;
+                         self.wrapperView.frame = tblFrame;
                          self.viewYouTube.frame=youtubeFrame;
                          self.viewYouTube.alpha=1;
                          player.view.frame=youtubeFrame;
-                         self.viewTable.alpha=1.0;
+                         self.wrapperView.alpha=1.0;
                          transaparentVw.alpha=1.0;
                          
                          
@@ -770,7 +768,7 @@
 {
     [self.player stop];
     [self.viewYouTube removeFromSuperview];
-    [self.viewTable removeFromSuperview];
+    [self.wrapperView removeFromSuperview];
     [transaparentVw removeFromSuperview];
     
     
@@ -799,7 +797,6 @@
 - (UITableViewCell *)tableView:(UITableView *)theTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"videoCommentCell";
-    
     
     UITableViewCell *cell;
     cell = (UITableViewCell *)[theTableView dequeueReusableCellWithIdentifier:cellIdentifier];
