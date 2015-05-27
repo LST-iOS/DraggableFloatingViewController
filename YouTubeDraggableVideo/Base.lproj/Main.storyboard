@@ -281,53 +281,15 @@
                                             <outlet property="delegate" destination="n1I-NN-SCZ" id="UTT-yo-a7T"/>
                                         </connections>
                                     </tableView>
-                                    <view alpha="0.85000002384185791" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tcs-xn-Afk">
-                                        <rect key="frame" x="0.0" y="519" width="320" height="49"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECF-3B-Ps9">
-                                                <rect key="frame" x="281" y="9" width="34" height="31"/>
-                                                <color key="backgroundColor" red="0.16979409280454938" green="0.049207960543436347" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="34" id="lax-xh-fV7"/>
-                                                    <constraint firstAttribute="height" constant="31" id="xne-87-kvV"/>
-                                                </constraints>
-                                                <state key="normal">
-                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="btnSendAction:" destination="n1I-NN-SCZ" eventType="touchUpInside" id="tZQ-Kf-Zz9"/>
-                                                </connections>
-                                            </button>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oDo-GD-aOw" customClass="BSGrowingTextView">
-                                                <rect key="frame" x="5" y="7" width="272" height="30"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            </view>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstItem="ECF-3B-Ps9" firstAttribute="leading" secondItem="oDo-GD-aOw" secondAttribute="trailing" constant="4" id="3mE-F1-Loy"/>
-                                            <constraint firstItem="oDo-GD-aOw" firstAttribute="top" secondItem="tcs-xn-Afk" secondAttribute="top" constant="7" id="9Cy-gT-fuX"/>
-                                            <constraint firstAttribute="bottom" secondItem="ECF-3B-Ps9" secondAttribute="bottom" constant="9" id="NlQ-ck-fWM"/>
-                                            <constraint firstAttribute="trailing" secondItem="ECF-3B-Ps9" secondAttribute="trailing" constant="5" id="Rzy-DU-LfE"/>
-                                            <constraint firstItem="oDo-GD-aOw" firstAttribute="leading" secondItem="tcs-xn-Afk" secondAttribute="leading" constant="5" id="WXG-44-ZMV"/>
-                                            <constraint firstItem="ECF-3B-Ps9" firstAttribute="top" secondItem="tcs-xn-Afk" secondAttribute="top" constant="9" id="XV1-X6-Y1p"/>
-                                            <constraint firstAttribute="height" constant="49" id="key-WR-cYr"/>
-                                            <constraint firstAttribute="bottom" secondItem="oDo-GD-aOw" secondAttribute="bottom" constant="12" id="vu3-74-KEu"/>
-                                        </constraints>
-                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="gfU-9o-R98" firstAttribute="leading" secondItem="Ga0-Dr-fnl" secondAttribute="leading" id="48J-WP-gv6"/>
                                     <constraint firstItem="YlA-ja-eae" firstAttribute="leading" secondItem="Ga0-Dr-fnl" secondAttribute="leading" id="6So-7j-dgR"/>
                                     <constraint firstAttribute="trailing" secondItem="YlA-ja-eae" secondAttribute="trailing" id="B3C-GE-s56"/>
-                                    <constraint firstItem="tcs-xn-Afk" firstAttribute="top" secondItem="gfU-9o-R98" secondAttribute="bottom" id="Evy-1K-beY"/>
                                     <constraint firstItem="gfU-9o-R98" firstAttribute="top" secondItem="YlA-ja-eae" secondAttribute="bottom" constant="5" id="GU6-gl-Mco"/>
-                                    <constraint firstAttribute="trailing" secondItem="tcs-xn-Afk" secondAttribute="trailing" id="PwM-kf-HL9"/>
                                     <constraint firstAttribute="trailing" secondItem="gfU-9o-R98" secondAttribute="trailing" id="QbT-2d-yaw"/>
                                     <constraint firstItem="YlA-ja-eae" firstAttribute="top" secondItem="Ga0-Dr-fnl" secondAttribute="top" constant="204" id="Xoy-Y7-Cbk"/>
-                                    <constraint firstItem="tcs-xn-Afk" firstAttribute="leading" secondItem="Ga0-Dr-fnl" secondAttribute="leading" id="jEv-ig-XIL"/>
-                                    <constraint firstAttribute="bottom" secondItem="tcs-xn-Afk" secondAttribute="bottom" id="t1y-ql-qX1"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S04-xZ-Hfl">
@@ -372,8 +334,6 @@
                     <connections>
                         <outlet property="btnDown" destination="J4y-nO-xN2" id="wTf-7v-tOc"/>
                         <outlet property="tblView" destination="gfU-9o-R98" id="vtM-ki-Bgh"/>
-                        <outlet property="txtViewGrowing" destination="oDo-GD-aOw" id="Jsz-ah-VBj"/>
-                        <outlet property="viewGrowingTextView" destination="tcs-xn-Afk" id="cVb-Y7-s6o"/>
                         <outlet property="viewYouTube" destination="S04-xZ-Hfl" id="wFu-hd-yVu"/>
                         <outlet property="wrapperView" destination="Ga0-Dr-fnl" id="mfd-Kc-07p"/>
                     </connections>

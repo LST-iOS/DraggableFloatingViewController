@@ -28,7 +28,7 @@
     CGRect menuFrame;
     CGRect viewFrame;
     CGRect minimizedYouTubeFrame;
-    CGRect growingTextViewFrame;;
+//    CGRect growingTextViewFrame;;
     
     //local touch location
     CGFloat _touchPositionInHeaderY;
@@ -127,13 +127,13 @@
     
     self.viewYouTube.translatesAutoresizingMaskIntoConstraints = YES;
     self.wrapperView.translatesAutoresizingMaskIntoConstraints = YES;
-    CGRect frame=self.viewGrowingTextView.frame;
-    growingTextViewFrame=self.viewGrowingTextView.frame;
-    self.viewGrowingTextView.translatesAutoresizingMaskIntoConstraints = YES;
-    self.viewGrowingTextView.frame=frame;
-    frame=self.txtViewGrowing.frame;
-    self.txtViewGrowing.translatesAutoresizingMaskIntoConstraints = YES;
-    self.txtViewGrowing.frame=frame;
+//    CGRect frame=self.viewGrowingTextView.frame;
+//    growingTextViewFrame=self.viewGrowingTextView.frame;
+//    self.viewGrowingTextView.translatesAutoresizingMaskIntoConstraints = YES;
+//    self.viewGrowingTextView.frame=frame;
+//    frame=self.txtViewGrowing.frame;
+//    self.txtViewGrowing.translatesAutoresizingMaskIntoConstraints = YES;
+//    self.txtViewGrowing.frame=frame;
 
     
     self.viewYouTube.frame=youtubeFrame;
@@ -158,7 +158,7 @@
     
     [self.onView addSubview:self.wrapperView];
     [self.onView addSubview:self.viewYouTube];
-    [self stGrowingTextViewProperty];
+//    [self stGrowingTextViewProperty];
     [self.player.view addSubview:self.btnDown];
     
     
@@ -353,46 +353,46 @@
 
 
 
-
-#pragma mark - Keyboard events
-
-//Handling the keyboard appear and disappering events
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
-    //__weak typeof(self) weakSelf = self;
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         float yPosition=self.view.frame.size.height- kbSize.height- self.viewGrowingTextView.frame.size.height;
-                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
-                         
-                         //                         [weakSelf.registerScrView setContentOffset:CGPointMake(0, (weakSelf.userNameTxtfld.frame.origin.y+weakSelf.userNameTxtfld.frame.size.height)-kbSize.height) animated:YES];
-                         
-                     }
-                     completion:^(BOOL finished) {
-                     }];
-}
-
-
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-{
-    // __weak typeof(self) weakSelf = self;
-    //NSDictionary* info = [aNotification userInfo];
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         float yPosition=self.view.frame.size.height-self.viewGrowingTextView.frame.size.height;
-                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
-                     }
-                     completion:^(BOOL finished) {
-                     }];
-}
-
-
+//
+//#pragma mark - Keyboard events
+//
+////Handling the keyboard appear and disappering events
+//- (void)keyboardWasShown:(NSNotification*)aNotification
+//{
+//    //__weak typeof(self) weakSelf = self;
+//    NSDictionary* info = [aNotification userInfo];
+////    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+//    [UIView animateWithDuration:0.3f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionCurveEaseIn
+//                     animations:^{
+////                         float yPosition=self.view.frame.size.height- kbSize.height- self.viewGrowingTextView.frame.size.height;
+////                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
+//                         
+//                         //                         [weakSelf.registerScrView setContentOffset:CGPointMake(0, (weakSelf.userNameTxtfld.frame.origin.y+weakSelf.userNameTxtfld.frame.size.height)-kbSize.height) animated:YES];
+//                         
+//                     }
+//                     completion:^(BOOL finished) {
+//                     }];
+//}
+//
+//
+//- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+//{
+//    // __weak typeof(self) weakSelf = self;
+//    //NSDictionary* info = [aNotification userInfo];
+//    [UIView animateWithDuration:0.3f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionCurveEaseIn
+//                     animations:^{
+//                         float yPosition=self.view.frame.size.height-self.viewGrowingTextView.frame.size.height;
+//                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
+//                     }
+//                     completion:^(BOOL finished) {
+//                     }];
+//}
+//
+//
 
 
 
@@ -400,26 +400,26 @@
 
 
 
-
-#pragma mark- View Function Methods
-
--(void)stGrowingTextViewProperty
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIContentSizeCategoryDidChangeNotification
-                                                  object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-    
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
-    
-}
-
+//
+//#pragma mark- View Function Methods
+//
+//-(void)stGrowingTextViewProperty
+//{
+//    [[NSNotificationCenter defaultCenter] removeObserver:self
+//                                                    name:UIContentSizeCategoryDidChangeNotification
+//                                                  object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+//    
+//    
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+//    
+//}
+//
 -(void)animateViewToRight:(UIPanGestureRecognizer *)recognizer{
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     [UIView animateWithDuration:0.25
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
@@ -441,7 +441,7 @@
 }
 
 -(void)animateViewToLeft:(UIPanGestureRecognizer *)recognizer{
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     
     [UIView animateWithDuration:0.25
                           delay:0.0
@@ -466,7 +466,7 @@
 
 
 -(void)adjustViewOnHorizontalPan:(UIPanGestureRecognizer *)recognizer {
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     CGFloat x = [recognizer locationInView:self.view].x;
     
     if (direction==UIPanGestureRecognizerDirectionLeft)
@@ -541,7 +541,7 @@
 
 -(void)adjustViewOnVerticalPan:(CGFloat)trueOffset :(CGFloat)xOffset recognizer:(UIPanGestureRecognizer *)recognizer
 {
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     CGFloat y = [recognizer locationInView:self.view].y;
     
     if(trueOffset>=restrictTrueOffset+60||xOffset>=restrictOffset+60)
@@ -685,7 +685,7 @@
 -(void)minimizeViewOnPan
 {
     self.btnDown.hidden=TRUE;
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     CGFloat trueOffset = self.initialFirstViewFrame.size.height - 100;
     CGFloat xOffset = self.initialFirstViewFrame.size.width-160;
     
@@ -741,7 +741,7 @@
 
 -(void)expandViewOnPan
 {
-    [self.txtViewGrowing resignFirstResponder];
+//    [self.txtViewGrowing resignFirstResponder];
     [UIView animateWithDuration:0.5
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
@@ -834,17 +834,17 @@
     [self minimizeViewOnPan];
 }
 
-- (IBAction)btnSendAction:(id)sender {
-    [self.txtViewGrowing resignFirstResponder];
-    self.txtViewGrowing.text=@"";
-    [UIView animateWithDuration:0.2f
-                          delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         
-                         self.viewGrowingTextView.frame=growingTextViewFrame;
-                     }completion:^(BOOL finished) {
-                         
-                     }];
-}
+//- (IBAction)btnSendAction:(id)sender {
+//    [self.txtViewGrowing resignFirstResponder];
+//    self.txtViewGrowing.text=@"";
+//    [UIView animateWithDuration:0.2f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionCurveEaseIn
+//                     animations:^{
+//                         
+//                         self.viewGrowingTextView.frame=growingTextViewFrame;
+//                     }completion:^(BOOL finished) {
+//                         
+//                     }];
+//}
 @end
