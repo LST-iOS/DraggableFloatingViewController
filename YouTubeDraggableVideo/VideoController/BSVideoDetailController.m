@@ -100,8 +100,103 @@
     
     foldButton.hidden=TRUE;
     [foldButton addTarget:self action:@selector(onTabDownButton) forControlEvents:UIControlEventTouchUpInside];
-
+    
+    // orientation behaver
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(orientationChanged:)
+                                                 name:UIDeviceOrientationDidChangeNotification
+                                               object:nil];
 }
+
+- (void)orientationChanged:(NSNotification *)notification{
+    [self adjustViewsForOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+}
+
+
+//deault
+- (BOOL) isFullScreen {
+    NSLog(@"isFullScreen");
+    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!");
+    return false;
+}
+//default
+- (void) goFullScreen {
+    NSLog(@"goFullScreen");
+    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!!!");
+    //                    self.secondViewController.player.controlStyle =  MPMovieControlStyleDefault;
+    //                    self.secondViewController.player.fullscreen = YES;
+    //                      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willExitFullscreen:) name:MPMoviePlayerWillExitFullscreenNotification object:nil];
+}
+//    - (void)willExitFullscreen:(NSNotification*)notification {
+//    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+//    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerWillExitFullscreenNotification object:nil];
+//    }
+
+
+
+
+- (void) adjustViewsForOrientation:(UIInterfaceOrientation) orientation {
+    
+    NSLog(@"adjust for orientation:%ld", (long)orientation);
+    
+    switch (orientation)
+    {
+        case UIInterfaceOrientationPortrait:
+        case UIInterfaceOrientationPortraitUpsideDown:
+        {
+            NSLog(@"portrait called;");
+            //load the portrait view
+                // FIX: rewrite after
+            if([self isFullScreen])
+            {
+                if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+                {
+                    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
+                }
+            }
+            
+        }
+        break;
+
+        //　横だったら、フルスクリーンにする
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+        {
+            NSLog(@"landscape called;");
+            
+//            if(self.secondViewController!=nil)
+//            {
+            
+            
+                 if(![self isFullScreen])// && wrapperView.alpha >= 1)
+                {
+                
+                    // FIX: rewrite after
+                    [self goFullScreen];
+                }
+                /* else if( self.secondViewController.viewTable.alpha<=0)
+                 {
+                 if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+                 [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
+                 } */
+//            }
+        }
+        break;
+        
+        case UIInterfaceOrientationUnknown:break;
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 #pragma mark - Button Action

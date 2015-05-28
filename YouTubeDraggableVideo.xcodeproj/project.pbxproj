@@ -16,8 +16,9 @@
 		253F2E581A7F5A4A007FD89E /* FirstVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 253F2E541A7F5A4A007FD89E /* FirstVC.m */; };
 		253F2E591A7F5A4A007FD89E /* BSVideoDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253F2E571A7F5A4A007FD89E /* BSVideoDetailController.m */; };
 		253F2E5C1A7F6027007FD89E /* profilePhoto.png in Resources */ = {isa = PBXBuildFile; fileRef = 253F2E5B1A7F6027007FD89E /* profilePhoto.png */; };
-		B04E93BD1B167F2C004384E8 /* VideoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04E93BC1B167F2C004384E8 /* VideoDetailViewController.swift */; };
 		B04E93C31B168CEB004384E8 /* test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B04E93C21B168CEB004384E8 /* test.mp4 */; };
+		B04E93CB1B16946A004384E8 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04E93C81B16946A004384E8 /* FirstViewController.swift */; };
+		B04E93CC1B16946A004384E8 /* VideoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04E93C91B16946A004384E8 /* VideoDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,10 +48,11 @@
 		253F2E561A7F5A4A007FD89E /* BSVideoDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSVideoDetailController.h; sourceTree = "<group>"; };
 		253F2E571A7F5A4A007FD89E /* BSVideoDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSVideoDetailController.m; sourceTree = "<group>"; };
 		253F2E5B1A7F6027007FD89E /* profilePhoto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profilePhoto.png; sourceTree = "<group>"; };
-		B04E93BB1B167F2B004384E8 /* YouTubeDraggableVideo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "YouTubeDraggableVideo-Bridging-Header.h"; sourceTree = "<group>"; };
-		B04E93BC1B167F2C004384E8 /* VideoDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailViewController.swift; sourceTree = "<group>"; };
 		B04E93C21B168CEB004384E8 /* test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.mp4; sourceTree = "<group>"; };
 		B04E93C41B168D16004384E8 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
+		B04E93C81B16946A004384E8 /* FirstViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
+		B04E93C91B16946A004384E8 /* VideoDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailViewController.swift; sourceTree = "<group>"; };
+		B04E93CA1B16946A004384E8 /* YouTubeDraggableVideo-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YouTubeDraggableVideo-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +94,7 @@
 		253F2E291A7F5907007FD89E /* YouTubeDraggableVideo */ = {
 			isa = PBXGroup;
 			children = (
-				B04E93B71B167A2C004384E8 /* VideoViewController */,
+				B04E93C71B16946A004384E8 /* Swift */,
 				253F2E5A1A7F5A68007FD89E /* AppDelegate */,
 				253F2E521A7F5A4A007FD89E /* FirstController */,
 				B04E93C11B168CEB004384E8 /* sampleMovies */,
@@ -159,15 +161,6 @@
 			path = AppDelegate;
 			sourceTree = "<group>";
 		};
-		B04E93B71B167A2C004384E8 /* VideoViewController */ = {
-			isa = PBXGroup;
-			children = (
-				B04E93BB1B167F2B004384E8 /* YouTubeDraggableVideo-Bridging-Header.h */,
-				B04E93BC1B167F2C004384E8 /* VideoDetailViewController.swift */,
-			);
-			path = VideoViewController;
-			sourceTree = "<group>";
-		};
 		B04E93C11B168CEB004384E8 /* sampleMovies */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,6 +168,16 @@
 				B04E93C21B168CEB004384E8 /* test.mp4 */,
 			);
 			path = sampleMovies;
+			sourceTree = "<group>";
+		};
+		B04E93C71B16946A004384E8 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				B04E93C81B16946A004384E8 /* FirstViewController.swift */,
+				B04E93C91B16946A004384E8 /* VideoDetailViewController.swift */,
+				B04E93CA1B16946A004384E8 /* YouTubeDraggableVideo-Bridging-Header.h */,
+			);
+			path = Swift;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,10 +282,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B04E93CB1B16946A004384E8 /* FirstViewController.swift in Sources */,
+				B04E93CC1B16946A004384E8 /* VideoDetailViewController.swift in Sources */,
 				253F2E581A7F5A4A007FD89E /* FirstVC.m in Sources */,
 				253F2E301A7F5907007FD89E /* AppDelegate.m in Sources */,
 				253F2E2D1A7F5907007FD89E /* main.m in Sources */,
-				B04E93BD1B167F2C004384E8 /* VideoDetailViewController.swift in Sources */,
 				253F2E591A7F5A4A007FD89E /* BSVideoDetailController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -409,7 +413,7 @@
 				INFOPLIST_FILE = YouTubeDraggableVideo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "YouTubeDraggableVideo/VideoViewController/YouTubeDraggableVideo-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "YouTubeDraggableVideo/Swift/YouTubeDraggableVideo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -422,7 +426,7 @@
 				INFOPLIST_FILE = YouTubeDraggableVideo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "YouTubeDraggableVideo/VideoViewController/YouTubeDraggableVideo-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "YouTubeDraggableVideo/Swift/YouTubeDraggableVideo-Bridging-Header.h";
 			};
 			name = Release;
 		};

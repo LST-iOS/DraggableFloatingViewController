@@ -1,0 +1,86 @@
+//
+//  VideoViewController.swift
+//  YouTubeDraggableVideo
+//
+//  Created by Takuya Okamoto on 2015/05/28.
+//  Copyright (c) 2015年 Sandeep Mukherjee. All rights reserved.
+//
+
+import Foundation
+import UIKit
+
+class VideoDetailViewController: BSVideoDetailController {
+
+    @IBOutlet weak var ibVideoWrapperView: UIView!
+    @IBOutlet weak var ibPageWrapperView: UIView!
+    @IBOutlet weak var ibFoldButton: UIButton!
+
+    var moviePlayer: MPMoviePlayerController!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupMoviePlayer()
+        self.setupWithVideoView(moviePlayer.view, videoWrapperView: ibVideoWrapperView, pageWrapperView: ibPageWrapperView, foldButton: ibFoldButton)
+        
+        // play
+        let seconds = 1.0
+        let delay = seconds * Double(NSEC_PER_SEC)// nanoseconds per seconds
+        var dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            self.moviePlayer.play()
+        })
+        
+    }
+    
+    
+    
+    func setupMoviePlayer() {
+        // setupMovie
+        // var url = NSURL(string: "http://jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v")
+        var url = NSURL.fileURLWithPath(NSBundle.mainBundle().pathForResource("test", ofType: "mp4")!)
+        moviePlayer = MPMoviePlayerController(contentURL: url)
+        moviePlayer.fullscreen = false
+        moviePlayer.controlStyle = MPMovieControlStyle.Embedded
+        moviePlayer.repeatMode = MPMovieRepeatMode.None
+        moviePlayer.prepareToPlay()
+        
+        // for movie loop
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "moviePlayBackDidFinish:",
+            name: MPMoviePlayerPlaybackDidFinishNotification,
+            object: moviePlayer)
+    }
+    // movie loop
+    func moviePlayBackDidFinish(notification: NSNotification) {
+        println("moviePlayBackDidFinish:")
+        moviePlayer.play()
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: MPMoviePlayerPlaybackDidFinishNotification, object: nil)
+    }
+    
+    
+    
+    override func isFullScreen() -> Bool {
+        println("isFullScreen: " + String(stringInterpolationSegment: moviePlayer.fullscreen))
+        return moviePlayer.fullscreen
+    }
+    override func goFullScreen() {
+        println("goFullScreen")
+        moviePlayer.controlStyle = MPMovieControlStyle.Fullscreen
+        moviePlayer.fullscreen = true
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willExitFullScreen", name:MPMoviePlayerWillExitFullscreenNotification, object: nil)
+    }
+    func willExitFullScreen() {
+        println("willExitFullScreen")
+        var portrait = UIInterfaceOrientation.Portrait.rawValue as NSNumber
+        if (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication().statusBarOrientation))
+        {
+            UIDevice.currentDevice().setValue(portrait, forKey: "orientation")
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: MPMoviePlayerWillExitFullscreenNotification, object: nil)
+        }
+    }
+
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+}

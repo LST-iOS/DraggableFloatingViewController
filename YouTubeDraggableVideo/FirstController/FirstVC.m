@@ -48,78 +48,12 @@
 {
     [super viewWillAppear:animated];
   
-      [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(orientationChanged:)    name:UIDeviceOrientationDidChangeNotification  object:nil];
-
-  }
-- (void)orientationChanged:(NSNotification *)notification{
-    [self adjustViewsForOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-
 }
 
-- (void) adjustViewsForOrientation:(UIInterfaceOrientation) orientation {
-    
-    switch (orientation)
-    {
-        case UIInterfaceOrientationPortrait:
-        case UIInterfaceOrientationPortraitUpsideDown:
-        {
-            //load the portrait view
-            if(self.secondViewController!=nil)
-            {
-                // FIX: rewrite after
-//                if(!self.secondViewController.player .fullscreen)
-//                {
-                    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-                [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-//                }
-            }
-        }
-            
-            break;
-        case UIInterfaceOrientationLandscapeLeft:
-        case UIInterfaceOrientationLandscapeRight:
-        {
-            if(self.secondViewController!=nil)
-            {
-                 NSLog(@"landscape called;");
-            
-                
-               // if(!self.secondViewController.player.fullscreen && self.secondViewController.viewTable.alpha>=1)
-                //{
 
-                
-                // FIX: rewrite after
-//                 self.secondViewController.player.controlStyle =  MPMovieControlStyleDefault;
-//                self.secondViewController.player .fullscreen = YES;
-                
-                
-                
-//                      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willExitFullscreen:) name:MPMoviePlayerWillExitFullscreenNotification object:nil];
-                
-                
-                //}
-               /* else if( self.secondViewController.viewTable.alpha<=0)
-                {
-                    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-                        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-                } */
-                
-          
-            }
-            
-            
-        }
-            break;
-        case UIInterfaceOrientationUnknown:break;
-    }
-}
 
-- (void)willExitFullscreen:(NSNotification*)notification {
-    
-    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerWillExitFullscreenNotification object:nil];
-}
+
+
 
 -(void)viewDidAppear:(BOOL)animated
 {

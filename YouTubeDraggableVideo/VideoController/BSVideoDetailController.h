@@ -35,6 +35,11 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 
 @interface BSVideoDetailController : UIViewController<UIGestureRecognizerDelegate>//,UITextViewDelegate>
 
+- (BOOL) isFullScreen;// please override
+- (void) goFullScreen;// please override
+
+
+
 @property (nonatomic, assign) id  <RemoveViewDelegate> delegate;
 
 - (void) setupWithVideoView: (UIView *)vView
@@ -42,6 +47,7 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
             pageWrapperView: (UIView *)ibWrapperView
                  foldButton: (UIButton *)ibFoldBtn;
 - (void) removeView;
+
 
 @property(nonatomic)CGRect initialFirstViewFrame;
 @property(nonatomic,strong) UIPanGestureRecognizer *panRecognizer;
