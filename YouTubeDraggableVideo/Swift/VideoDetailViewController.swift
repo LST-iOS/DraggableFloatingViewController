@@ -59,6 +59,8 @@ class VideoDetailViewController: BSVideoDetailController {
     
     
     
+    
+    // MARK: FullScreen Method
     override func isFullScreen() -> Bool {
         println("isFullScreen: " + String(stringInterpolationSegment: moviePlayer.fullscreen))
         return moviePlayer.fullscreen
@@ -71,9 +73,9 @@ class VideoDetailViewController: BSVideoDetailController {
     }
     func willExitFullScreen() {
         println("willExitFullScreen")
-        var portrait = UIInterfaceOrientation.Portrait.rawValue as NSNumber
         if (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication().statusBarOrientation))
         {
+            var portrait = UIInterfaceOrientation.Portrait.rawValue as NSNumber
             UIDevice.currentDevice().setValue(portrait, forKey: "orientation")
             NSNotificationCenter.defaultCenter().removeObserver(self, name: MPMoviePlayerWillExitFullscreenNotification, object: nil)
         }

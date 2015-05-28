@@ -18,19 +18,12 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-
-
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "orientationChanged:", name: UIDeviceOrientationDidChangeNotification, object: nil)
     }
     
     override func viewWillDisappear(animated: Bool) {
-        // FIX: rewrite after
-        //    if(self.secondViewController!=nil && !self.secondViewController.player.isFullscreen)
-        //    {
-        //        [self.secondViewController removeView];
-        //        [self.secondViewController.view removeFromSuperview];
-        //        self.secondViewController=nil;
-        //    }
+        if self.secondViewController != nil && !self.secondViewController.isFullScreen() {
+            removeSecondController()
+        }
     }
     
     @IBAction func onTapButton(sender: AnyObject) {
@@ -43,22 +36,21 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
         super.didReceiveMemoryWarning()
     }
 
-    
-    func showSecondController() {
-
-        
-        var portrait = UIInterfaceOrientation.Portrait.rawValue as NSNumber
-        if (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication().statusBarOrientation)) {
-            UIDevice.currentDevice().setValue(portrait, forKey: "orientation")
-        }
-        
-
+    func removeSecondController() {
         if self.secondViewController != nil {
             self.secondViewController.removeView()
             self.secondViewController.view.removeFromSuperview()
             self.secondViewController = nil
         }
+    }
+    
+    func showSecondController() {
+        if (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication().statusBarOrientation)) {
+            var portrait = UIInterfaceOrientation.Portrait.rawValue as NSNumber
+            UIDevice.currentDevice().setValue(portrait, forKey: "orientation")
+        }
         
+        removeSecondController()
         
         self.secondViewController = self.storyboard!.instantiateViewControllerWithIdentifier("VideoDetailController") as! BSVideoDetailController
         
