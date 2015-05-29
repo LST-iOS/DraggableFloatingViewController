@@ -11,7 +11,6 @@
 #import "QuartzCore/CALayer.h"
 
 
-
 @interface BSVideoDetailController ()
 @end
 
@@ -53,10 +52,20 @@
     UIView *videoView;
     
     UIView *bodyArea;
+    
+
+    
+    CGFloat maxH;
+    CGFloat maxW;
+    CGFloat videoHeightRatio;
+    CGFloat finalViewOffsetY;
+    CGFloat minimamVideoHeight;
 }
 
 //@synthesize player;
 
+const CGFloat finalMargin = 2.0;
+const CGFloat minimamVideoWidth = 140;
 
 
 
@@ -135,14 +144,17 @@
 }
 
 - (void) beforeApperAnimation {
-
+    maxH = self.parentViewFrame.size.height;
+    maxW = self.parentViewFrame.size.width;
     CGFloat videoHeight = videoWrapper.frame.size.height;
+    CGFloat videoWidth = videoWrapper.frame.size.width;
+    videoHeightRatio = videoHeight / videoWidth;
+    finalViewOffsetY = maxH - (minimamVideoWidth * videoHeightRatio) - finalMargin;
+    minimamVideoHeight = minimamVideoWidth * videoHeightRatio;
     
     bodyArea = [[UIView alloc] init];
-    bodyArea.frame = CGRectMake(0,
-                                videoHeight,
-                                self.parentViewFrame.size.width,
-                                self.parentViewFrame.size.height - videoHeight);
+    bodyArea.frame = CGRectMake(0, videoHeight,
+                                maxW, maxH - videoHeight);
     [pageWrapper addSubview:bodyArea];
 
     bodyArea.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.1f];
@@ -348,92 +360,6 @@
 }
 
 
--(void)expandViewOnPan
-{
-    NSLog(@"expandViewOnPan");
-    //        [self.txtViewGrowing resignFirstResponder];
-    [UIView animateWithDuration:0.5
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^ {
-                         pageWrapper.frame = pageWrapperFrame;
-                         videoWrapper.frame=videoWrapperFrame;
-                         videoWrapper.alpha=1;
-                         videoView.frame=videoWrapperFrame;
-                         pageWrapper.alpha=1.0;
-                         transparentBlackSheet.alpha=1.0;
-                         
-                         bodyArea.frame = CGRectMake(
-                                                     0,
-                                                     videoView.frame.size.height,// keep stay on bottom of videoView
-                                                     bodyArea.frame.size.width,
-                                                     bodyArea.frame.size.height
-                                                     );
-                     }
-                     completion:^(BOOL finished) {
-                         //                         player.controlStyle = MPMovieControlStyleDefault;
-                         [self.delegate onExpanded];
-                         isExpandedMode=TRUE;
-                         foldButton.hidden=FALSE;
-                     }];
-}
-
-
-
--(void)minimizeViewOnPan
-{
-    foldButton.hidden = TRUE;
-    //    [self.txtViewGrowing resignFirstResponder];
-    CGFloat trueOffset = self.parentViewFrame.size.height - 100;
-    CGFloat xOffset = self.parentViewFrame.size.width - 160;
-    
-    //Use this offset to adjust the position of your view accordingly
-    wFrame.origin.y = trueOffset;
-    wFrame.origin.x = xOffset;
-    wFrame.size.width=self.parentViewFrame.size.width - xOffset;
-    //menuFrame.size.height=200-xOffset*0.5;
-    
-    // viewFrame.origin.y = trueOffset;
-    //viewFrame.origin.x = xOffset;
-    vFrame.size.width = self.view.bounds.size.width - xOffset;
-    vFrame.size.height = 200 - xOffset * 0.5;
-    vFrame.origin.y = trueOffset;
-    vFrame.origin.x = xOffset;
-    
-    
-    [UIView animateWithDuration:0.5
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^ {
-                         pageWrapper.frame = wFrame;
-                         videoWrapper.frame = vFrame;
-                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                         pageWrapper.alpha=0;
-                         transparentBlackSheet.alpha=0.0;
-                     }
-                     completion:^(BOOL finished) {
-                         //add tap gesture
-                         self.tapRecognizer=nil;
-                         if(self.tapRecognizer==nil)
-                         {
-                             self.tapRecognizer= [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
-                             self.tapRecognizer.numberOfTapsRequired=1;
-                             self.tapRecognizer.delegate=self;
-                             [videoWrapper addGestureRecognizer:self.tapRecognizer];
-                         }
-                         
-                         isExpandedMode=FALSE;
-                         minimizedVideoFrame=videoWrapper.frame;
-                         
-                         if(direction==UIPanGestureRecognizerDirectionDown)
-                         {
-                             [self.onView bringSubviewToFront:self.view];
-                         }
-                     }];
-}
-
-
-
 
 -(void)removeView
 {
@@ -482,10 +408,11 @@
 
 -(void)panAction:(UIPanGestureRecognizer *)recognizer
 {
+    
     CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
     
+    
     if(recognizer.state == UIGestureRecognizerStateBegan) {
-
         direction = UIPanGestureRecognizerDirectionUndefined;
         //storing direction
         CGPoint velocity = [recognizer velocityInView:recognizer.view];
@@ -498,18 +425,22 @@
             // player.controlStyle = MPMovieControlStyleNone;
             [self.delegate onDownGesture];
         }
-        
     }
-    else if(recognizer.state == UIGestureRecognizerStateChanged){
-        if(direction==UIPanGestureRecognizerDirectionDown || direction==UIPanGestureRecognizerDirectionUp) {
-            CGFloat viewOffsetY = touchPosInViewY - _touchPositionInHeaderY;
-            CGFloat xOffset = viewOffsetY * 0.35;
-            [self adjustViewOnVerticalPan:viewOffsetY :xOffset recognizer:recognizer];
+
+    
+    else if(recognizer.state == UIGestureRecognizerStateChanged) {
+        if(direction == UIPanGestureRecognizerDirectionDown || direction == UIPanGestureRecognizerDirectionUp) {
+            CGFloat newOffsetY = touchPosInViewY - _touchPositionInHeaderY;
+            CGFloat newOffsetX = newOffsetY * 0.35;
+            [self adjustViewOnVerticalPan:newOffsetY :newOffsetX recognizer:recognizer];
         }
         else if (direction==UIPanGestureRecognizerDirectionRight || direction==UIPanGestureRecognizerDirectionLeft) {
             [self adjustViewOnHorizontalPan:recognizer];
         }
     }
+
+
+    
     else if(recognizer.state == UIGestureRecognizerStateEnded){
         
         if(direction==UIPanGestureRecognizerDirectionDown || direction==UIPanGestureRecognizerDirectionUp)
@@ -588,109 +519,211 @@
 
 
 
--(void)adjustViewOnVerticalPan:(CGFloat)viewOffsetY :(CGFloat)xOffset recognizer:(UIPanGestureRecognizer *)recognizer
+
+
+
+-(void)detectPanDirection:(CGPoint )velocity
 {
-    //    [self.txtViewGrowing resignFirstResponder];
-    CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
+    foldButton.hidden=TRUE;
+    BOOL isVerticalGesture = fabs(velocity.y) > fabs(velocity.x);
     
-    // final minimization
-    if(viewOffsetY >= minimizedOffsetY+60 || xOffset >= minimizedOffsetX+60)
+    if (isVerticalGesture)
     {
-        CGFloat finalOffsetY = self.parentViewFrame.size.height - 100;
-        CGFloat finalOffsetX = self.parentViewFrame.size.width-160;
-        //Use this offset to adjust the position of your view accordingly
-        wFrame.origin.y = finalOffsetY;
-        wFrame.origin.x = finalOffsetX;
-        wFrame.size.width = self.parentViewFrame.size.width - finalOffsetX;
-        
-        vFrame.size.width = self.view.bounds.size.width - finalOffsetX;
-        vFrame.size.height = 200 - finalOffsetX * 0.5;
-        vFrame.origin.y = finalOffsetY;
-        vFrame.origin.x = finalOffsetX;
-        
-        [UIView animateWithDuration:0.05
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^ {
-                             pageWrapper.frame = wFrame;
-                             videoWrapper.frame=vFrame;
-                             videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                             pageWrapper.alpha=0;
-                         }
-                         completion:^(BOOL finished) {
-                             minimizedVideoFrame=videoWrapper.frame;
-                             isExpandedMode=FALSE;
-                         }];
-        [recognizer setTranslation:CGPointZero inView:recognizer.view];
+        if (velocity.y > 0) {
+            direction = UIPanGestureRecognizerDirectionDown;
+            
+        } else {
+            direction = UIPanGestureRecognizerDirectionUp;
+        }
     }
-    // normal pan animation
-    else {
-        
-        //Use this offset to adjust the position of your view accordingly
-        wFrame.origin.y = viewOffsetY;
-        wFrame.origin.x = xOffset;
-        wFrame.size.width = self.parentViewFrame.size.width - xOffset;
-
-        vFrame.origin.y = viewOffsetY;
-        vFrame.origin.x = xOffset;
-        vFrame.size.width = self.view.bounds.size.width - xOffset;
-        vFrame.size.height = 200 - xOffset * 0.5;
-
-        float restrictY = self.parentViewFrame.size.height - videoWrapper.frame.size.height - 10;
-        
-        if (pageWrapper.frame.origin.y < restrictY && pageWrapper.frame.origin.y > 0) {
-            [UIView animateWithDuration:0.09
-                                  delay:0.0
-                                options:UIViewAnimationOptionCurveEaseInOut
-                             animations:^ {
-                                 pageWrapper.frame = wFrame;
-                                 videoWrapper.frame = vFrame;
-                                 videoView.frame = CGRectMake(
-                                                              videoView.frame.origin.x,  videoView.frame.origin.x,
-                                                              vFrame.size.width, vFrame.size.height
-                                                              );
-                                 bodyArea.frame = CGRectMake(
-                                                             0,
-                                                             videoView.frame.size.height,// keep stay on bottom of videoView
-                                                             bodyArea.frame.size.width,
-                                                             bodyArea.frame.size.height
-                                                             );
-                                 
-                                 CGFloat percentage = touchPosInViewY / self.parentViewFrame.size.height;
-                                 pageWrapper.alpha= transparentBlackSheet.alpha = 1.0 - percentage;
-                             }
-                             completion:^(BOOL finished) {
-                                 if(direction==UIPanGestureRecognizerDirectionDown)
-                                 {
-                                     [self.onView bringSubviewToFront:self.view];
-                                 }
-                             }];
-        }
-        else if (wFrame.origin.y < restrictY && wFrame.origin.y > 0)
+    else
+    {
+        if(velocity.x > 0)
         {
-            NSLog(@"aaaaaaaaaaaaaaa");
-            [UIView animateWithDuration:0.09
-                                  delay:0.0
-                                options:UIViewAnimationOptionCurveEaseInOut
-                             animations:^ {
-                                 pageWrapper.frame = wFrame;
-                                 videoWrapper.frame = vFrame;
-                                 videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                                 
-                                 bodyArea.frame = CGRectMake(
-                                                             0,
-                                                             videoView.frame.size.height,// keep stay on bottom of videoView
-                                                             bodyArea.frame.size.width,
-                                                             bodyArea.frame.size.height
-                                                             );
-
-                             }completion:nil];
+            direction = UIPanGestureRecognizerDirectionRight;
         }
-        [recognizer setTranslation:CGPointZero inView:recognizer.view];
+        else
+        {
+            direction = UIPanGestureRecognizerDirectionLeft;
+        }
     }
 }
 
 
+
+
+
+
+-(void)adjustViewOnVerticalPan:(CGFloat)newOffsetY :(CGFloat)newOffsetX recognizer:(UIPanGestureRecognizer *)recognizer
+{
+    CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
+    //    [self.txtViewGrowing resignFirstResponder];
+    
+//    CGFloat finalMinimazationRange = 1;
+//    CGFloat finalViewOffsetY = maxH - (minimamVideoWidth * videoHeightRatio) - finalMargin;
+//    CGFloat diffForFinal = finalViewOffsetY - viewOffsetY;
+    
+    
+    // final minimization
+    //if (viewOffsetY >= minimizedOffsetY + finalMinimazationRange || xOffset >= minimizedOffsetX + finalMinimazationRange)
+//    if (diffForFinal <= finalMinimazationRange)
+//    {
+//        NSLog(@"final minimization");
+////        CGFloat finalOffsetY = self.parentViewFrame.size.height - 100;
+////        CGFloat finalOffsetX = self.parentViewFrame.size.width - 160;
+////        //Use this offset to adjust the position of your view accordingly
+////        wFrame.origin.y = finalOffsetY;
+////        wFrame.origin.x = finalOffsetX;
+////        wFrame.size.width = self.parentViewFrame.size.width - finalOffsetX - finalMargin;
+////        
+////        vFrame.size.width = self.view.bounds.size.width - finalOffsetX - finalMargin;
+////        vFrame.size.height = (200 - finalOffsetX * 0.5) - finalMargin;
+////        vFrame.origin.y = finalOffsetY - finalMargin * 2;
+////        vFrame.origin.x = finalOffsetX;
+//        
+//        //---------------------------------------
+//        
+//        vFrame.size.width = minimamVideoWidth;//self.view.bounds.size.width - xOffset;
+//        // ↓
+//        vFrame.size.height = vFrame.size.width * videoHeightRatio;//(200 - xOffset * 0.5);
+//        vFrame.origin.y = maxH - vFrame.size.height - finalMargin;//trueOffset - finalMargin * 2;
+//        vFrame.origin.x = maxW - vFrame.size.width - finalMargin;
+//        wFrame.origin.y = vFrame.origin.y;
+//        wFrame.origin.x = vFrame.origin.x;
+//
+//        
+//        [UIView animateWithDuration:0.05
+//                              delay:0.0
+//                            options:UIViewAnimationOptionCurveEaseInOut
+//                         animations:^ {
+//                             pageWrapper.frame = wFrame;
+//                             videoWrapper.frame = vFrame;
+//                             videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
+//                             pageWrapper.alpha=0;
+//                         }
+//                         completion:^(BOOL finished) {
+//                             minimizedVideoFrame=videoWrapper.frame;
+//                             isExpandedMode=FALSE;
+//                         }];
+//        [recognizer setTranslation:CGPointZero inView:recognizer.view];
+//    }
+//    // normal pan animation
+//    else {
+    
+    
+    NSLog(@"normal minimization");
+
+    CGFloat progressRate = newOffsetY / finalViewOffsetY;
+    NSLog(@"newOffsetY %f", newOffsetY);
+    NSLog(@"finalViewOffsetY %f", finalViewOffsetY);
+    NSLog(@"progressRate %f", progressRate);
+    
+//    //Use this offset to adjust the position of your view accordingly
+//    wFrame.origin.y = newOffsetY;
+//    wFrame.origin.x = newOffsetX;
+//    wFrame.size.width = self.parentViewFrame.size.width - newOffsetX;
+//    
+//    vFrame.origin.y = newOffsetY;
+//    vFrame.origin.x = newOffsetX;
+//    vFrame.size.width = self.view.bounds.size.width - newOffsetX;
+//    vFrame.size.height = 200 - newOffsetX * 0.5;
+    
+    if(progressRate >= 0.97) {
+        progressRate = 1;
+        newOffsetY = finalViewOffsetY;
+    }
+    
+    [self calcNewFrameWithParsentage:progressRate newOffsetY:newOffsetY];
+
+//    if (pageWrapper.frame.origin.y < finalViewOffsetY && pageWrapper.frame.origin.y > 0) {
+    if (progressRate <= 1 && pageWrapper.frame.origin.y > 0) {
+        [UIView animateWithDuration:0.09
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^ {
+                             pageWrapper.frame = wFrame;
+                             videoWrapper.frame = vFrame;
+                             videoView.frame = CGRectMake(
+                                                          videoView.frame.origin.x,  videoView.frame.origin.x,
+                                                          vFrame.size.width, vFrame.size.height
+                                                          );
+                             bodyArea.frame = CGRectMake(
+                                                         0,
+                                                         videoView.frame.size.height,// keep stay on bottom of videoView
+                                                         bodyArea.frame.size.width,
+                                                         bodyArea.frame.size.height
+                                                         );
+                             
+                             CGFloat percentage = touchPosInViewY / self.parentViewFrame.size.height;
+                             pageWrapper.alpha= transparentBlackSheet.alpha = 1.0 - percentage;
+                         }
+                         completion:^(BOOL finished) {
+                             if(direction==UIPanGestureRecognizerDirectionDown)
+                             {
+                                 [self.onView bringSubviewToFront:self.view];
+                             }
+                         }];
+    }
+    // what is this case...?
+    else if (wFrame.origin.y < finalViewOffsetY && wFrame.origin.y > 0)
+    {
+        [UIView animateWithDuration:0.09
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^ {
+                             pageWrapper.frame = wFrame;
+                             videoWrapper.frame = vFrame;
+                             videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
+                             
+                             bodyArea.frame = CGRectMake(
+                                                         0,
+                                                         videoView.frame.size.height,// keep stay on bottom of videoView
+                                                         bodyArea.frame.size.width,
+                                                         bodyArea.frame.size.height
+                                                         );
+                         }completion:nil];
+    }
+
+    
+    [recognizer setTranslation:CGPointZero inView:recognizer.view];
+
+    //    }
+}
+
+
+
+- (void) calcNewFrameWithParsentage:(CGFloat) persentage newOffsetY:(CGFloat) newOffsetY{
+    CGFloat newWidth = minimamVideoWidth + ((maxW - minimamVideoWidth) * (1 - persentage));
+    CGFloat newHeight = newWidth * videoHeightRatio;
+    
+    CGFloat realNewOffsetX = maxW - newWidth - (finalMargin * persentage);
+    CGFloat realNewOffsetY = maxH - newHeight - (finalMargin * persentage);
+    
+    NSLog(@"realNewOffsetX %f", realNewOffsetX);
+    NSLog(@"realNewOffsetY %f", realNewOffsetY);
+    
+    vFrame.size.width = newWidth;//self.view.bounds.size.width - xOffset;
+    vFrame.size.height = newHeight;//(200 - xOffset * 0.5);
+    
+    vFrame.origin.y = newOffsetY;//trueOffset - finalMargin * 2;
+    wFrame.origin.y = newOffsetY;
+    
+    vFrame.origin.x = realNewOffsetX;//maxW - vFrame.size.width - finalMargin;
+    wFrame.origin.x = realNewOffsetX;
+    //    vFrame.origin.y = realNewOffsetY;//trueOffset - finalMargin * 2;
+    //    wFrame.origin.y = realNewOffsetY;
+   
+}
+
+-(void) setFinalFrame {
+    vFrame.size.width = minimamVideoWidth;//self.view.bounds.size.width - xOffset;
+    // ↓
+    vFrame.size.height = vFrame.size.width * videoHeightRatio;//(200 - xOffset * 0.5);
+    vFrame.origin.y = maxH - vFrame.size.height - finalMargin;//trueOffset - finalMargin * 2;
+    vFrame.origin.x = maxW - vFrame.size.width - finalMargin;
+    wFrame.origin.y = vFrame.origin.y;
+    wFrame.origin.x = vFrame.origin.x;
+}
 
 
 -(void)adjustViewOnHorizontalPan:(UIPanGestureRecognizer *)recognizer {
@@ -706,7 +739,6 @@
             CGPoint velocity = [recognizer velocityInView:recognizer.view];
             
             BOOL isVerticalGesture = fabs(velocity.y) > fabs(velocity.x);
-            
             
             
             CGPoint translation = [recognizer translationInView:recognizer.view];
@@ -767,6 +799,97 @@
 
 
 
+-(void)expandViewOnPan
+{
+    NSLog(@"expandViewOnPan");
+    //        [self.txtViewGrowing resignFirstResponder];
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         pageWrapper.frame = pageWrapperFrame;
+                         videoWrapper.frame = videoWrapperFrame;
+                         videoWrapper.alpha = 1;
+                         videoView.frame = videoWrapperFrame;
+                         pageWrapper.alpha = 1.0;
+                         transparentBlackSheet.alpha = 1.0;
+                         
+                         bodyArea.frame = CGRectMake(
+                                                     0,
+                                                     videoView.frame.size.height,// keep stay on bottom of videoView
+                                                     bodyArea.frame.size.width,
+                                                     bodyArea.frame.size.height
+                                                     );
+                     }
+                     completion:^(BOOL finished) {
+                         //                         player.controlStyle = MPMovieControlStyleDefault;
+                         [self.delegate onExpanded];
+                         isExpandedMode = TRUE;
+                         foldButton.hidden = FALSE;
+                     }];
+}
+
+
+
+-(void)minimizeViewOnPan
+{
+    foldButton.hidden = TRUE;
+    //    [self.txtViewGrowing resignFirstResponder];
+    
+    
+//    CGFloat xOffset = maxW - 160;
+    
+    //Use this offset to adjust the position of your view accordingly
+    //menuFrame.size.height=200-xOffset*0.5;
+    
+    // viewFrame.origin.y = trueOffset;
+    //viewFrame.origin.x = xOffset;
+    
+    //    CGFloat trueOffset = self.parentViewFrame.size.height - 100;
+//    wFrame.size.width = self.parentViewFrame.size.width - xOffset;
+    
+//    wFrame.size.width = self.parentViewFrame.size.width - finalOffsetX - finalMargin;
+//    vFrame.size.width = self.view.bounds.size.width - finalOffsetX - finalMargin;
+//    vFrame.size.height = (200 - finalOffsetX * 0.5) - finalMargin;
+//    vFrame.origin.y = finalOffsetY - finalMargin * 2;
+    
+    [self setFinalFrame];
+    
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         pageWrapper.frame = wFrame;
+                         videoWrapper.frame = vFrame;
+                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
+                         pageWrapper.alpha=0;
+                         transparentBlackSheet.alpha=0.0;
+                     }
+                     completion:^(BOOL finished) {
+                         //add tap gesture
+                         self.tapRecognizer=nil;
+                         if(self.tapRecognizer==nil)
+                         {
+                             self.tapRecognizer= [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
+                             self.tapRecognizer.numberOfTapsRequired=1;
+                             self.tapRecognizer.delegate=self;
+                             [videoWrapper addGestureRecognizer:self.tapRecognizer];
+                         }
+                         
+                         isExpandedMode=FALSE;
+                         minimizedVideoFrame=videoWrapper.frame;
+                         
+                         if(direction==UIPanGestureRecognizerDirectionDown)
+                         {
+                             [self.onView bringSubviewToFront:self.view];
+                         }
+                     }];
+}
+
+
+
+
+
 -(void)animateViewToRight:(UIPanGestureRecognizer *)recognizer{
 //    [self.txtViewGrowing resignFirstResponder];
     [UIView animateWithDuration:0.25
@@ -811,38 +934,6 @@
 }
 
 
-
-
-
-
-
--(void)detectPanDirection:(CGPoint )velocity
-{
-    foldButton.hidden=TRUE;
-    BOOL isVerticalGesture = fabs(velocity.y) > fabs(velocity.x);
-    
-    if (isVerticalGesture) {
-        if (velocity.y > 0) {
-            direction = UIPanGestureRecognizerDirectionDown;
-            
-        } else {
-            direction = UIPanGestureRecognizerDirectionUp;
-        }
-    }
-    else
-        
-    {
-        if(velocity.x > 0)
-        {
-            direction = UIPanGestureRecognizerDirectionRight;
-        }
-        else
-        {
-            direction = UIPanGestureRecognizerDirectionLeft;
-        }
-        
-    }
-}
 
 
 
