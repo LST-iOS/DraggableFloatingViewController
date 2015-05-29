@@ -387,6 +387,33 @@
     }
 }
 
+
+-(void)expandViewOnPan
+{
+    //        [self.txtViewGrowing resignFirstResponder];
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         wrapperView.frame = wrapperFrame;
+                         videoWrapperView.frame=videoWrapperFrame;
+                         videoWrapperView.alpha=1;
+                         videoView.frame=videoWrapperFrame;
+                         wrapperView.alpha=1.0;
+                         transaparentVw.alpha=1.0;
+                         
+                         
+                     }
+                     completion:^(BOOL finished) {
+                         //                         player.controlStyle = MPMovieControlStyleDefault;
+                         [self.delegate onExpanded];
+                         isExpandedMode=TRUE;
+                         foldButton.hidden=FALSE;
+                     }];
+}
+
+
+
 -(void)minimizeViewOnPan
 {
     foldButton.hidden=TRUE;
@@ -437,34 +464,8 @@
                              [self.onView bringSubviewToFront:self.view];
                          }
                      }];
-    
 }
 
-
-
--(void)expandViewOnPan
-{
-//        [self.txtViewGrowing resignFirstResponder];
-    [UIView animateWithDuration:0.5
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^ {
-                         wrapperView.frame = wrapperFrame;
-                         videoWrapperView.frame=videoWrapperFrame;
-                         videoWrapperView.alpha=1;
-                         videoView.frame=videoWrapperFrame;
-                         wrapperView.alpha=1.0;
-                         transaparentVw.alpha=1.0;
-                         
-                         
-                     }
-                     completion:^(BOOL finished) {
-//                         player.controlStyle = MPMovieControlStyleDefault;
-                         [self.delegate onExpanded];
-                         isExpandedMode=TRUE;
-                         foldButton.hidden=FALSE;
-                     }];
-}
 
 
 
@@ -475,8 +476,6 @@
     [videoWrapperView removeFromSuperview];
     [wrapperView removeFromSuperview];
     [transaparentVw removeFromSuperview];
-    
-    
 }
 
 
@@ -493,7 +492,9 @@
     {
         return NO;
     }
-    return YES;
+    else {
+        return YES;
+    }
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer

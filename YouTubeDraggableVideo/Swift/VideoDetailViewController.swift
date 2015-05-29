@@ -22,7 +22,7 @@ class VideoDetailViewController: BSVideoDetailController {
         
         setupMoviePlayer()
         self.setupWithVideoView(moviePlayer.view, videoWrapperView: ibVideoWrapperView, pageWrapperView: ibPageWrapperView, foldButton: ibFoldButton)
-        
+
         // play
         let seconds = 1.0
         let delay = seconds * Double(NSEC_PER_SEC)// nanoseconds per seconds
