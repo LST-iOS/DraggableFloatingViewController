@@ -170,7 +170,7 @@
     
     
     [self.view addSubview:self.secondViewController.view];
-    self.secondViewController.onView=self.view;
+    self.secondViewController.parentView=self.view;
     
     [UIView animateWithDuration:0.9f animations:^{
         self.secondViewController.view.transform=CGAffineTransformMakeScale(1.0, 1.0);

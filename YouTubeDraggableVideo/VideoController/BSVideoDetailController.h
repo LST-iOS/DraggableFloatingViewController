@@ -12,7 +12,9 @@
 
 
 @protocol RemoveViewDelegate
+@required
 - (void)removeController;
+@optional
 - (void)onExpanded;//MPMoviewControlStyleDeafult
 - (void)onRemoveView;//stop the player
 - (void)onDownGesture;//MPMoviewControlStyleNone
@@ -32,8 +34,8 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 
 
 
-
-@interface BSVideoDetailController : UIViewController<UIGestureRecognizerDelegate>//,UITextViewDelegate>
+// PLEASE EXTEND
+@interface BSVideoDetailController : UIViewController<UIGestureRecognizerDelegate>
 
 @property(nonatomic,strong) UIView *bodyArea;// please add subview on this
 - (BOOL) isFullScreen;// please override
@@ -55,12 +57,4 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 @property(nonatomic,strong) UITapGestureRecognizer *tapRecognizer;
 @property(nonatomic,strong) UIView *parentView;
 
-//@property (strong, nonatomic) MPMoviePlayerController *player;
-//@property (weak, nonatomic) IBOutlet UITableView *tblView;
-//@property (weak, nonatomic) IBOutlet UIView *viewGrowingTextView;
-//@property (weak, nonatomic) IBOutlet UITextView *txtViewGrowing;
-//@property (weak, nonatomic) IBOutlet UIView *viewShare;
-//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnDownBottomLayout;
-//- (IBAction)btnDownTapAction:(id)sender;
-//- (IBAction)btnSendAction:(id)sender;
 @end

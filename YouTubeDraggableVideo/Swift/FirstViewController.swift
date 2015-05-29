@@ -54,6 +54,7 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
     }
     
     func showSecondController() {
+
         if (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication().statusBarOrientation)) {
             var portrait = UIInterfaceOrientation.Portrait.rawValue as NSNumber
             UIDevice.currentDevice().setValue(portrait, forKey: "orientation")
@@ -91,6 +92,7 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
         });
     }
 
+    // TODO: rename
     func removeController() {
         println("🌠removeController")
         self.secondViewController = nil
