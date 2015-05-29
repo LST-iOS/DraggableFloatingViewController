@@ -57,7 +57,7 @@
 
 
 
-//
+//PLEASE OVERRIDE
 //- (void)viewDidLoad {
 //    [super viewDidLoad];
 
@@ -71,6 +71,28 @@
 //}
 
 
+//PLEASE OVERRIDE
+- (BOOL) isFullScreen {
+    NSLog(@"isFullScreen");
+    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!");
+    return false;
+}
+
+//PLEASE OVERRIDE
+- (void) goFullScreen {
+    NSLog(@"goFullScreen");
+    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!!!");
+    //                    self.secondViewController.player.controlStyle =  MPMovieControlStyleDefault;
+    //                    self.secondViewController.player.fullscreen = YES;
+    //                      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willExitFullscreen:) name:MPMoviePlayerWillExitFullscreenNotification object:nil];
+}
+//    - (void)willExitFullscreen:(NSNotification*)notification {
+//    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+//    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerWillExitFullscreenNotification object:nil];
+//    }
+
+
 
 
 
@@ -79,7 +101,6 @@
             pageWrapperView: (UIView *)ibWrapperView
                  foldButton: (UIButton *)ibFoldBtn
 {
-    
     videoView = vView;
     videoWrapperView = ibVideoWrapperView;
     wrapperView = ibWrapperView;
@@ -99,7 +120,7 @@
     isExpandedMode=TRUE;
     
     foldButton.hidden=TRUE;
-    [foldButton addTarget:self action:@selector(onTabDownButton) forControlEvents:UIControlEventTouchUpInside];
+    [foldButton addTarget:self action:@selector(onTapDownButton) forControlEvents:UIControlEventTouchUpInside];
     
     // orientation behaver
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -108,31 +129,28 @@
                                                object:nil];
 }
 
+
+
+
+#pragma mark - Button Action
+
+- (void) onTapDownButton {
+    [self minimizeViewOnPan];
+    NSLog(@"onTapButons");
+}
+
+//- (IBAction)btnDownTapAction:(id)sender {
+//    NSLog(@"btnDownTapAction");
+//    [self minimizeViewOnPan];
+//}
+
+
+
+#pragma mark - Orientation
+
 - (void)orientationChanged:(NSNotification *)notification{
     [self adjustViewsForOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 }
-
-
-//deault
-- (BOOL) isFullScreen {
-    NSLog(@"isFullScreen");
-    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!");
-    return false;
-}
-//default
-- (void) goFullScreen {
-    NSLog(@"goFullScreen");
-    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!!!");
-    //                    self.secondViewController.player.controlStyle =  MPMovieControlStyleDefault;
-    //                    self.secondViewController.player.fullscreen = YES;
-    //                      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willExitFullscreen:) name:MPMoviePlayerWillExitFullscreenNotification object:nil];
-}
-//    - (void)willExitFullscreen:(NSNotification*)notification {
-//    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-//    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerWillExitFullscreenNotification object:nil];
-//    }
-
 
 
 
@@ -195,21 +213,6 @@
 
 
 
-
-
-
-
-#pragma mark - Button Action
-
-- (void) onTabDownButton {
-    [self minimizeViewOnPan];
-    NSLog(@"onTapButons");
-}
-
-//- (IBAction)btnDownTapAction:(id)sender {
-//    NSLog(@"btnDownTapAction");
-//    [self minimizeViewOnPan];
-//}
 
 
 
@@ -295,7 +298,7 @@
     videoWrapperFrame=videoWrapperView.frame;
     wrapperFrame=wrapperView.frame;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-    
+
     videoWrapperView.translatesAutoresizingMaskIntoConstraints = YES;
     wrapperView.translatesAutoresizingMaskIntoConstraints = YES;
 //    CGRect frame=self.viewGrowingTextView.frame;
@@ -334,7 +337,7 @@
 
     
     //animate Button Down
-    foldButton.translatesAutoresizingMaskIntoConstraints = YES;
+//    foldButton.translatesAutoresizingMaskIntoConstraints = YES;
 //    foldButton.frame=CGRectMake( foldButton.frame.origin.x,  foldButton.frame.origin.y-22,  foldButton.frame.size.width,  foldButton.frame.size.width);
 //    CGRect frameBtnDown=foldButton.frame;
     
@@ -353,15 +356,15 @@
 //    } completion:nil];
 }
 
-
--(void)addShadow
-{
-    foldButton.imageView.layer.shadowColor = [UIColor whiteColor].CGColor;
-    foldButton.imageView.layer.shadowOffset = CGSizeMake(0, 1);
-    foldButton.imageView.layer.shadowOpacity = 1;
-    foldButton.imageView.layer.shadowRadius = 4.0;
-    foldButton.imageView.clipsToBounds = NO;
-}
+//
+//-(void)addShadow
+//{
+//    foldButton.imageView.layer.shadowColor = [UIColor whiteColor].CGColor;
+//    foldButton.imageView.layer.shadowOffset = CGSizeMake(0, 1);
+//    foldButton.imageView.layer.shadowOpacity = 1;
+//    foldButton.imageView.layer.shadowRadius = 4.0;
+//    foldButton.imageView.clipsToBounds = NO;
+//}
 
 
 
