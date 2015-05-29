@@ -22,33 +22,35 @@
     //local Frame store
     CGRect videoWrapperFrame;
     CGRect minimizedVideoFrame;
-    CGRect wrapperFrame;
+    CGRect pageWrapperFrame;
+
     CGRect wFrame;
     CGRect vFrame;
-//    CGRect growingTextViewFrame;;
     
     //local touch location
     CGFloat _touchPositionInHeaderY;
     CGFloat _touchPositionInHeaderX;
     
     //local restriction Offset--- for checking out of bound
-    float restrictOffset,restrictTrueOffset,restictYaxis;
+    float minimizedOffsetX,minimizedOffsetY;//,restictYaxis;
     
     //detecting Pan gesture Direction
     UIPanGestureRecognizerDirection direction;
     
     
     //Creating a transparent Black layer view
-    UIView *transaparentVw;
+    UIView *transparentBlackSheet;
     
     //Just to Check wether view  is expanded or not
     BOOL isExpandedMode;
     
-    UIView *videoView;
     
-    UIView *wrapperView;
-    UIView *videoWrapperView;
+    
+    UIView *pageWrapper;
+    UIView *videoWrapper;
     UIButton *foldButton;
+
+    UIView *videoView;
 }
 
 //@synthesize player;
@@ -102,8 +104,8 @@
                  foldButton: (UIButton *)ibFoldBtn
 {
     videoView = vView;
-    videoWrapperView = ibVideoWrapperView;
-    wrapperView = ibWrapperView;
+    videoWrapper = ibVideoWrapperView;
+    pageWrapper = ibWrapperView;
     foldButton = ibFoldBtn;
     
     // [[BSUtils sharedInstance] showLoadingMode:self];
@@ -114,7 +116,7 @@
     //adding Pan Gesture
     UIPanGestureRecognizer *pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
     pan.delegate=self;
-    [videoWrapperView addGestureRecognizer:pan];
+    [videoWrapper addGestureRecognizer:pan];
 
     //setting view to Expanded state
     isExpandedMode=TRUE;
@@ -238,23 +240,9 @@
 
 -(void)addVideoView
 {
-//    NSURL *urlString = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"sample" ofType:@"mp4"]];
-//    MPMoviePlayerController *player  = [[MPMoviePlayerController alloc] initWithContentURL:urlString];
-//    player.controlStyle =  MPMovieControlStyleNone;
-//    player.shouldAutoplay=YES;
-//    player.repeatMode = NO;
-//    player.scalingMode = MPMovieScalingModeAspectFit;
-//    videoView = player.view;
+    [videoView setFrame:videoWrapper.frame];
+    [videoWrapper addSubview:videoView];
 
-//    videoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"test"]];
-
-    
-    [videoView setFrame:videoWrapperView.frame];
-    [videoWrapperView addSubview:videoView];
-
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerLoadStateDidChange:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
-
-//    [player prepareToPlay];
     [self calculateFrames];
     
     [NSTimer scheduledTimerWithTimeInterval:0.4f
@@ -264,21 +252,6 @@
                                     repeats:NO];
 }
 
-
-
-//
-//#pragma mark- MPMoviePlayerLoadStateDidChange Notification
-//
-//- (void)MPMoviePlayerLoadStateDidChange:(NSNotification *)notification {
-//    if ((player.loadState & MPMovieLoadStatePlaythroughOK) == MPMovieLoadStatePlaythroughOK) {
-//        //add your code
-//        NSLog(@"Playing OK");
-//        [self showFoldButton];
-//        //[self.btnDown bringSubviewToFront:self.videoView];
-//    }
-//    NSLog(@"loadState=%lu",player.loadState);
-//    //[self.btnDown bringSubviewToFront:self.videoView];
-//}
 
 
 
@@ -295,73 +268,42 @@
 
 -(void)calculateFrames
 {
-    videoWrapperFrame = videoWrapperView.frame;
-    wrapperFrame = wrapperView.frame;
+    videoWrapperFrame = videoWrapper.frame;
+    pageWrapperFrame = pageWrapper.frame;
 
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 
     // disable AutoLayout
-    videoWrapperView.translatesAutoresizingMaskIntoConstraints = YES;
-    wrapperView.translatesAutoresizingMaskIntoConstraints = YES;
+    videoWrapper.translatesAutoresizingMaskIntoConstraints = YES;
+    pageWrapper.translatesAutoresizingMaskIntoConstraints = YES;
 
-    videoWrapperView.frame = videoWrapperFrame;
-    wrapperView.frame = wrapperFrame;
+    videoWrapper.frame = videoWrapperFrame;
+    pageWrapper.frame = pageWrapperFrame;
 
-    wFrame = wrapperView.frame;
-    vFrame = videoWrapperView.frame;
+    wFrame = pageWrapper.frame;
+    vFrame = videoWrapper.frame;
     
     
-    videoView.backgroundColor = videoWrapperView.backgroundColor = [UIColor clearColor];
+    videoView.backgroundColor = videoWrapper.backgroundColor = [UIColor clearColor];
     //self.videoView.layer.shouldRasterize=YES;
     // self.viewYouTube.layer.shouldRasterize=YES;
     //self.viewTable.layer.shouldRasterize=YES;
     
-    restrictOffset = self.parentViewFrame.size.width - 200;
-    restrictTrueOffset = self.parentViewFrame.size.height - 180;
-    restictYaxis = self.parentViewFrame.size.height - videoWrapperView.frame.size.height;
-    
+    minimizedOffsetX = self.parentViewFrame.size.width - 200;
+    minimizedOffsetY = self.parentViewFrame.size.height - 180;
+
     //[[BSUtils sharedInstance] hideLoadingMode:self];
     self.view.hidden = TRUE;
-    transaparentVw = [[UIView alloc] initWithFrame:self.parentViewFrame];
-    transaparentVw.backgroundColor = [UIColor blackColor];
-    transaparentVw.alpha = 0.9;
-    [self.onView addSubview:transaparentVw];
-    [self.onView addSubview:wrapperView];
-    [self.onView addSubview:videoWrapperView];
+
+    transparentBlackSheet = [[UIView alloc] initWithFrame:self.parentViewFrame];
+    transparentBlackSheet.backgroundColor = [UIColor blackColor];
+    transparentBlackSheet.alpha = 0.9;
+
+    [self.onView addSubview:transparentBlackSheet];
+    [self.onView addSubview:pageWrapper];
+    [self.onView addSubview:videoWrapper];
     [videoView addSubview:foldButton];
-    //    [self stGrowingTextViewProperty];
-
-    
-    //animate Button Down
-//    foldButton.translatesAutoresizingMaskIntoConstraints = YES;
-//    foldButton.frame=CGRectMake( foldButton.frame.origin.x,  foldButton.frame.origin.y-22,  foldButton.frame.size.width,  foldButton.frame.size.width);
-//    CGRect frameBtnDown=foldButton.frame;
-    
-    
-//    [UIView animateKeyframesWithDuration:2.0 delay:0.0 options:UIViewKeyframeAnimationOptionAutoreverse | UIViewKeyframeAnimationOptionRepeat|UIViewAnimationOptionAllowUserInteraction animations:^{
-//        [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
-//            foldButton.transform=CGAffineTransformMakeScale(1.5, 1.5);
-//            [self addShadow];
-//            foldButton.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y+17, frameBtnDown.size.width, frameBtnDown.size.width);
-//        }];
-//        [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
-//            foldButton.frame=CGRectMake(frameBtnDown.origin.x, frameBtnDown.origin.y, frameBtnDown.size.width, frameBtnDown.size.width);
-//            foldButton.transform=CGAffineTransformIdentity;
-//            [self addShadow];
-//        }];
-//    } completion:nil];
 }
-
-//
-//-(void)addShadow
-//{
-//    foldButton.imageView.layer.shadowColor = [UIColor whiteColor].CGColor;
-//    foldButton.imageView.layer.shadowOffset = CGSizeMake(0, 1);
-//    foldButton.imageView.layer.shadowOpacity = 1;
-//    foldButton.imageView.layer.shadowRadius = 4.0;
-//    foldButton.imageView.clipsToBounds = NO;
-//}
-
 
 
 
@@ -378,10 +320,10 @@
 - (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
     NSLog(@"expandViewOnTap");
     [self expandViewOnPan];
-    for (UIGestureRecognizer *recognizer in videoWrapperView.gestureRecognizers) {
+    for (UIGestureRecognizer *recognizer in videoWrapper.gestureRecognizers) {
         
         if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-            [videoWrapperView removeGestureRecognizer:recognizer];
+            [videoWrapper removeGestureRecognizer:recognizer];
         }
     }
 }
@@ -394,12 +336,12 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         wrapperView.frame = wrapperFrame;
-                         videoWrapperView.frame=videoWrapperFrame;
-                         videoWrapperView.alpha=1;
+                         pageWrapper.frame = pageWrapperFrame;
+                         videoWrapper.frame=videoWrapperFrame;
+                         videoWrapper.alpha=1;
                          videoView.frame=videoWrapperFrame;
-                         wrapperView.alpha=1.0;
-                         transaparentVw.alpha=1.0;
+                         pageWrapper.alpha=1.0;
+                         transparentBlackSheet.alpha=1.0;
                      }
                      completion:^(BOOL finished) {
                          //                         player.controlStyle = MPMovieControlStyleDefault;
@@ -436,11 +378,11 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         wrapperView.frame = wFrame;
-                         videoWrapperView.frame=vFrame;
+                         pageWrapper.frame = wFrame;
+                         videoWrapper.frame=vFrame;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                         wrapperView.alpha=0;
-                         transaparentVw.alpha=0.0;
+                         pageWrapper.alpha=0;
+                         transparentBlackSheet.alpha=0.0;
                      }
                      completion:^(BOOL finished) {
                          //add tap gesture
@@ -450,11 +392,11 @@
                              self.tapRecognizer= [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
                              self.tapRecognizer.numberOfTapsRequired=1;
                              self.tapRecognizer.delegate=self;
-                             [videoWrapperView addGestureRecognizer:self.tapRecognizer];
+                             [videoWrapper addGestureRecognizer:self.tapRecognizer];
                          }
                          
                          isExpandedMode=FALSE;
-                         minimizedVideoFrame=videoWrapperView.frame;
+                         minimizedVideoFrame=videoWrapper.frame;
                          
                          if(direction==UIPanGestureRecognizerDirectionDown)
                          {
@@ -470,9 +412,9 @@
 {
     [self.delegate onRemoveView];
 //    [self.player stop];
-    [videoWrapperView removeFromSuperview];
-    [wrapperView removeFromSuperview];
-    [transaparentVw removeFromSuperview];
+    [videoWrapper removeFromSuperview];
+    [pageWrapper removeFromSuperview];
+    [transparentBlackSheet removeFromSuperview];
 }
 
 
@@ -523,8 +465,8 @@
         [self detectPanDirection:velocity];
         
         //Snag the Y position of the touch when panning begins
-        _touchPositionInHeaderY = [recognizer locationInView:videoWrapperView].y;
-        _touchPositionInHeaderX = [recognizer locationInView:videoWrapperView].x;
+        _touchPositionInHeaderY = [recognizer locationInView:videoWrapper].y;
+        _touchPositionInHeaderX = [recognizer locationInView:videoWrapper].x;
         if(direction==UIPanGestureRecognizerDirectionDown)
         {
 //            player.controlStyle = MPMovieControlStyleNone;
@@ -578,7 +520,7 @@
         
         else if (direction==UIPanGestureRecognizerDirectionLeft)
         {
-            if(wrapperView.alpha<=0)
+            if(pageWrapper.alpha<=0)
             {
                 
                 if(recognizer.view.frame.origin.x<0)
@@ -598,7 +540,7 @@
         
         else if (direction==UIPanGestureRecognizerDirectionRight)
         {
-            if(wrapperView.alpha<=0)
+            if(pageWrapper.alpha<=0)
             {
                 
                 
@@ -629,11 +571,11 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         wrapperView.frame = wFrame;
-                         videoWrapperView.frame=vFrame;
+                         pageWrapper.frame = wFrame;
+                         videoWrapper.frame=vFrame;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                         wrapperView.alpha=0;
-                         videoWrapperView.alpha=1;
+                         pageWrapper.alpha=0;
+                         videoWrapper.alpha=1;
                      }
                      completion:^(BOOL finished) {
                          
@@ -649,11 +591,11 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         wrapperView.frame = wFrame;
-                         videoWrapperView.frame=vFrame;
+                         pageWrapper.frame = wFrame;
+                         videoWrapper.frame=vFrame;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                         wrapperView.alpha=0;
-                         videoWrapperView.alpha=1;
+                         pageWrapper.alpha=0;
+                         videoWrapper.alpha=1;
                          
                          
                          
@@ -673,7 +615,7 @@
     
     if (direction==UIPanGestureRecognizerDirectionLeft)
     {
-        if(wrapperView.alpha<=0)
+        if(pageWrapper.alpha<=0)
         {
             
             NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
@@ -702,7 +644,7 @@
     }
     else if (direction==UIPanGestureRecognizerDirectionRight)
     {
-        if(wrapperView.alpha<=0)
+        if(pageWrapper.alpha<=0)
         {
             
             NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
@@ -746,7 +688,7 @@
 //    [self.txtViewGrowing resignFirstResponder];
     CGFloat y = [recognizer locationInView:self.view].y;
     
-    if(trueOffset>=restrictTrueOffset+60||xOffset>=restrictOffset+60)
+    if(trueOffset>=minimizedOffsetY+60||xOffset>=minimizedOffsetX+60)
     {
         CGFloat trueOffset = self.parentViewFrame.size.height - 100;
         CGFloat xOffset = self.parentViewFrame.size.width-160;
@@ -767,16 +709,16 @@
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^ {
-                             wrapperView.frame = wFrame;
-                             videoWrapperView.frame=vFrame;
+                             pageWrapper.frame = wFrame;
+                             videoWrapper.frame=vFrame;
                              videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                             wrapperView.alpha=0;
+                             pageWrapper.alpha=0;
                              
                              
                              
                          }
                          completion:^(BOOL finished) {
-                             minimizedVideoFrame=videoWrapperView.frame;
+                             minimizedVideoFrame=videoWrapper.frame;
                              
                              isExpandedMode=FALSE;
                          }];
@@ -794,20 +736,20 @@
         vFrame.size.height=200-xOffset*0.5;
         vFrame.origin.y=trueOffset;
         vFrame.origin.x=xOffset;
-        float restrictY=self.parentViewFrame.size.height-videoWrapperView.frame.size.height-10;
+        float restrictY=self.parentViewFrame.size.height-videoWrapper.frame.size.height-10;
         
         
-        if (wrapperView.frame.origin.y<restrictY && wrapperView.frame.origin.y>0) {
+        if (pageWrapper.frame.origin.y<restrictY && pageWrapper.frame.origin.y>0) {
             [UIView animateWithDuration:0.09
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
-                                 wrapperView.frame = wFrame;
-                                 videoWrapperView.frame=vFrame;
+                                 pageWrapper.frame = wFrame;
+                                 videoWrapper.frame=vFrame;
                                  videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                                  
                                  CGFloat percentage = y/self.parentViewFrame.size.height;
-                                 wrapperView.alpha= transaparentVw.alpha = 1.0 - percentage;
+                                 pageWrapper.alpha= transparentBlackSheet.alpha = 1.0 - percentage;
                                  
                                  
                                  
@@ -826,8 +768,8 @@
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
-                                 wrapperView.frame = wFrame;
-                                 videoWrapperView.frame=vFrame;
+                                 pageWrapper.frame = wFrame;
+                                 videoWrapper.frame=vFrame;
                                  videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                              }completion:nil];
             
