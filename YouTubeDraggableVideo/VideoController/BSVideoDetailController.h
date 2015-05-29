@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 - (BOOL) isFullScreen;// please override
 - (void) goFullScreen;// please override
 @property (nonatomic, assign) id  <RemoveViewDelegate> delegate;// please use
-- (void) beforeApperAnimation;// please call
+- (void) beforeAppearAnimation;// please call
 
 
 
