@@ -77,6 +77,9 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
         self.view.addSubview(self.secondViewController.view)
         self.secondViewController.onView = self.view;
         
+
+        self.secondViewController.beforeApperAnimation()
+        
         UIView.animateWithDuration(0.25, animations: { ()-> Void in
             self.secondViewController.view.transform = CGAffineTransformMakeScale(1.0, 1.0)
             self.secondViewController.view.alpha = 1

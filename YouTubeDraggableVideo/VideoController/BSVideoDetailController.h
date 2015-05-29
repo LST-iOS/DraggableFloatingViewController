@@ -42,6 +42,8 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 
 @property (nonatomic, assign) id  <RemoveViewDelegate> delegate;
 
+- (void) beforeApperAnimation;
+
 - (void) setupWithVideoView: (UIView *)vView
            videoWrapperView: (UIView *)ibVideoWrapperView
             pageWrapperView: (UIView *)ibWrapperView

@@ -51,6 +51,8 @@
     UIButton *foldButton;
 
     UIView *videoView;
+    
+    UIView *infoArea;
 }
 
 //@synthesize player;
@@ -109,10 +111,7 @@
     foldButton = ibFoldBtn;
     
     // [[BSUtils sharedInstance] showLoadingMode:self];
-    
-    //adding demo Video -- giving a little delay to store correct frame size
-    [self performSelector:@selector(addVideoView) withObject:nil afterDelay:0.8];
-    
+
     //adding Pan Gesture
     UIPanGestureRecognizer *pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
     pan.delegate=self;
@@ -129,7 +128,85 @@
                                              selector:@selector(orientationChanged:)
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
+
+    //adding demo Video -- giving a little delay to store correct frame size
+    [self performSelector:@selector(calculateFrames) withObject:nil afterDelay:0.25];
+
 }
+
+- (void) beforeApperAnimation {
+
+    CGFloat videoHeight = videoWrapper.frame.size.height;
+    
+    infoArea = [[UIView alloc] init];
+    infoArea.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.3f];
+    infoArea.frame = CGRectMake(0, videoHeight, 300, 500);
+    infoArea.layer.borderWidth = 3.0f;
+    infoArea.layer.borderColor = [[[UIColor blueColor] colorWithAlphaComponent:0.3f] CGColor];
+    [pageWrapper addSubview:infoArea];
+    
+}
+
+
+
+#pragma mark- Calculate Frames and Store Frame Size
+
+-(void)calculateFrames
+{
+    
+    
+    [videoView setFrame:videoWrapper.frame];
+    [videoWrapper addSubview:videoView];
+    
+    videoWrapperFrame = videoWrapper.frame;
+    pageWrapperFrame = pageWrapper.frame;
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    
+    // disable AutoLayout
+    videoWrapper.translatesAutoresizingMaskIntoConstraints = YES;
+    pageWrapper.translatesAutoresizingMaskIntoConstraints = YES;
+    
+    videoWrapper.frame = videoWrapperFrame;
+    pageWrapper.frame = pageWrapperFrame;
+    
+    wFrame = pageWrapper.frame;
+    vFrame = videoWrapper.frame;
+    
+    minimizedOffsetX = self.parentViewFrame.size.width - 200;
+    minimizedOffsetY = self.parentViewFrame.size.height - 180;
+    
+    
+    //self.videoView.layer.shouldRasterize=YES;
+    //self.viewYouTube.layer.shouldRasterize=YES;
+    //self.viewTable.layer.shouldRasterize=YES;
+    
+    
+    videoView.backgroundColor = videoWrapper.backgroundColor = [UIColor clearColor];
+
+    //[[BSUtils sharedInstance] hideLoadingMode:self];
+    self.view.hidden = TRUE;
+    
+    
+    
+    transparentBlackSheet = [[UIView alloc] initWithFrame:self.parentViewFrame];
+    transparentBlackSheet.backgroundColor = [UIColor blackColor];
+    transparentBlackSheet.alpha = 0.9;
+    
+    [self.onView addSubview:transparentBlackSheet];
+    [self.onView addSubview:pageWrapper];
+    [self.onView addSubview:videoWrapper];
+    
+    
+    [videoView addSubview:foldButton];
+    [NSTimer scheduledTimerWithTimeInterval:0.4f
+                                     target:self
+                                   selector:@selector(showFoldButton)
+                                   userInfo:nil
+                                    repeats:NO];
+}
+
+
 
 
 
@@ -236,25 +313,6 @@
 
 
 
-#pragma mark- Add Video on View
-
--(void)addVideoView
-{
-    [videoView setFrame:videoWrapper.frame];
-    [videoWrapper addSubview:videoView];
-
-    [self calculateFrames];
-    
-    [NSTimer scheduledTimerWithTimeInterval:0.4f
-                                     target:self
-                                   selector:@selector(showFoldButton)
-                                   userInfo:nil
-                                    repeats:NO];
-}
-
-
-
-
 - (void) showFoldButton {
     NSLog(@"show downButton");
 //    [videoWrapperView bringSubviewToFront:foldButton];
@@ -262,48 +320,6 @@
 }
 
 
-
-
-#pragma mark- Calculate Frames and Store Frame Size
-
--(void)calculateFrames
-{
-    videoWrapperFrame = videoWrapper.frame;
-    pageWrapperFrame = pageWrapper.frame;
-
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-
-    // disable AutoLayout
-    videoWrapper.translatesAutoresizingMaskIntoConstraints = YES;
-    pageWrapper.translatesAutoresizingMaskIntoConstraints = YES;
-
-    videoWrapper.frame = videoWrapperFrame;
-    pageWrapper.frame = pageWrapperFrame;
-
-    wFrame = pageWrapper.frame;
-    vFrame = videoWrapper.frame;
-    
-    
-    videoView.backgroundColor = videoWrapper.backgroundColor = [UIColor clearColor];
-    //self.videoView.layer.shouldRasterize=YES;
-    // self.viewYouTube.layer.shouldRasterize=YES;
-    //self.viewTable.layer.shouldRasterize=YES;
-    
-    minimizedOffsetX = self.parentViewFrame.size.width - 200;
-    minimizedOffsetY = self.parentViewFrame.size.height - 180;
-
-    //[[BSUtils sharedInstance] hideLoadingMode:self];
-    self.view.hidden = TRUE;
-
-    transparentBlackSheet = [[UIView alloc] initWithFrame:self.parentViewFrame];
-    transparentBlackSheet.backgroundColor = [UIColor blackColor];
-    transparentBlackSheet.alpha = 0.9;
-
-    [self.onView addSubview:transparentBlackSheet];
-    [self.onView addSubview:pageWrapper];
-    [self.onView addSubview:videoWrapper];
-    [videoView addSubview:foldButton];
-}
 
 
 
@@ -379,7 +395,7 @@
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
                          pageWrapper.frame = wFrame;
-                         videoWrapper.frame=vFrame;
+                         videoWrapper.frame = vFrame;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                          pageWrapper.alpha=0;
                          transparentBlackSheet.alpha=0.0;
@@ -455,10 +471,10 @@
 
 -(void)panAction:(UIPanGestureRecognizer *)recognizer
 {
-    CGFloat y = [recognizer locationInView:self.view].y;
+    CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
     
-    if(recognizer.state == UIGestureRecognizerStateBegan){
-        
+    if(recognizer.state == UIGestureRecognizerStateBegan) {
+
         direction = UIPanGestureRecognizerDirectionUndefined;
         //storing direction
         CGPoint velocity = [recognizer velocityInView:recognizer.view];
@@ -467,22 +483,19 @@
         //Snag the Y position of the touch when panning begins
         _touchPositionInHeaderY = [recognizer locationInView:videoWrapper].y;
         _touchPositionInHeaderX = [recognizer locationInView:videoWrapper].x;
-        if(direction==UIPanGestureRecognizerDirectionDown)
-        {
-//            player.controlStyle = MPMovieControlStyleNone;
+        if(direction==UIPanGestureRecognizerDirectionDown) {
+            // player.controlStyle = MPMovieControlStyleNone;
             [self.delegate onDownGesture];
         }
         
     }
     else if(recognizer.state == UIGestureRecognizerStateChanged){
-        if(direction==UIPanGestureRecognizerDirectionDown || direction==UIPanGestureRecognizerDirectionUp)
-        {
-            CGFloat trueOffset = y - _touchPositionInHeaderY;
-            CGFloat xOffset = (y - _touchPositionInHeaderY)*0.35;
-            [self adjustViewOnVerticalPan:trueOffset :xOffset recognizer:recognizer];
+        if(direction==UIPanGestureRecognizerDirectionDown || direction==UIPanGestureRecognizerDirectionUp) {
+            CGFloat viewOffsetY = touchPosInViewY - _touchPositionInHeaderY;
+            CGFloat xOffset = viewOffsetY * 0.35;
+            [self adjustViewOnVerticalPan:viewOffsetY :xOffset recognizer:recognizer];
         }
-        else if (direction==UIPanGestureRecognizerDirectionRight || direction==UIPanGestureRecognizerDirectionLeft)
-        {
+        else if (direction==UIPanGestureRecognizerDirectionRight || direction==UIPanGestureRecognizerDirectionLeft) {
             [self adjustViewOnHorizontalPan:recognizer];
         }
     }
@@ -564,53 +577,112 @@
 
 
 
-
--(void)animateViewToRight:(UIPanGestureRecognizer *)recognizer{
-//    [self.txtViewGrowing resignFirstResponder];
-    [UIView animateWithDuration:0.25
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^ {
-                         pageWrapper.frame = wFrame;
-                         videoWrapper.frame=vFrame;
-                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                         pageWrapper.alpha=0;
-                         videoWrapper.alpha=1;
-                     }
-                     completion:^(BOOL finished) {
-                         
-                     }];
-    [recognizer setTranslation:CGPointZero inView:recognizer.view];
+-(void)adjustViewOnVerticalPan:(CGFloat)viewOffsetY :(CGFloat)xOffset recognizer:(UIPanGestureRecognizer *)recognizer
+{
+    //    [self.txtViewGrowing resignFirstResponder];
+    CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
     
+    // last animation
+    if(viewOffsetY >= minimizedOffsetY+60 || xOffset >= minimizedOffsetX+60)
+    {
+        CGFloat finalOffsetY = self.parentViewFrame.size.height - 100;
+        CGFloat finalOffsetX = self.parentViewFrame.size.width-160;
+        //Use this offset to adjust the position of your view accordingly
+        wFrame.origin.y = finalOffsetY;
+        wFrame.origin.x = finalOffsetX;
+        wFrame.size.width = self.parentViewFrame.size.width - finalOffsetX;
+        
+        vFrame.size.width = self.view.bounds.size.width - finalOffsetX;
+        vFrame.size.height = 200 - finalOffsetX * 0.5;
+        vFrame.origin.y = finalOffsetY;
+        vFrame.origin.x = finalOffsetX;
+        
+        [UIView animateWithDuration:0.05
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^ {
+                             pageWrapper.frame = wFrame;
+                             videoWrapper.frame=vFrame;
+                             videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
+                             pageWrapper.alpha=0;
+                             
+                             
+                             
+                         }
+                         completion:^(BOOL finished) {
+                             minimizedVideoFrame=videoWrapper.frame;
+                             
+                             isExpandedMode=FALSE;
+                         }];
+        [recognizer setTranslation:CGPointZero inView:recognizer.view];
+        
+    }
+    // normal pan animation
+    else {
+        
+        //Use this offset to adjust the position of your view accordingly
+        wFrame.origin.y = viewOffsetY;
+        wFrame.origin.x = xOffset;
+        wFrame.size.width = self.parentViewFrame.size.width - xOffset;
+
+        vFrame.origin.y = viewOffsetY;
+        vFrame.origin.x = xOffset;
+        vFrame.size.width = self.view.bounds.size.width - xOffset;
+        vFrame.size.height = 200 - xOffset * 0.5;
+        float restrictY = self.parentViewFrame.size.height - videoWrapper.frame.size.height - 10;
+        
+        
+        if (pageWrapper.frame.origin.y < restrictY && pageWrapper.frame.origin.y > 0) {
+            [UIView animateWithDuration:0.09
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^ {
+                                 pageWrapper.frame = wFrame;
+                                 videoWrapper.frame = vFrame;
+                                 videoView.frame = CGRectMake(
+                                                              videoView.frame.origin.x,  videoView.frame.origin.x,
+                                                              vFrame.size.width, vFrame.size.height
+                                                              );
+                                 infoArea.frame = CGRectMake(
+                                                             0,
+                                                             videoView.frame.size.height,// keep stay on bottom of videoView
+                                                             infoArea.frame.size.width,
+                                                             infoArea.frame.size.height
+                                                             );
+                                 
+                                 CGFloat percentage = touchPosInViewY / self.parentViewFrame.size.height;
+                                 pageWrapper.alpha= transparentBlackSheet.alpha = 1.0 - percentage;
+                             }
+                             completion:^(BOOL finished) {
+                                 if(direction==UIPanGestureRecognizerDirectionDown)
+                                 {
+                                     [self.onView bringSubviewToFront:self.view];
+                                 }
+                             }];
+        }
+        else if (wFrame.origin.y<restrictY&& wFrame.origin.y>0)
+        {
+            [UIView animateWithDuration:0.09
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^ {
+                                 pageWrapper.frame = wFrame;
+                                 videoWrapper.frame=vFrame;
+                                 videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
+                             }completion:nil];
+            
+            
+        }
+        
+        [recognizer setTranslation:CGPointZero inView:recognizer.view];
+    }
 }
 
--(void)animateViewToLeft:(UIPanGestureRecognizer *)recognizer{
-//    [self.txtViewGrowing resignFirstResponder];
-    
-    [UIView animateWithDuration:0.25
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^ {
-                         pageWrapper.frame = wFrame;
-                         videoWrapper.frame=vFrame;
-                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                         pageWrapper.alpha=0;
-                         videoWrapper.alpha=1;
-                         
-                         
-                         
-                     }
-                     completion:^(BOOL finished) {
-                         
-                     }];
-    
-    [recognizer setTranslation:CGPointZero inView:recognizer.view];
-    
-}
+
 
 
 -(void)adjustViewOnHorizontalPan:(UIPanGestureRecognizer *)recognizer {
-//    [self.txtViewGrowing resignFirstResponder];
+    //    [self.txtViewGrowing resignFirstResponder];
     CGFloat x = [recognizer locationInView:self.view].x;
     
     if (direction==UIPanGestureRecognizerDirectionLeft)
@@ -683,102 +755,52 @@
 
 
 
--(void)adjustViewOnVerticalPan:(CGFloat)trueOffset :(CGFloat)xOffset recognizer:(UIPanGestureRecognizer *)recognizer
-{
+-(void)animateViewToRight:(UIPanGestureRecognizer *)recognizer{
 //    [self.txtViewGrowing resignFirstResponder];
-    CGFloat y = [recognizer locationInView:self.view].y;
+    [UIView animateWithDuration:0.25
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         pageWrapper.frame = wFrame;
+                         videoWrapper.frame=vFrame;
+                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
+                         pageWrapper.alpha=0;
+                         videoWrapper.alpha=1;
+                     }
+                     completion:^(BOOL finished) {
+                         
+                     }];
+    [recognizer setTranslation:CGPointZero inView:recognizer.view];
     
-    if(trueOffset>=minimizedOffsetY+60||xOffset>=minimizedOffsetX+60)
-    {
-        CGFloat trueOffset = self.parentViewFrame.size.height - 100;
-        CGFloat xOffset = self.parentViewFrame.size.width-160;
-        //Use this offset to adjust the position of your view accordingly
-        wFrame.origin.y = trueOffset;
-        wFrame.origin.x = xOffset;
-        wFrame.size.width=self.parentViewFrame.size.width-xOffset;
-        
-        vFrame.size.width=self.view.bounds.size.width-xOffset;
-        vFrame.size.height=200-xOffset*0.5;
-        vFrame.origin.y=trueOffset;
-        vFrame.origin.x=xOffset;
-        
-        
-        
-        
-        [UIView animateWithDuration:0.05
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^ {
-                             pageWrapper.frame = wFrame;
-                             videoWrapper.frame=vFrame;
-                             videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                             pageWrapper.alpha=0;
-                             
-                             
-                             
-                         }
-                         completion:^(BOOL finished) {
-                             minimizedVideoFrame=videoWrapper.frame;
-                             
-                             isExpandedMode=FALSE;
-                         }];
-        [recognizer setTranslation:CGPointZero inView:recognizer.view];
-        
-    }
-    else
-    {
-        
-        //Use this offset to adjust the position of your view accordingly
-        wFrame.origin.y = trueOffset;
-        wFrame.origin.x = xOffset;
-        wFrame.size.width=self.parentViewFrame.size.width-xOffset;
-        vFrame.size.width=self.view.bounds.size.width-xOffset;
-        vFrame.size.height=200-xOffset*0.5;
-        vFrame.origin.y=trueOffset;
-        vFrame.origin.x=xOffset;
-        float restrictY=self.parentViewFrame.size.height-videoWrapper.frame.size.height-10;
-        
-        
-        if (pageWrapper.frame.origin.y<restrictY && pageWrapper.frame.origin.y>0) {
-            [UIView animateWithDuration:0.09
-                                  delay:0.0
-                                options:UIViewAnimationOptionCurveEaseInOut
-                             animations:^ {
-                                 pageWrapper.frame = wFrame;
-                                 videoWrapper.frame=vFrame;
-                                 videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                                 
-                                 CGFloat percentage = y/self.parentViewFrame.size.height;
-                                 pageWrapper.alpha= transparentBlackSheet.alpha = 1.0 - percentage;
-                                 
-                                 
-                                 
-                                 
-                             }
-                             completion:^(BOOL finished) {
-                                 if(direction==UIPanGestureRecognizerDirectionDown)
-                                 {
-                                     [self.onView bringSubviewToFront:self.view];
-                                 }
-                             }];
-        }
-        else if (wFrame.origin.y<restrictY&& wFrame.origin.y>0)
-        {
-            [UIView animateWithDuration:0.09
-                                  delay:0.0
-                                options:UIViewAnimationOptionCurveEaseInOut
-                             animations:^ {
-                                 pageWrapper.frame = wFrame;
-                                 videoWrapper.frame=vFrame;
-                                 videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                             }completion:nil];
-            
-            
-        }
-        
-        [recognizer setTranslation:CGPointZero inView:recognizer.view];
-    }
 }
+
+-(void)animateViewToLeft:(UIPanGestureRecognizer *)recognizer{
+//    [self.txtViewGrowing resignFirstResponder];
+    
+    [UIView animateWithDuration:0.25
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         pageWrapper.frame = wFrame;
+                         videoWrapper.frame=vFrame;
+                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
+                         pageWrapper.alpha=0;
+                         videoWrapper.alpha=1;
+                         
+                         
+                         
+                     }
+                     completion:^(BOOL finished) {
+                         
+                     }];
+    
+    [recognizer setTranslation:CGPointZero inView:recognizer.view];
+    
+}
+
+
+
+
 
 
 
