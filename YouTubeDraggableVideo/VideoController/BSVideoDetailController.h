@@ -35,14 +35,13 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 
 @interface BSVideoDetailController : UIViewController<UIGestureRecognizerDelegate>//,UITextViewDelegate>
 
+@property(nonatomic,strong) UIView *bodyArea;// please add subview on this
 - (BOOL) isFullScreen;// please override
 - (void) goFullScreen;// please override
+@property (nonatomic, assign) id  <RemoveViewDelegate> delegate;// please use
+- (void) beforeApperAnimation;// please call
 
 
-
-@property (nonatomic, assign) id  <RemoveViewDelegate> delegate;
-
-- (void) beforeApperAnimation;
 
 - (void) setupWithVideoView: (UIView *)vView
            videoWrapperView: (UIView *)ibVideoWrapperView

@@ -52,7 +52,7 @@
 
     UIView *videoView;
     
-    UIView *infoArea;
+    UIView *bodyArea;
 }
 
 //@synthesize player;
@@ -138,13 +138,16 @@
 
     CGFloat videoHeight = videoWrapper.frame.size.height;
     
-    infoArea = [[UIView alloc] init];
-    infoArea.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.3f];
-    infoArea.frame = CGRectMake(0, videoHeight, 300, 500);
-    infoArea.layer.borderWidth = 3.0f;
-    infoArea.layer.borderColor = [[[UIColor blueColor] colorWithAlphaComponent:0.3f] CGColor];
-    [pageWrapper addSubview:infoArea];
-    
+    bodyArea = [[UIView alloc] init];
+    bodyArea.frame = CGRectMake(0,
+                                videoHeight,
+                                self.parentViewFrame.size.width,
+                                self.parentViewFrame.size.height - videoHeight);
+    [pageWrapper addSubview:bodyArea];
+
+    bodyArea.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.1f];
+    bodyArea.layer.borderColor = [[[UIColor cyanColor] colorWithAlphaComponent:0.2f] CGColor];
+    bodyArea.layer.borderWidth = 1.0f;
 }
 
 
@@ -347,6 +350,7 @@
 
 -(void)expandViewOnPan
 {
+    NSLog(@"expandViewOnPan");
     //        [self.txtViewGrowing resignFirstResponder];
     [UIView animateWithDuration:0.5
                           delay:0.0
@@ -358,6 +362,13 @@
                          videoView.frame=videoWrapperFrame;
                          pageWrapper.alpha=1.0;
                          transparentBlackSheet.alpha=1.0;
+                         
+                         bodyArea.frame = CGRectMake(
+                                                     0,
+                                                     videoView.frame.size.height,// keep stay on bottom of videoView
+                                                     bodyArea.frame.size.width,
+                                                     bodyArea.frame.size.height
+                                                     );
                      }
                      completion:^(BOOL finished) {
                          //                         player.controlStyle = MPMovieControlStyleDefault;
@@ -582,7 +593,7 @@
     //    [self.txtViewGrowing resignFirstResponder];
     CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
     
-    // last animation
+    // final minimization
     if(viewOffsetY >= minimizedOffsetY+60 || xOffset >= minimizedOffsetX+60)
     {
         CGFloat finalOffsetY = self.parentViewFrame.size.height - 100;
@@ -605,17 +616,12 @@
                              videoWrapper.frame=vFrame;
                              videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                              pageWrapper.alpha=0;
-                             
-                             
-                             
                          }
                          completion:^(BOOL finished) {
                              minimizedVideoFrame=videoWrapper.frame;
-                             
                              isExpandedMode=FALSE;
                          }];
         [recognizer setTranslation:CGPointZero inView:recognizer.view];
-        
     }
     // normal pan animation
     else {
@@ -629,8 +635,8 @@
         vFrame.origin.x = xOffset;
         vFrame.size.width = self.view.bounds.size.width - xOffset;
         vFrame.size.height = 200 - xOffset * 0.5;
+
         float restrictY = self.parentViewFrame.size.height - videoWrapper.frame.size.height - 10;
-        
         
         if (pageWrapper.frame.origin.y < restrictY && pageWrapper.frame.origin.y > 0) {
             [UIView animateWithDuration:0.09
@@ -643,11 +649,11 @@
                                                               videoView.frame.origin.x,  videoView.frame.origin.x,
                                                               vFrame.size.width, vFrame.size.height
                                                               );
-                                 infoArea.frame = CGRectMake(
+                                 bodyArea.frame = CGRectMake(
                                                              0,
                                                              videoView.frame.size.height,// keep stay on bottom of videoView
-                                                             infoArea.frame.size.width,
-                                                             infoArea.frame.size.height
+                                                             bodyArea.frame.size.width,
+                                                             bodyArea.frame.size.height
                                                              );
                                  
                                  CGFloat percentage = touchPosInViewY / self.parentViewFrame.size.height;
@@ -660,20 +666,26 @@
                                  }
                              }];
         }
-        else if (wFrame.origin.y<restrictY&& wFrame.origin.y>0)
+        else if (wFrame.origin.y < restrictY && wFrame.origin.y > 0)
         {
+            NSLog(@"aaaaaaaaaaaaaaa");
             [UIView animateWithDuration:0.09
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
                                  pageWrapper.frame = wFrame;
-                                 videoWrapper.frame=vFrame;
+                                 videoWrapper.frame = vFrame;
                                  videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
+                                 
+                                 bodyArea.frame = CGRectMake(
+                                                             0,
+                                                             videoView.frame.size.height,// keep stay on bottom of videoView
+                                                             bodyArea.frame.size.width,
+                                                             bodyArea.frame.size.height
+                                                             );
+
                              }completion:nil];
-            
-            
         }
-        
         [recognizer setTranslation:CGPointZero inView:recognizer.view];
     }
 }
