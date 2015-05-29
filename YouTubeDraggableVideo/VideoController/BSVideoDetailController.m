@@ -140,6 +140,7 @@ const CGFloat minimamVideoWidth = 140;
 
     //adding demo Video -- giving a little delay to store correct frame size
     [self performSelector:@selector(calculateFrames) withObject:nil afterDelay:0.25];
+    
 
 }
 
@@ -176,8 +177,10 @@ const CGFloat minimamVideoWidth = 140;
     videoWrapperFrame = videoWrapper.frame;
     pageWrapperFrame = pageWrapper.frame;
     
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-    
+//    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    [UIApplication sharedApplication].statusBarHidden = YES;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIInterfaceOrientationLandscapeLeft];
+//    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     // disable AutoLayout
     videoWrapper.translatesAutoresizingMaskIntoConstraints = YES;
     pageWrapper.translatesAutoresizingMaskIntoConstraints = YES;
@@ -430,9 +433,14 @@ const CGFloat minimamVideoWidth = 140;
     
     else if(recognizer.state == UIGestureRecognizerStateChanged) {
         if(direction == UIPanGestureRecognizerDirectionDown || direction == UIPanGestureRecognizerDirectionUp) {
-            CGFloat newOffsetY = touchPosInViewY - _touchPositionInHeaderY;
-            CGFloat newOffsetX = newOffsetY * 0.35;
-            [self adjustViewOnVerticalPan:newOffsetY :newOffsetX recognizer:recognizer];
+
+            CGFloat appendY = 0;
+            if (direction == UIPanGestureRecognizerDirectionDown) appendY = 50;
+            
+            CGFloat newOffsetY = touchPosInViewY - _touchPositionInHeaderY + appendY;
+
+            // CGFloat newOffsetX = newOffsetY * 0.35;
+            [self adjustViewOnVerticalPan:newOffsetY recognizer:recognizer];
         }
         else if (direction==UIPanGestureRecognizerDirectionRight || direction==UIPanGestureRecognizerDirectionLeft) {
             [self adjustViewOnHorizontalPan:recognizer];
@@ -446,7 +454,7 @@ const CGFloat minimamVideoWidth = 140;
         if(direction==UIPanGestureRecognizerDirectionDown || direction==UIPanGestureRecognizerDirectionUp)
         {
             
-            if(recognizer.view.frame.origin.y<0)
+            if(recognizer.view.frame.origin.y < 0)
             {
                 [self expandViewOnPan];
                 
@@ -554,7 +562,7 @@ const CGFloat minimamVideoWidth = 140;
 
 
 
--(void)adjustViewOnVerticalPan:(CGFloat)newOffsetY :(CGFloat)newOffsetX recognizer:(UIPanGestureRecognizer *)recognizer
+-(void)adjustViewOnVerticalPan:(CGFloat)newOffsetY recognizer:(UIPanGestureRecognizer *)recognizer
 {
     CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
     //    [self.txtViewGrowing resignFirstResponder];
@@ -637,7 +645,7 @@ const CGFloat minimamVideoWidth = 140;
 
 //    if (pageWrapper.frame.origin.y < finalViewOffsetY && pageWrapper.frame.origin.y > 0) {
     if (progressRate <= 1 && pageWrapper.frame.origin.y > 0) {
-        [UIView animateWithDuration:0.09
+        [UIView animateWithDuration:0.03
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^ {
@@ -728,13 +736,12 @@ const CGFloat minimamVideoWidth = 140;
 
 -(void)adjustViewOnHorizontalPan:(UIPanGestureRecognizer *)recognizer {
     //    [self.txtViewGrowing resignFirstResponder];
-    CGFloat x = [recognizer locationInView:self.view].x;
-    
-    if (direction==UIPanGestureRecognizerDirectionLeft)
-    {
-        if(pageWrapper.alpha<=0)
+    if(pageWrapper.alpha<=0) {
+        
+        CGFloat x = [recognizer locationInView:self.view].x;
+        
+        if (direction==UIPanGestureRecognizerDirectionLeft)
         {
-            
             NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
             CGPoint velocity = [recognizer velocityInView:recognizer.view];
             
@@ -757,12 +764,8 @@ const CGFloat minimamVideoWidth = 140;
             
             [recognizer setTranslation:CGPointZero inView:recognizer.view];
         }
-    }
-    else if (direction==UIPanGestureRecognizerDirectionRight)
-    {
-        if(pageWrapper.alpha<=0)
+        else if (direction==UIPanGestureRecognizerDirectionRight)
         {
-            
             NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
             CGPoint velocity = [recognizer velocityInView:recognizer.view];
             

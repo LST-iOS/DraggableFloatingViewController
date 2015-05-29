@@ -1,3 +1,10 @@
+# Caution
+* Please hide StatusBar to disable Swipe Down Gesture of Notification Center.
+http://stackoverflow.com/questions/18059703/cannot-hide-status-bar-in-ios7
+↑
+Sometimes it's need to edit "info.plist".
+
+
 # DraggableYoutubeFloatingVideo
 
 DraggableYoutubeFloatingVideo allows you to play videos on a floating mini window at the bottom of your screen from sites like YouTube, Vimeo & Facebook or custom video url , yes you have to specify URL for that. 
