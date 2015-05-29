@@ -53,8 +53,8 @@
     
     UIView *bodyArea;
     
+    UIView *borderView;
 
-    
     CGFloat maxH;
     CGFloat maxW;
     CGFloat videoHeightRatio;
@@ -65,7 +65,7 @@
 
 //@synthesize player;
 
-const CGFloat finalMargin = 2.0;
+const CGFloat finalMargin = 3.0;
 const CGFloat minimamVideoWidth = 140;
 const CGFloat flickVelocity = 1000;
 
@@ -142,7 +142,18 @@ const CGFloat flickVelocity = 1000;
     //adding demo Video -- giving a little delay to store correct frame size
     [self performSelector:@selector(afterAppearAnimation) withObject:nil afterDelay:0.25];
     
+    
+    borderView = [[UIView alloc] init];
+    borderView.clipsToBounds = YES;
+    borderView.layer.masksToBounds = NO;
+    borderView.layer.borderColor = [[UIColor whiteColor] CGColor];
+    borderView.layer.borderWidth = 0.5f;
 
+    borderView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    borderView.layer.shadowColor = [UIColor blackColor].CGColor;
+    borderView.layer.shadowRadius = 1.0;
+    borderView.layer.shadowOpacity = 1.0;
+    borderView.alpha = 0;
 }
 
 - (void) beforeAppearAnimation {
@@ -155,13 +166,13 @@ const CGFloat flickVelocity = 1000;
     minimamVideoHeight = minimamVideoWidth * videoHeightRatio;
     
     bodyArea = [[UIView alloc] init];
-    bodyArea.frame = CGRectMake(0, videoHeight,
-                                maxW, maxH - videoHeight);
+    bodyArea.frame = CGRectMake(0, videoHeight, maxW, maxH - videoHeight);
     [pageWrapper addSubview:bodyArea];
 
     bodyArea.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.1f];
     bodyArea.layer.borderColor = [[[UIColor cyanColor] colorWithAlphaComponent:0.2f] CGColor];
     bodyArea.layer.borderWidth = 1.0f;
+    
 }
 
 
@@ -208,6 +219,15 @@ const CGFloat flickVelocity = 1000;
     transparentBlackSheet.backgroundColor = [UIColor blackColor];
     transparentBlackSheet.alpha = 0.9;
     
+    
+
+    borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
+                                  videoView.frame.origin.x - 1,
+                                  videoView.frame.size.width + 1,
+                                  videoView.frame.size.height + 1);
+    [videoView addSubview:borderView];
+    
+    
     [self.onView addSubview:transparentBlackSheet];
     [self.onView addSubview:pageWrapper];
     [self.onView addSubview:videoWrapper];
@@ -219,6 +239,11 @@ const CGFloat flickVelocity = 1000;
                                    selector:@selector(showFoldButton)
                                    userInfo:nil
                                     repeats:NO];
+    
+    
+    
+    
+    
 }
 
 
@@ -380,7 +405,7 @@ const CGFloat flickVelocity = 1000;
 #pragma mark- Pan Gesture Delagate
 
 - (BOOL)gestureRecognizerShould:(UIGestureRecognizer *)gestureRecognizer {
-    if(gestureRecognizer.view.frame.origin.y<0)
+    if(gestureRecognizer.view.frame.origin.y < 0)
     {
         return NO;
     }
@@ -408,9 +433,7 @@ const CGFloat flickVelocity = 1000;
 
 -(void)panAction:(UIPanGestureRecognizer *)recognizer
 {
-    
     CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
-    
     
     if(recognizer.state == UIGestureRecognizerStateBegan) {
         direction = UIPanGestureRecognizerDirectionUndefined;
@@ -431,8 +454,9 @@ const CGFloat flickVelocity = 1000;
     else if(recognizer.state == UIGestureRecognizerStateChanged) {
         if(direction == UIPanGestureRecognizerDirectionDown || direction == UIPanGestureRecognizerDirectionUp) {
 
-            CGFloat appendY = 0;
-            if (direction == UIPanGestureRecognizerDirectionDown) appendY = 50;
+            CGFloat appendY;
+            if (direction == UIPanGestureRecognizerDirectionDown) appendY = 80;
+            else appendY = -80;
             
             CGFloat newOffsetY = touchPosInViewY - _touchPositionInHeaderY + appendY;
 
@@ -448,19 +472,21 @@ const CGFloat flickVelocity = 1000;
     
     else if(recognizer.state == UIGestureRecognizerStateEnded){
         
-        if(direction==UIPanGestureRecognizerDirectionDown || direction==UIPanGestureRecognizerDirectionUp)
+        if(direction == UIPanGestureRecognizerDirectionDown || direction == UIPanGestureRecognizerDirectionUp)
         {
             
             CGPoint velocity = [recognizer velocityInView:recognizer.view];
             
             if(velocity.y < -flickVelocity)
             {
+                NSLog(@"flick up");
                 [self expandViewOnPan];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
             else if(velocity.y > flickVelocity)
             {
+                NSLog(@"flick down");
                 [self minimizeViewOnPan];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
@@ -509,8 +535,6 @@ const CGFloat flickVelocity = 1000;
         {
             if(pageWrapper.alpha<=0)
             {
-                
-                
                 if(recognizer.view.frame.origin.x>self.parentViewFrame.size.width-50)
                 {
                     [self.view removeFromSuperview];
@@ -569,72 +593,8 @@ const CGFloat flickVelocity = 1000;
 -(void)adjustViewOnVerticalPan:(CGFloat)newOffsetY recognizer:(UIPanGestureRecognizer *)recognizer
 {
     CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
-    //    [self.txtViewGrowing resignFirstResponder];
-    
-//    CGFloat finalMinimazationRange = 1;
-//    CGFloat finalViewOffsetY = maxH - (minimamVideoWidth * videoHeightRatio) - finalMargin;
-//    CGFloat diffForFinal = finalViewOffsetY - viewOffsetY;
-    
-    
-    // final minimization
-    //if (viewOffsetY >= minimizedOffsetY + finalMinimazationRange || xOffset >= minimizedOffsetX + finalMinimazationRange)
-//    if (diffForFinal <= finalMinimazationRange)
-//    {
-//        NSLog(@"final minimization");
-////        CGFloat finalOffsetY = self.parentViewFrame.size.height - 100;
-////        CGFloat finalOffsetX = self.parentViewFrame.size.width - 160;
-////        //Use this offset to adjust the position of your view accordingly
-////        wFrame.origin.y = finalOffsetY;
-////        wFrame.origin.x = finalOffsetX;
-////        wFrame.size.width = self.parentViewFrame.size.width - finalOffsetX - finalMargin;
-////        
-////        vFrame.size.width = self.view.bounds.size.width - finalOffsetX - finalMargin;
-////        vFrame.size.height = (200 - finalOffsetX * 0.5) - finalMargin;
-////        vFrame.origin.y = finalOffsetY - finalMargin * 2;
-////        vFrame.origin.x = finalOffsetX;
-//        
-//        //---------------------------------------
-//        
-//        vFrame.size.width = minimamVideoWidth;//self.view.bounds.size.width - xOffset;
-//        // ↓
-//        vFrame.size.height = vFrame.size.width * videoHeightRatio;//(200 - xOffset * 0.5);
-//        vFrame.origin.y = maxH - vFrame.size.height - finalMargin;//trueOffset - finalMargin * 2;
-//        vFrame.origin.x = maxW - vFrame.size.width - finalMargin;
-//        wFrame.origin.y = vFrame.origin.y;
-//        wFrame.origin.x = vFrame.origin.x;
-//
-//        
-//        [UIView animateWithDuration:0.05
-//                              delay:0.0
-//                            options:UIViewAnimationOptionCurveEaseInOut
-//                         animations:^ {
-//                             pageWrapper.frame = wFrame;
-//                             videoWrapper.frame = vFrame;
-//                             videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-//                             pageWrapper.alpha=0;
-//                         }
-//                         completion:^(BOOL finished) {
-//                             minimizedVideoFrame=videoWrapper.frame;
-//                             isExpandedMode=FALSE;
-//                         }];
-//        [recognizer setTranslation:CGPointZero inView:recognizer.view];
-//    }
-//    // normal pan animation
-//    else {
-    
-    
-//    NSLog(@"normal minimization");
 
     CGFloat progressRate = newOffsetY / finalViewOffsetY;
-//    //Use this offset to adjust the position of your view accordingly
-//    wFrame.origin.y = newOffsetY;
-//    wFrame.origin.x = newOffsetX;
-//    wFrame.size.width = self.parentViewFrame.size.width - newOffsetX;
-//    
-//    vFrame.origin.y = newOffsetY;
-//    vFrame.origin.x = newOffsetX;
-//    vFrame.size.width = self.view.bounds.size.width - newOffsetX;
-//    vFrame.size.height = 200 - newOffsetX * 0.5;
     
     if(progressRate >= 0.97) {
         progressRate = 1;
@@ -662,8 +622,16 @@ const CGFloat flickVelocity = 1000;
                                                          bodyArea.frame.size.height
                                                          );
                              
+                             borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
+                                                           videoView.frame.origin.x - 1,
+                                                           videoView.frame.size.width + 1,
+                                                           videoView.frame.size.height + 1);
+                             
+                             
                              CGFloat percentage = touchPosInViewY / self.parentViewFrame.size.height;
-                             pageWrapper.alpha= transparentBlackSheet.alpha = 1.0 - (percentage * 1.5);
+                             pageWrapper.alpha = transparentBlackSheet.alpha = 1.0 - (percentage * 1.5);
+                             if (percentage > 0.2) borderView.alpha = percentage;
+                             else borderView.alpha = 0;
                          }
                          completion:^(BOOL finished) {
                              if(direction==UIPanGestureRecognizerDirectionDown)
@@ -689,6 +657,12 @@ const CGFloat flickVelocity = 1000;
                                                          bodyArea.frame.size.width,
                                                          bodyArea.frame.size.height
                                                          );
+                             borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
+                                                           videoView.frame.origin.x - 1,
+                                                           videoView.frame.size.width + 1,
+                                                           videoView.frame.size.height + 1);
+                             
+                             borderView.alpha = progressRate;
                          }completion:nil];
     }
 
@@ -812,13 +786,21 @@ const CGFloat flickVelocity = 1000;
                          videoView.frame = videoWrapperFrame;
                          pageWrapper.alpha = 1.0;
                          transparentBlackSheet.alpha = 1.0;
-                         
+                         borderView.alpha = 0.0;
+
                          bodyArea.frame = CGRectMake(
                                                      0,
                                                      videoView.frame.size.height,// keep stay on bottom of videoView
                                                      bodyArea.frame.size.width,
                                                      bodyArea.frame.size.height
                                                      );
+
+                         borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
+                                                       videoView.frame.origin.x - 1,
+                                                       videoView.frame.size.width + 1,
+                                                       videoView.frame.size.height + 1);
+                         
+
                      }
                      completion:^(BOOL finished) {
                          //                         player.controlStyle = MPMovieControlStyleDefault;
@@ -833,24 +815,6 @@ const CGFloat flickVelocity = 1000;
 -(void)minimizeViewOnPan
 {
     foldButton.hidden = TRUE;
-    //    [self.txtViewGrowing resignFirstResponder];
-    
-    
-//    CGFloat xOffset = maxW - 160;
-    
-    //Use this offset to adjust the position of your view accordingly
-    //menuFrame.size.height=200-xOffset*0.5;
-    
-    // viewFrame.origin.y = trueOffset;
-    //viewFrame.origin.x = xOffset;
-    
-    //    CGFloat trueOffset = self.parentViewFrame.size.height - 100;
-//    wFrame.size.width = self.parentViewFrame.size.width - xOffset;
-    
-//    wFrame.size.width = self.parentViewFrame.size.width - finalOffsetX - finalMargin;
-//    vFrame.size.width = self.view.bounds.size.width - finalOffsetX - finalMargin;
-//    vFrame.size.height = (200 - finalOffsetX * 0.5) - finalMargin;
-//    vFrame.origin.y = finalOffsetY - finalMargin * 2;
     
     [self setFinalFrame];
     
@@ -863,15 +827,23 @@ const CGFloat flickVelocity = 1000;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                          pageWrapper.alpha=0;
                          transparentBlackSheet.alpha=0.0;
+                         borderView.alpha = 1.0;
+
+                         borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
+                                                       videoView.frame.origin.x - 1,
+                                                       videoView.frame.size.width + 1,
+                                                       videoView.frame.size.height + 1);
+
                      }
                      completion:^(BOOL finished) {
                          //add tap gesture
                          self.tapRecognizer=nil;
                          if(self.tapRecognizer==nil)
                          {
-                             self.tapRecognizer= [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
-                             self.tapRecognizer.numberOfTapsRequired=1;
-                             self.tapRecognizer.delegate=self;
+                             self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
+                             self.tapRecognizer.numberOfTapsRequired = 1;
+                             self.tapRecognizer.delegate = self;
+//                             self.tapRecognizer.minimumPressDuration = 0.1;
                              [videoWrapper addGestureRecognizer:self.tapRecognizer];
                          }
                          
@@ -900,6 +872,7 @@ const CGFloat flickVelocity = 1000;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                          pageWrapper.alpha=0;
                          videoWrapper.alpha=1;
+                         borderView.alpha = 0.0;
                      }
                      completion:^(BOOL finished) {
                          
@@ -920,9 +893,7 @@ const CGFloat flickVelocity = 1000;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                          pageWrapper.alpha=0;
                          videoWrapper.alpha=1;
-                         
-                         
-                         
+                         borderView.alpha = 1.0;
                      }
                      completion:^(BOOL finished) {
                          
@@ -932,144 +903,5 @@ const CGFloat flickVelocity = 1000;
     
 }
 
-
-
-
-
-
-
-
-
-
-//#pragma mark - UITableViewDataSource
-//
-//// number of section(s), now I assume there is only 1 section
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)theTableView
-//{
-//    return 1;
-//}
-//
-//// number of row in the section, I assume there is only 1 row
-//- (NSInteger)tableView:(UITableView *)theTableView numberOfRowsInSection:(NSInteger)section
-//{
-//    return 10;
-//}
-//
-//// the cell will be returned to the tableView
-//- (UITableViewCell *)tableView:(UITableView *)theTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    static NSString *cellIdentifier = @"videoCommentCell";
-//    UITableViewCell *cell;
-//    cell = (UITableViewCell *)[theTableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//    if (cell == nil) {
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//    }
-//    cell.backgroundColor = [UIColor clearColor];
-//    cell.contentView.backgroundColor = [UIColor clearColor];
-//    cell.selectionStyle=UITableViewCellSelectionStyleNone;
-//    return cell;
-//}
-//
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return 88.0;
-//}
-//
-//
-//
-//#pragma mark - UITableViewDelegate
-//
-//// when user tap the row, what action you want to perform
-//- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    NSLog(@"selected %ld row", (long)indexPath.row);
-//}
-//- (void)didReceiveMemoryWarning {
-//    [super didReceiveMemoryWarning];
-//    // Dispose of any resources that can be recreated.
-//}
-
-
-
-
-
-//- (IBAction)btnSendAction:(id)sender {
-//    [self.txtViewGrowing resignFirstResponder];
-//    self.txtViewGrowing.text=@"";
-//    [UIView animateWithDuration:0.2f
-//                          delay:0.0f
-//                        options:UIViewAnimationOptionCurveEaseIn
-//                     animations:^{
-//                         
-//                         self.viewGrowingTextView.frame=growingTextViewFrame;
-//                     }completion:^(BOOL finished) {
-//                         
-//                     }];
-//}
-
-
-
-//
-//#pragma mark - Keyboard events
-//
-////Handling the keyboard appear and disappering events
-//- (void)keyboardWasShown:(NSNotification*)aNotification
-//{
-//    //__weak typeof(self) weakSelf = self;
-//    NSDictionary* info = [aNotification userInfo];
-////    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-//    [UIView animateWithDuration:0.3f
-//                          delay:0.0f
-//                        options:UIViewAnimationOptionCurveEaseIn
-//                     animations:^{
-////                         float yPosition=self.view.frame.size.height- kbSize.height- self.viewGrowingTextView.frame.size.height;
-////                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
-//
-//                         //                         [weakSelf.registerScrView setContentOffset:CGPointMake(0, (weakSelf.userNameTxtfld.frame.origin.y+weakSelf.userNameTxtfld.frame.size.height)-kbSize.height) animated:YES];
-//
-//                     }
-//                     completion:^(BOOL finished) {
-//                     }];
-//}
-//
-//
-//- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-//{
-//    // __weak typeof(self) weakSelf = self;
-//    //NSDictionary* info = [aNotification userInfo];
-//    [UIView animateWithDuration:0.3f
-//                          delay:0.0f
-//                        options:UIViewAnimationOptionCurveEaseIn
-//                     animations:^{
-//                         float yPosition=self.view.frame.size.height-self.viewGrowingTextView.frame.size.height;
-//                         self.viewGrowingTextView.frame=CGRectMake(0, yPosition, self.viewGrowingTextView.frame.size.width, self.viewGrowingTextView.frame.size.height);
-//                     }
-//                     completion:^(BOOL finished) {
-//                     }];
-//}
-//
-//
-
-
-
-//#pragma mark - Text View delegate -
-//
-//#pragma mark- View Function Methods
-//
-//-(void)stGrowingTextViewProperty
-//{
-//    [[NSNotificationCenter defaultCenter] removeObserver:self
-//                                                    name:UIContentSizeCategoryDidChangeNotification
-//                                                  object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-//
-//
-//
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
-//
-//}
-//
 
 @end

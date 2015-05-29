@@ -26,6 +26,7 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
             self.showSecondController()
         })
+        self.view.backgroundColor = UIColor.whiteColor()
     }
     
     override func viewWillDisappear(animated: Bool) {
