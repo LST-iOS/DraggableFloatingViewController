@@ -316,13 +316,13 @@
     // self.viewYouTube.layer.shouldRasterize=YES;
     //self.viewTable.layer.shouldRasterize=YES;
     
-    restrictOffset = self.initialFirstViewFrame.size.width - 200;
-    restrictTrueOffset = self.initialFirstViewFrame.size.height - 180;
-    restictYaxis = self.initialFirstViewFrame.size.height - videoWrapperView.frame.size.height;
+    restrictOffset = self.parentViewFrame.size.width - 200;
+    restrictTrueOffset = self.parentViewFrame.size.height - 180;
+    restictYaxis = self.parentViewFrame.size.height - videoWrapperView.frame.size.height;
     
     //[[BSUtils sharedInstance] hideLoadingMode:self];
     self.view.hidden = TRUE;
-    transaparentVw = [[UIView alloc] initWithFrame:self.initialFirstViewFrame];
+    transaparentVw = [[UIView alloc] initWithFrame:self.parentViewFrame];
     transaparentVw.backgroundColor = [UIColor blackColor];
     transaparentVw.alpha = 0.9;
     [self.onView addSubview:transaparentVw];
@@ -413,23 +413,23 @@
 
 -(void)minimizeViewOnPan
 {
-    foldButton.hidden=TRUE;
+    foldButton.hidden = TRUE;
     //    [self.txtViewGrowing resignFirstResponder];
-    CGFloat trueOffset = self.initialFirstViewFrame.size.height - 100;
-    CGFloat xOffset = self.initialFirstViewFrame.size.width-160;
+    CGFloat trueOffset = self.parentViewFrame.size.height - 100;
+    CGFloat xOffset = self.parentViewFrame.size.width - 160;
     
     //Use this offset to adjust the position of your view accordingly
     wFrame.origin.y = trueOffset;
     wFrame.origin.x = xOffset;
-    wFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
+    wFrame.size.width=self.parentViewFrame.size.width - xOffset;
     //menuFrame.size.height=200-xOffset*0.5;
     
     // viewFrame.origin.y = trueOffset;
     //viewFrame.origin.x = xOffset;
-    vFrame.size.width=self.view.bounds.size.width-xOffset;
-    vFrame.size.height=200-xOffset*0.5;
-    vFrame.origin.y=trueOffset;
-    vFrame.origin.x=xOffset;
+    vFrame.size.width = self.view.bounds.size.width - xOffset;
+    vFrame.size.height = 200 - xOffset * 0.5;
+    vFrame.origin.y = trueOffset;
+    vFrame.origin.x = xOffset;
     
     
     [UIView animateWithDuration:0.5
@@ -558,7 +558,7 @@
                 return;
                 
             }
-            else if(recognizer.view.frame.origin.y>(self.initialFirstViewFrame.size.width/2))
+            else if(recognizer.view.frame.origin.y>(self.parentViewFrame.size.width/2))
             {
                 
                 [self minimizeViewOnPan];
@@ -567,7 +567,7 @@
                 
                 
             }
-            else if(recognizer.view.frame.origin.y<(self.initialFirstViewFrame.size.width/2))
+            else if(recognizer.view.frame.origin.y<(self.parentViewFrame.size.width/2))
             {
                 [self expandViewOnPan];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
@@ -602,7 +602,7 @@
             {
                 
                 
-                if(recognizer.view.frame.origin.x>self.initialFirstViewFrame.size.width-50)
+                if(recognizer.view.frame.origin.x>self.parentViewFrame.size.width-50)
                 {
                     [self.view removeFromSuperview];
                     [self removeView];
@@ -691,7 +691,7 @@
             
             if (!isVerticalGesture) {
                 
-                CGFloat percentage = (x/self.initialFirstViewFrame.size.width);
+                CGFloat percentage = (x/self.parentViewFrame.size.width);
                 
                 recognizer.view.alpha = percentage;
                 
@@ -720,11 +720,11 @@
                 if(velocity.x > 0)
                 {
                     
-                    CGFloat percentage = (x/self.initialFirstViewFrame.size.width);
+                    CGFloat percentage = (x/self.parentViewFrame.size.width);
                     recognizer.view.alpha =1.0- percentage;                }
                 else
                 {
-                    CGFloat percentage = (x/self.initialFirstViewFrame.size.width);
+                    CGFloat percentage = (x/self.parentViewFrame.size.width);
                     recognizer.view.alpha =percentage;
                     
                     
@@ -748,12 +748,12 @@
     
     if(trueOffset>=restrictTrueOffset+60||xOffset>=restrictOffset+60)
     {
-        CGFloat trueOffset = self.initialFirstViewFrame.size.height - 100;
-        CGFloat xOffset = self.initialFirstViewFrame.size.width-160;
+        CGFloat trueOffset = self.parentViewFrame.size.height - 100;
+        CGFloat xOffset = self.parentViewFrame.size.width-160;
         //Use this offset to adjust the position of your view accordingly
         wFrame.origin.y = trueOffset;
         wFrame.origin.x = xOffset;
-        wFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
+        wFrame.size.width=self.parentViewFrame.size.width-xOffset;
         
         vFrame.size.width=self.view.bounds.size.width-xOffset;
         vFrame.size.height=200-xOffset*0.5;
@@ -789,12 +789,12 @@
         //Use this offset to adjust the position of your view accordingly
         wFrame.origin.y = trueOffset;
         wFrame.origin.x = xOffset;
-        wFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
+        wFrame.size.width=self.parentViewFrame.size.width-xOffset;
         vFrame.size.width=self.view.bounds.size.width-xOffset;
         vFrame.size.height=200-xOffset*0.5;
         vFrame.origin.y=trueOffset;
         vFrame.origin.x=xOffset;
-        float restrictY=self.initialFirstViewFrame.size.height-videoWrapperView.frame.size.height-10;
+        float restrictY=self.parentViewFrame.size.height-videoWrapperView.frame.size.height-10;
         
         
         if (wrapperView.frame.origin.y<restrictY && wrapperView.frame.origin.y>0) {
@@ -806,7 +806,7 @@
                                  videoWrapperView.frame=vFrame;
                                  videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                                  
-                                 CGFloat percentage = y/self.initialFirstViewFrame.size.height;
+                                 CGFloat percentage = y/self.parentViewFrame.size.height;
                                  wrapperView.alpha= transaparentVw.alpha = 1.0 - percentage;
                                  
                                  

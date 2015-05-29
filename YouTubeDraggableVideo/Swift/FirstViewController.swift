@@ -69,7 +69,7 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
             self.view.frame.size.width - 50, self.view.frame.size.height - 50,
             self.view.frame.size.width, self.view.frame.size.height
         )
-        self.secondViewController.initialFirstViewFrame = self.view.frame
+        self.secondViewController.parentViewFrame = self.view.frame
 
         self.secondViewController.view.alpha = 0
         self.secondViewController.view.transform = CGAffineTransformMakeScale(0.2, 0.2)
@@ -77,7 +77,7 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
         self.view.addSubview(self.secondViewController.view)
         self.secondViewController.onView = self.view;
         
-        UIView.animateWithDuration(0.9, animations: { ()-> Void in
+        UIView.animateWithDuration(0.25, animations: { ()-> Void in
             self.secondViewController.view.transform = CGAffineTransformMakeScale(1.0, 1.0)
             self.secondViewController.view.alpha = 1
             self.secondViewController.view.frame = CGRectMake(

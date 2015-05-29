@@ -162,7 +162,7 @@
     self.secondViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"BSVideoDetailController"];
     //initial frame
     self.secondViewController.view.frame=CGRectMake(self.view.frame.size.width-50, self.view.frame.size.height-50, self.view.frame.size.width, self.view.frame.size.height);
-    self.secondViewController.initialFirstViewFrame=self.view.frame;
+    self.secondViewController.parentViewFrame=self.view.frame;
     
     
     self.secondViewController.view.alpha=0;

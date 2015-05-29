@@ -49,7 +49,7 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 - (void) removeView;
 
 
-@property(nonatomic)CGRect initialFirstViewFrame;
+@property(nonatomic)CGRect parentViewFrame;
 @property(nonatomic,strong) UIPanGestureRecognizer *panRecognizer;
 @property(nonatomic,strong) UITapGestureRecognizer *tapRecognizer;
 @property(nonatomic,strong) UIView *onView;
