@@ -1,8 +1,9 @@
 # Caution
 * Please hide StatusBar to disable Swipe Down Gesture of Notification Center.
+It's need to edit "info.plist".
+
 http://stackoverflow.com/questions/18059703/cannot-hide-status-bar-in-ios7
-↑
-Sometimes it's need to edit "info.plist".
+
 
 
 # DraggableYoutubeFloatingVideo

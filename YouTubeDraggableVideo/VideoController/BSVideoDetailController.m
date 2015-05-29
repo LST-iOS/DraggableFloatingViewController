@@ -139,12 +139,12 @@ const CGFloat minimamVideoWidth = 140;
                                                object:nil];
 
     //adding demo Video -- giving a little delay to store correct frame size
-    [self performSelector:@selector(calculateFrames) withObject:nil afterDelay:0.25];
+    [self performSelector:@selector(afterAppearAnimation) withObject:nil afterDelay:0.25];
     
 
 }
 
-- (void) beforeApperAnimation {
+- (void) beforeAppearAnimation {
     maxH = self.parentViewFrame.size.height;
     maxW = self.parentViewFrame.size.width;
     CGFloat videoHeight = videoWrapper.frame.size.height;
@@ -167,19 +167,15 @@ const CGFloat minimamVideoWidth = 140;
 
 #pragma mark- Calculate Frames and Store Frame Size
 
--(void)calculateFrames
-{
-    
-    
+-(void) afterAppearAnimation {
     [videoView setFrame:videoWrapper.frame];
     [videoWrapper addSubview:videoView];
     
     videoWrapperFrame = videoWrapper.frame;
     pageWrapperFrame = pageWrapper.frame;
     
-//    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-    [UIApplication sharedApplication].statusBarHidden = YES;
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIInterfaceOrientationLandscapeLeft];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+//    [UIApplication sharedApplication].statusBarHidden = YES;
 //    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     // disable AutoLayout
     videoWrapper.translatesAutoresizingMaskIntoConstraints = YES;
@@ -454,30 +450,40 @@ const CGFloat minimamVideoWidth = 140;
         if(direction==UIPanGestureRecognizerDirectionDown || direction==UIPanGestureRecognizerDirectionUp)
         {
             
-            if(recognizer.view.frame.origin.y < 0)
+            CGPoint velocity = [recognizer velocityInView:recognizer.view];
+            NSLog(@"velocity y: %f", velocity.y);
+
+            CGFloat flickVelocity = 1000;
+            
+            if(velocity.y < -flickVelocity)
             {
                 [self expandViewOnPan];
-                
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
-                
                 return;
-                
             }
-            else if(recognizer.view.frame.origin.y>(self.parentViewFrame.size.width/2))
+            else if(velocity.y > flickVelocity)
             {
-                
                 [self minimizeViewOnPan];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
-                
-                
             }
-            else if(recognizer.view.frame.origin.y<(self.parentViewFrame.size.width/2))
+            else if(recognizer.view.frame.origin.y < 0)
             {
                 [self expandViewOnPan];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
-                
+            }
+            else if(recognizer.view.frame.origin.y>(self.parentViewFrame.size.width/2))
+            {
+                [self minimizeViewOnPan];
+                [recognizer setTranslation:CGPointZero inView:recognizer.view];
+                return;
+            }
+            else if(recognizer.view.frame.origin.y < (self.parentViewFrame.size.width/2))
+            {
+                [self expandViewOnPan];
+                [recognizer setTranslation:CGPointZero inView:recognizer.view];
+                return;
             }
         }
         
@@ -619,13 +625,9 @@ const CGFloat minimamVideoWidth = 140;
 //    else {
     
     
-    NSLog(@"normal minimization");
+//    NSLog(@"normal minimization");
 
     CGFloat progressRate = newOffsetY / finalViewOffsetY;
-    NSLog(@"newOffsetY %f", newOffsetY);
-    NSLog(@"finalViewOffsetY %f", finalViewOffsetY);
-    NSLog(@"progressRate %f", progressRate);
-    
 //    //Use this offset to adjust the position of your view accordingly
 //    wFrame.origin.y = newOffsetY;
 //    wFrame.origin.x = newOffsetX;
@@ -663,7 +665,7 @@ const CGFloat minimamVideoWidth = 140;
                                                          );
                              
                              CGFloat percentage = touchPosInViewY / self.parentViewFrame.size.height;
-                             pageWrapper.alpha= transparentBlackSheet.alpha = 1.0 - percentage;
+                             pageWrapper.alpha= transparentBlackSheet.alpha = 1.0 - (percentage * 1.5);
                          }
                          completion:^(BOOL finished) {
                              if(direction==UIPanGestureRecognizerDirectionDown)
@@ -706,9 +708,6 @@ const CGFloat minimamVideoWidth = 140;
     
     CGFloat realNewOffsetX = maxW - newWidth - (finalMargin * persentage);
     CGFloat realNewOffsetY = maxH - newHeight - (finalMargin * persentage);
-    
-    NSLog(@"realNewOffsetX %f", realNewOffsetX);
-    NSLog(@"realNewOffsetY %f", realNewOffsetY);
     
     vFrame.size.width = newWidth;//self.view.bounds.size.width - xOffset;
     vFrame.size.height = newHeight;//(200 - xOffset * 0.5);
