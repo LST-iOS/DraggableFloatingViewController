@@ -53,7 +53,7 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 @property(nonatomic)CGRect parentViewFrame;
 @property(nonatomic,strong) UIPanGestureRecognizer *panRecognizer;
 @property(nonatomic,strong) UITapGestureRecognizer *tapRecognizer;
-@property(nonatomic,strong) UIView *onView;
+@property(nonatomic,strong) UIView *parentView;
 
 //@property (strong, nonatomic) MPMoviePlayerController *player;
 //@property (weak, nonatomic) IBOutlet UITableView *tblView;

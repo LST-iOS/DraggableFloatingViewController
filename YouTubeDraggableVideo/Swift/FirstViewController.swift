@@ -76,7 +76,7 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
         self.secondViewController.view.transform = CGAffineTransformMakeScale(0.2, 0.2)
         
         self.view.addSubview(self.secondViewController.view)
-        self.secondViewController.onView = self.view;
+        self.secondViewController.parentView = self.view;
         
 
         self.secondViewController.beforeAppearAnimation()

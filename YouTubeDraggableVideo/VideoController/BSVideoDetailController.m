@@ -23,15 +23,13 @@
     CGRect minimizedVideoFrame;
     CGRect pageWrapperFrame;
 
+    // animation Frame
     CGRect wFrame;
     CGRect vFrame;
     
     //local touch location
     CGFloat _touchPositionInHeaderY;
     CGFloat _touchPositionInHeaderX;
-    
-    //local restriction Offset--- for checking out of bound
-    float minimizedOffsetX,minimizedOffsetY;//,restictYaxis;
     
     //detecting Pan gesture Direction
     UIPanGestureRecognizerDirection direction;
@@ -44,16 +42,14 @@
     BOOL isExpandedMode;
     
     
-    
     UIView *pageWrapper;
     UIView *videoWrapper;
     UIButton *foldButton;
 
     UIView *videoView;
-    
-    UIView *bodyArea;
-    
+    // border of mini vieo view
     UIView *borderView;
+    UIView *bodyArea;
 
     CGFloat maxH;
     CGFloat maxW;
@@ -71,6 +67,11 @@ const CGFloat flickVelocity = 1000;
 
 
 
+
+
+
+
+
 //PLEASE OVERRIDE
 //- (void)viewDidLoad {
 //    [super viewDidLoad];
@@ -83,7 +84,6 @@ const CGFloat flickVelocity = 1000;
 //             pageWrapperView: self.ibWrapperView
 //                  foldButton: self.ibFoldBtn];
 //}
-
 
 //PLEASE OVERRIDE
 - (BOOL) isFullScreen {
@@ -100,6 +100,7 @@ const CGFloat flickVelocity = 1000;
     //                    self.secondViewController.player.fullscreen = YES;
     //                      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willExitFullscreen:) name:MPMoviePlayerWillExitFullscreenNotification object:nil];
 }
+
 //    - (void)willExitFullscreen:(NSNotification*)notification {
 //    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
 //    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
@@ -110,6 +111,11 @@ const CGFloat flickVelocity = 1000;
 
 
 
+
+
+
+# pragma mark - init
+
 - (void) setupWithVideoView: (UIView *)vView
            videoWrapperView: (UIView *)ibVideoWrapperView
             pageWrapperView: (UIView *)ibWrapperView
@@ -119,41 +125,39 @@ const CGFloat flickVelocity = 1000;
     videoWrapper = ibVideoWrapperView;
     pageWrapper = ibWrapperView;
     foldButton = ibFoldBtn;
-    
-    // [[BSUtils sharedInstance] showLoadingMode:self];
 
-    //adding Pan Gesture
-    UIPanGestureRecognizer *pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
-    pan.delegate=self;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+
+    // adding Pan Gesture
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
+    pan.delegate = self;
     [videoWrapper addGestureRecognizer:pan];
 
-    //setting view to Expanded state
-    isExpandedMode=TRUE;
-    
-    foldButton.hidden=TRUE;
-    [foldButton addTarget:self action:@selector(onTapDownButton) forControlEvents:UIControlEventTouchUpInside];
-    
     // orientation behaver
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(orientationChanged:)
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
+    
+    // setting view to Expanded state
+    isExpandedMode = TRUE;
+    
+    foldButton.hidden = TRUE;
+    [foldButton addTarget:self action:@selector(onTapDownButton) forControlEvents:UIControlEventTouchUpInside];
 
-    //adding demo Video -- giving a little delay to store correct frame size
-    [self performSelector:@selector(afterAppearAnimation) withObject:nil afterDelay:0.25];
-    
-    
     borderView = [[UIView alloc] init];
     borderView.clipsToBounds = YES;
     borderView.layer.masksToBounds = NO;
     borderView.layer.borderColor = [[UIColor whiteColor] CGColor];
     borderView.layer.borderWidth = 0.5f;
-
     borderView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
     borderView.layer.shadowColor = [UIColor blackColor].CGColor;
     borderView.layer.shadowRadius = 1.0;
     borderView.layer.shadowOpacity = 1.0;
     borderView.alpha = 0;
+    
+    // giving a little delay to store correct frame size
+    [self performSelector:@selector(afterAppearAnimation) withObject:nil afterDelay:0.25];
 }
 
 - (void) beforeAppearAnimation {
@@ -168,110 +172,77 @@ const CGFloat flickVelocity = 1000;
     bodyArea = [[UIView alloc] init];
     bodyArea.frame = CGRectMake(0, videoHeight, maxW, maxH - videoHeight);
     [pageWrapper addSubview:bodyArea];
-
-    bodyArea.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.1f];
-    bodyArea.layer.borderColor = [[[UIColor cyanColor] colorWithAlphaComponent:0.2f] CGColor];
-    bodyArea.layer.borderWidth = 1.0f;
+    //dev
+    bodyArea.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:1.0f];
+    bodyArea.layer.borderColor = [[[UIColor orangeColor] colorWithAlphaComponent:1.0f] CGColor];
+    bodyArea.layer.borderWidth = 4.0f;
     
 }
 
-
-
-#pragma mark- Calculate Frames and Store Frame Size
-
 -(void) afterAppearAnimation {
-    [videoView setFrame:videoWrapper.frame];
+
+    videoView.frame = videoWrapper.frame;
     [videoWrapper addSubview:videoView];
     
     videoWrapperFrame = videoWrapper.frame;
     pageWrapperFrame = pageWrapper.frame;
     
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-//    [UIApplication sharedApplication].statusBarHidden = YES;
-//    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     // disable AutoLayout
     videoWrapper.translatesAutoresizingMaskIntoConstraints = YES;
     pageWrapper.translatesAutoresizingMaskIntoConstraints = YES;
     
+    
     videoWrapper.frame = videoWrapperFrame;
     pageWrapper.frame = pageWrapperFrame;
-    
-    wFrame = pageWrapper.frame;
-    vFrame = videoWrapper.frame;
-    
-    minimizedOffsetX = self.parentViewFrame.size.width - 200;
-    minimizedOffsetY = self.parentViewFrame.size.height - 180;
-    
-    
-    //self.videoView.layer.shouldRasterize=YES;
-    //self.viewYouTube.layer.shouldRasterize=YES;
-    //self.viewTable.layer.shouldRasterize=YES;
-    
+    vFrame = videoWrapperFrame;
+    wFrame = pageWrapperFrame;
     
     videoView.backgroundColor = videoWrapper.backgroundColor = [UIColor clearColor];
 
-    //[[BSUtils sharedInstance] hideLoadingMode:self];
-    self.view.hidden = TRUE;
-    
-    
     
     transparentBlackSheet = [[UIView alloc] initWithFrame:self.parentViewFrame];
     transparentBlackSheet.backgroundColor = [UIColor blackColor];
     transparentBlackSheet.alpha = 0.9;
     
-    
-
     borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
                                   videoView.frame.origin.x - 1,
                                   videoView.frame.size.width + 1,
                                   videoView.frame.size.height + 1);
+    
+    [self.parentView addSubview:transparentBlackSheet];
+    [self.parentView addSubview:pageWrapper];
+    [self.parentView addSubview:videoWrapper];
     [videoView addSubview:borderView];
-    
-    
-    [self.onView addSubview:transparentBlackSheet];
-    [self.onView addSubview:pageWrapper];
-    [self.onView addSubview:videoWrapper];
-    
-    
     [videoView addSubview:foldButton];
-    [NSTimer scheduledTimerWithTimeInterval:0.4f
-                                     target:self
-                                   selector:@selector(showFoldButton)
-                                   userInfo:nil
-                                    repeats:NO];
     
-    
-    
-    
-    
+    self.view.hidden = TRUE;
+    foldButton.hidden = FALSE;
 }
-
-
-
-
-
-
-#pragma mark - Button Action
 
 - (void) onTapDownButton {
     [self minimizeViewOnPan];
     NSLog(@"onTapButons");
 }
 
-//- (IBAction)btnDownTapAction:(id)sender {
-//    NSLog(@"btnDownTapAction");
-//    [self minimizeViewOnPan];
-//}
+
+- (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
+    NSLog(@"expandViewOnTap");
+    [self expandViewOnPan];
+    for (UIGestureRecognizer *recognizer in videoWrapper.gestureRecognizers) {
+        
+        if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+            [videoWrapper removeGestureRecognizer:recognizer];
+        }
+    }
+}
 
 
 
 #pragma mark - Orientation
 
-- (void)orientationChanged:(NSNotification *)notification{
+- (void) orientationChanged:(NSNotification *)notification {
     [self adjustViewsForOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 }
-
-
 
 - (void) adjustViewsForOrientation:(UIInterfaceOrientation) orientation {
     
@@ -296,7 +267,7 @@ const CGFloat flickVelocity = 1000;
         }
         break;
 
-        //　横だったら、フルスクリーンにする
+        //　if Landscapemode then Fullscreen
         case UIInterfaceOrientationLandscapeLeft:
         case UIInterfaceOrientationLandscapeRight:
         {
@@ -304,8 +275,6 @@ const CGFloat flickVelocity = 1000;
             
 //            if(self.secondViewController!=nil)
 //            {
-            
-            
                  if(![self isFullScreen])// && wrapperView.alpha >= 1)
                 {
                 
@@ -326,98 +295,6 @@ const CGFloat flickVelocity = 1000;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-#pragma mark- Status Bar Hidden function
-
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
-- (NSUInteger) supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-- (BOOL)shouldAutorotate
-{
-    return NO;
-}
-
-
-
-
-
-- (void) showFoldButton {
-    NSLog(@"show downButton");
-//    [videoWrapperView bringSubviewToFront:foldButton];
-    foldButton.hidden = FALSE;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-#pragma mark- Pan Animation
-
-- (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
-    NSLog(@"expandViewOnTap");
-    [self expandViewOnPan];
-    for (UIGestureRecognizer *recognizer in videoWrapper.gestureRecognizers) {
-        
-        if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-            [videoWrapper removeGestureRecognizer:recognizer];
-        }
-    }
-}
-
-
-
--(void)removeView
-{
-    [self.delegate onRemoveView];
-//    [self.player stop];
-    [videoWrapper removeFromSuperview];
-    [pageWrapper removeFromSuperview];
-    [transparentBlackSheet removeFromSuperview];
-}
-
-
-
-
-
-
-
-
-#pragma mark- Pan Gesture Delagate
-
-- (BOOL)gestureRecognizerShould:(UIGestureRecognizer *)gestureRecognizer {
-    if(gestureRecognizer.view.frame.origin.y < 0)
-    {
-        return NO;
-    }
-    else {
-        return YES;
-    }
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    return YES;
-}
 
 
 
@@ -552,6 +429,14 @@ const CGFloat flickVelocity = 1000;
     }
 }
 
+-(void)removeView
+{
+    //    [self.player stop];
+    [self.delegate onRemoveView];
+    [videoWrapper removeFromSuperview];
+    [pageWrapper removeFromSuperview];
+    [transparentBlackSheet removeFromSuperview];
+}
 
 
 
@@ -636,7 +521,7 @@ const CGFloat flickVelocity = 1000;
                          completion:^(BOOL finished) {
                              if(direction==UIPanGestureRecognizerDirectionDown)
                              {
-                                 [self.onView bringSubviewToFront:self.view];
+                                 [self.parentView bringSubviewToFront:self.view];
                              }
                          }];
     }
@@ -673,35 +558,6 @@ const CGFloat flickVelocity = 1000;
 }
 
 
-
-- (void) calcNewFrameWithParsentage:(CGFloat) persentage newOffsetY:(CGFloat) newOffsetY{
-    CGFloat newWidth = minimamVideoWidth + ((maxW - minimamVideoWidth) * (1 - persentage));
-    CGFloat newHeight = newWidth * videoHeightRatio;
-    
-    CGFloat newOffsetX = maxW - newWidth - (finalMargin * persentage);
-    
-    vFrame.size.width = newWidth;//self.view.bounds.size.width - xOffset;
-    vFrame.size.height = newHeight;//(200 - xOffset * 0.5);
-    
-    vFrame.origin.y = newOffsetY;//trueOffset - finalMargin * 2;
-    wFrame.origin.y = newOffsetY;
-    
-    vFrame.origin.x = newOffsetX;//maxW - vFrame.size.width - finalMargin;
-    wFrame.origin.x = newOffsetX;
-    //    vFrame.origin.y = realNewOffsetY;//trueOffset - finalMargin * 2;
-    //    wFrame.origin.y = realNewOffsetY;
-   
-}
-
--(void) setFinalFrame {
-    vFrame.size.width = minimamVideoWidth;//self.view.bounds.size.width - xOffset;
-    // ↓
-    vFrame.size.height = vFrame.size.width * videoHeightRatio;//(200 - xOffset * 0.5);
-    vFrame.origin.y = maxH - vFrame.size.height - finalMargin;//trueOffset - finalMargin * 2;
-    vFrame.origin.x = maxW - vFrame.size.width - finalMargin;
-    wFrame.origin.y = vFrame.origin.y;
-    wFrame.origin.x = vFrame.origin.x;
-}
 
 
 -(void)adjustViewOnHorizontalPan:(UIPanGestureRecognizer *)recognizer {
@@ -769,8 +625,44 @@ const CGFloat flickVelocity = 1000;
 }
 
 
+- (void) calcNewFrameWithParsentage:(CGFloat) persentage newOffsetY:(CGFloat) newOffsetY{
+    CGFloat newWidth = minimamVideoWidth + ((maxW - minimamVideoWidth) * (1 - persentage));
+    CGFloat newHeight = newWidth * videoHeightRatio;
+    
+    CGFloat newOffsetX = maxW - newWidth - (finalMargin * persentage);
+    
+    vFrame.size.width = newWidth;//self.view.bounds.size.width - xOffset;
+    vFrame.size.height = newHeight;//(200 - xOffset * 0.5);
+    
+    vFrame.origin.y = newOffsetY;//trueOffset - finalMargin * 2;
+    wFrame.origin.y = newOffsetY;
+    
+    vFrame.origin.x = newOffsetX;//maxW - vFrame.size.width - finalMargin;
+    wFrame.origin.x = newOffsetX;
+    //    vFrame.origin.y = realNewOffsetY;//trueOffset - finalMargin * 2;
+    //    wFrame.origin.y = realNewOffsetY;
+    
+}
+
+-(void) setFinalFrame {
+    vFrame.size.width = minimamVideoWidth;//self.view.bounds.size.width - xOffset;
+    // ↓
+    vFrame.size.height = vFrame.size.width * videoHeightRatio;//(200 - xOffset * 0.5);
+    vFrame.origin.y = maxH - vFrame.size.height - finalMargin;//trueOffset - finalMargin * 2;
+    vFrame.origin.x = maxW - vFrame.size.width - finalMargin;
+    wFrame.origin.y = vFrame.origin.y;
+    wFrame.origin.x = vFrame.origin.x;
+}
 
 
+
+
+
+
+
+
+
+# pragma mark - animations
 
 -(void)expandViewOnPan
 {
@@ -852,13 +744,10 @@ const CGFloat flickVelocity = 1000;
                          
                          if(direction==UIPanGestureRecognizerDirectionDown)
                          {
-                             [self.onView bringSubviewToFront:self.view];
+                             [self.parentView bringSubviewToFront:self.view];
                          }
                      }];
 }
-
-
-
 
 
 -(void)animateViewToRight:(UIPanGestureRecognizer *)recognizer{
@@ -903,5 +792,37 @@ const CGFloat flickVelocity = 1000;
     
 }
 
+
+#pragma mark- Pan Gesture Delagate
+
+- (BOOL)gestureRecognizerShould:(UIGestureRecognizer *)gestureRecognizer {
+    if(gestureRecognizer.view.frame.origin.y < 0)
+    {
+        return NO;
+    }
+    else {
+        return YES;
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+
+
+#pragma mark- Status Bar Hidden function
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+- (NSUInteger) supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
 
 @end
