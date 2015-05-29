@@ -60,13 +60,14 @@
     CGFloat videoHeightRatio;
     CGFloat finalViewOffsetY;
     CGFloat minimamVideoHeight;
+
 }
 
 //@synthesize player;
 
 const CGFloat finalMargin = 2.0;
 const CGFloat minimamVideoWidth = 140;
-
+const CGFloat flickVelocity = 1000;
 
 
 
@@ -451,9 +452,6 @@ const CGFloat minimamVideoWidth = 140;
         {
             
             CGPoint velocity = [recognizer velocityInView:recognizer.view];
-            NSLog(@"velocity y: %f", velocity.y);
-
-            CGFloat flickVelocity = 1000;
             
             if(velocity.y < -flickVelocity)
             {
@@ -706,8 +704,7 @@ const CGFloat minimamVideoWidth = 140;
     CGFloat newWidth = minimamVideoWidth + ((maxW - minimamVideoWidth) * (1 - persentage));
     CGFloat newHeight = newWidth * videoHeightRatio;
     
-    CGFloat realNewOffsetX = maxW - newWidth - (finalMargin * persentage);
-    CGFloat realNewOffsetY = maxH - newHeight - (finalMargin * persentage);
+    CGFloat newOffsetX = maxW - newWidth - (finalMargin * persentage);
     
     vFrame.size.width = newWidth;//self.view.bounds.size.width - xOffset;
     vFrame.size.height = newHeight;//(200 - xOffset * 0.5);
@@ -715,8 +712,8 @@ const CGFloat minimamVideoWidth = 140;
     vFrame.origin.y = newOffsetY;//trueOffset - finalMargin * 2;
     wFrame.origin.y = newOffsetY;
     
-    vFrame.origin.x = realNewOffsetX;//maxW - vFrame.size.width - finalMargin;
-    wFrame.origin.x = realNewOffsetX;
+    vFrame.origin.x = newOffsetX;//maxW - vFrame.size.width - finalMargin;
+    wFrame.origin.x = newOffsetX;
     //    vFrame.origin.y = realNewOffsetY;//trueOffset - finalMargin * 2;
     //    wFrame.origin.y = realNewOffsetY;
    
