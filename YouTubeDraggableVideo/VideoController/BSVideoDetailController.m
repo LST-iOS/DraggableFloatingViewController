@@ -23,8 +23,8 @@
     CGRect videoWrapperFrame;
     CGRect minimizedVideoFrame;
     CGRect wrapperFrame;
-    CGRect menuFrame;
-    CGRect viewFrame;
+    CGRect wFrame;
+    CGRect vFrame;
 //    CGRect growingTextViewFrame;;
     
     //local touch location
@@ -295,25 +295,22 @@
 
 -(void)calculateFrames
 {
-    videoWrapperFrame=videoWrapperView.frame;
-    wrapperFrame=wrapperView.frame;
+    videoWrapperFrame = videoWrapperView.frame;
+    wrapperFrame = wrapperView.frame;
+
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 
+    // disable AutoLayout
     videoWrapperView.translatesAutoresizingMaskIntoConstraints = YES;
     wrapperView.translatesAutoresizingMaskIntoConstraints = YES;
-//    CGRect frame=self.viewGrowingTextView.frame;
-//    growingTextViewFrame=self.viewGrowingTextView.frame;
-//    self.viewGrowingTextView.translatesAutoresizingMaskIntoConstraints = YES;
-//    self.viewGrowingTextView.frame=frame;
-//    frame=self.txtViewGrowing.frame;
-//    self.txtViewGrowing.translatesAutoresizingMaskIntoConstraints = YES;
-//    self.txtViewGrowing.frame=frame;
 
+    videoWrapperView.frame = videoWrapperFrame;
+    wrapperView.frame = wrapperFrame;
+
+    wFrame = wrapperView.frame;
+    vFrame = videoWrapperView.frame;
     
-    videoWrapperView.frame=videoWrapperFrame;
-    wrapperView.frame=wrapperFrame;
-    menuFrame=wrapperView.frame;
-    viewFrame=videoWrapperView.frame;
+    
     videoView.backgroundColor = videoWrapperView.backgroundColor = [UIColor clearColor];
     //self.videoView.layer.shouldRasterize=YES;
     // self.viewYouTube.layer.shouldRasterize=YES;
@@ -321,15 +318,14 @@
     
     restrictOffset = self.initialFirstViewFrame.size.width - 200;
     restrictTrueOffset = self.initialFirstViewFrame.size.height - 180;
-    restictYaxis = self.initialFirstViewFrame.size.height-videoWrapperView.frame.size.height;
+    restictYaxis = self.initialFirstViewFrame.size.height - videoWrapperView.frame.size.height;
     
     //[[BSUtils sharedInstance] hideLoadingMode:self];
     self.view.hidden = TRUE;
-    transaparentVw = [[UIView alloc]initWithFrame:self.initialFirstViewFrame];
-    transaparentVw.backgroundColor=[UIColor blackColor];
+    transaparentVw = [[UIView alloc] initWithFrame:self.initialFirstViewFrame];
+    transaparentVw.backgroundColor = [UIColor blackColor];
     transaparentVw.alpha = 0.9;
     [self.onView addSubview:transaparentVw];
-    
     [self.onView addSubview:wrapperView];
     [self.onView addSubview:videoWrapperView];
     [videoView addSubview:foldButton];
@@ -404,8 +400,6 @@
                          videoView.frame=videoWrapperFrame;
                          wrapperView.alpha=1.0;
                          transaparentVw.alpha=1.0;
-                         
-                         
                      }
                      completion:^(BOOL finished) {
                          //                         player.controlStyle = MPMovieControlStyleDefault;
@@ -425,26 +419,26 @@
     CGFloat xOffset = self.initialFirstViewFrame.size.width-160;
     
     //Use this offset to adjust the position of your view accordingly
-    menuFrame.origin.y = trueOffset;
-    menuFrame.origin.x = xOffset;
-    menuFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
+    wFrame.origin.y = trueOffset;
+    wFrame.origin.x = xOffset;
+    wFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
     //menuFrame.size.height=200-xOffset*0.5;
     
     // viewFrame.origin.y = trueOffset;
     //viewFrame.origin.x = xOffset;
-    viewFrame.size.width=self.view.bounds.size.width-xOffset;
-    viewFrame.size.height=200-xOffset*0.5;
-    viewFrame.origin.y=trueOffset;
-    viewFrame.origin.x=xOffset;
+    vFrame.size.width=self.view.bounds.size.width-xOffset;
+    vFrame.size.height=200-xOffset*0.5;
+    vFrame.origin.y=trueOffset;
+    vFrame.origin.x=xOffset;
     
     
     [UIView animateWithDuration:0.5
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         wrapperView.frame = menuFrame;
-                         videoWrapperView.frame=viewFrame;
-                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                         wrapperView.frame = wFrame;
+                         videoWrapperView.frame=vFrame;
+                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                          wrapperView.alpha=0;
                          transaparentVw.alpha=0.0;
                      }
@@ -635,9 +629,9 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         wrapperView.frame = menuFrame;
-                         videoWrapperView.frame=viewFrame;
-                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                         wrapperView.frame = wFrame;
+                         videoWrapperView.frame=vFrame;
+                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                          wrapperView.alpha=0;
                          videoWrapperView.alpha=1;
                      }
@@ -655,9 +649,9 @@
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
-                         wrapperView.frame = menuFrame;
-                         videoWrapperView.frame=viewFrame;
-                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                         wrapperView.frame = wFrame;
+                         videoWrapperView.frame=vFrame;
+                         videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                          wrapperView.alpha=0;
                          videoWrapperView.alpha=1;
                          
@@ -757,14 +751,14 @@
         CGFloat trueOffset = self.initialFirstViewFrame.size.height - 100;
         CGFloat xOffset = self.initialFirstViewFrame.size.width-160;
         //Use this offset to adjust the position of your view accordingly
-        menuFrame.origin.y = trueOffset;
-        menuFrame.origin.x = xOffset;
-        menuFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
+        wFrame.origin.y = trueOffset;
+        wFrame.origin.x = xOffset;
+        wFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
         
-        viewFrame.size.width=self.view.bounds.size.width-xOffset;
-        viewFrame.size.height=200-xOffset*0.5;
-        viewFrame.origin.y=trueOffset;
-        viewFrame.origin.x=xOffset;
+        vFrame.size.width=self.view.bounds.size.width-xOffset;
+        vFrame.size.height=200-xOffset*0.5;
+        vFrame.origin.y=trueOffset;
+        vFrame.origin.x=xOffset;
         
         
         
@@ -773,9 +767,9 @@
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^ {
-                             wrapperView.frame = menuFrame;
-                             videoWrapperView.frame=viewFrame;
-                             videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                             wrapperView.frame = wFrame;
+                             videoWrapperView.frame=vFrame;
+                             videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                              wrapperView.alpha=0;
                              
                              
@@ -793,13 +787,13 @@
     {
         
         //Use this offset to adjust the position of your view accordingly
-        menuFrame.origin.y = trueOffset;
-        menuFrame.origin.x = xOffset;
-        menuFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
-        viewFrame.size.width=self.view.bounds.size.width-xOffset;
-        viewFrame.size.height=200-xOffset*0.5;
-        viewFrame.origin.y=trueOffset;
-        viewFrame.origin.x=xOffset;
+        wFrame.origin.y = trueOffset;
+        wFrame.origin.x = xOffset;
+        wFrame.size.width=self.initialFirstViewFrame.size.width-xOffset;
+        vFrame.size.width=self.view.bounds.size.width-xOffset;
+        vFrame.size.height=200-xOffset*0.5;
+        vFrame.origin.y=trueOffset;
+        vFrame.origin.x=xOffset;
         float restrictY=self.initialFirstViewFrame.size.height-videoWrapperView.frame.size.height-10;
         
         
@@ -808,9 +802,9 @@
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
-                                 wrapperView.frame = menuFrame;
-                                 videoWrapperView.frame=viewFrame;
-                                 videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                                 wrapperView.frame = wFrame;
+                                 videoWrapperView.frame=vFrame;
+                                 videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                                  
                                  CGFloat percentage = y/self.initialFirstViewFrame.size.height;
                                  wrapperView.alpha= transaparentVw.alpha = 1.0 - percentage;
@@ -826,15 +820,15 @@
                                  }
                              }];
         }
-        else if (menuFrame.origin.y<restrictY&& menuFrame.origin.y>0)
+        else if (wFrame.origin.y<restrictY&& wFrame.origin.y>0)
         {
             [UIView animateWithDuration:0.09
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^ {
-                                 wrapperView.frame = menuFrame;
-                                 videoWrapperView.frame=viewFrame;
-                                 videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, viewFrame.size.width, viewFrame.size.height);
+                                 wrapperView.frame = wFrame;
+                                 videoWrapperView.frame=vFrame;
+                                 videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                              }completion:nil];
             
             

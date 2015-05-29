@@ -18,6 +18,14 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // dev
+        let seconds = 0.1
+        let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+        var dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            self.showSecondController()
+        })
     }
     
     override func viewWillDisappear(animated: Bool) {

@@ -164,15 +164,39 @@
                                                     <constraint firstAttribute="bottom" secondItem="OqK-P4-2Hm" secondAttribute="bottom" id="xm7-PP-uvg"/>
                                                 </constraints>
                                             </view>
+                                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A5d-jj-5VZ" userLabel="testView">
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dCE-eX-sMe">
+                                                        <rect key="frame" x="0.0" y="0.0" width="42" height="21"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="300" id="Z5w-Mi-pT2"/>
+                                                </constraints>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="Z5w-Mi-pT2"/>
+                                                    </mask>
+                                                </variation>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="QCB-5l-HY2" firstAttribute="top" secondItem="YlA-ja-eae" secondAttribute="top" constant="3" id="0HZ-Rq-E8v"/>
                                             <constraint firstAttribute="height" constant="45" id="0bR-lm-WY9"/>
+                                            <constraint firstAttribute="trailing" secondItem="A5d-jj-5VZ" secondAttribute="trailing" id="19o-Mc-tSi"/>
                                             <constraint firstItem="Ixl-Bl-Zqn" firstAttribute="leading" secondItem="UN2-Zf-Tr3" secondAttribute="trailing" id="1AS-R4-vvh"/>
                                             <constraint firstItem="UDJ-UP-Koj" firstAttribute="leading" secondItem="n4k-X2-Ki4" secondAttribute="trailing" constant="11" id="4Nr-Cx-goG"/>
                                             <constraint firstAttribute="bottom" secondItem="UN2-Zf-Tr3" secondAttribute="bottom" constant="2" id="8uH-cT-y2Q"/>
+                                            <constraint firstItem="n4k-X2-Ki4" firstAttribute="leading" secondItem="A5d-jj-5VZ" secondAttribute="trailing" id="C8L-v2-Dy0"/>
+                                            <constraint firstItem="A5d-jj-5VZ" firstAttribute="top" secondItem="YlA-ja-eae" secondAttribute="top" id="D0D-Qj-Ug7"/>
                                             <constraint firstItem="UDJ-UP-Koj" firstAttribute="leading" secondItem="n4k-X2-Ki4" secondAttribute="trailing" constant="11" id="DtS-9Z-g5e"/>
+                                            <constraint firstItem="A5d-jj-5VZ" firstAttribute="leading" secondItem="YlA-ja-eae" secondAttribute="leading" id="Icu-kA-RHO"/>
                                             <constraint firstItem="UN2-Zf-Tr3" firstAttribute="leading" secondItem="YlA-ja-eae" secondAttribute="leading" constant="6" id="OLG-es-b6M"/>
                                             <constraint firstAttribute="bottom" secondItem="n4k-X2-Ki4" secondAttribute="bottom" constant="10" id="R1K-ir-To2"/>
                                             <constraint firstAttribute="trailing" secondItem="UDJ-UP-Koj" secondAttribute="trailing" constant="5" id="SEN-bd-5jM"/>
@@ -187,13 +211,27 @@
                                             <constraint firstItem="Ixl-Bl-Zqn" firstAttribute="leading" secondItem="UN2-Zf-Tr3" secondAttribute="trailing" id="qs4-Eh-JXd"/>
                                             <constraint firstAttribute="bottom" secondItem="Ixl-Bl-Zqn" secondAttribute="bottom" constant="2" id="z7L-De-Eg7"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="C8L-v2-Dy0"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="gfU-9o-R98">
                                         <rect key="frame" x="0.0" y="254" width="320" height="314"/>
-                                        <color key="backgroundColor" red="0.76774796199999995" green="0.76774796199999995" blue="0.76774796199999995" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.0" green="0.76774796199999995" blue="0.76774796199999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="265" id="TDM-PR-Qi4"/>
                                         </constraints>
+                                        <color key="separatorColor" red="0.84850543479999996" green="0.18151807349999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="sectionIndexBackgroundColor" red="0.84850543479999996" green="0.18151807349999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <label key="tableFooterView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="onTableView" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="acA-fz-Gln">
+                                            <rect key="frame" x="0.0" y="262" width="320" height="44"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                         <prototypes>
                                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="videoCommentCell" rowHeight="88" id="uuH-fz-zuE">
                                                 <rect key="frame" x="0.0" y="257" width="320" height="110"/>
@@ -282,6 +320,18 @@
                                             </mask>
                                         </variation>
                                     </tableView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="on wrapper view" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rML-Xz-t3j">
+                                        <rect key="frame" x="0.0" y="311" width="320" height="44"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="onwarrperrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1tT-3r-EHh">
+                                        <rect key="frame" x="37" y="412" width="261" height="45"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
