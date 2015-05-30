@@ -46,8 +46,7 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 
 
 - (void) setupWithVideoView: (UIView *)vView
-           videoWrapperView: (UIView *)ibVideoWrapperView
-            pageWrapperView: (UIView *)ibWrapperView
+            videoViewHeight: (CGFloat) videoHeight
                  foldButton: (UIButton *)ibFoldBtn;
 - (void) removeView;
 

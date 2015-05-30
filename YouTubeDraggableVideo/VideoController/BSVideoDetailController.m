@@ -117,15 +117,25 @@ const CGFloat flickVelocity = 1000;
 # pragma mark - init
 
 - (void) setupWithVideoView: (UIView *)vView
-           videoWrapperView: (UIView *)ibVideoWrapperView
-            pageWrapperView: (UIView *)ibWrapperView
-                 foldButton: (UIButton *)ibFoldBtn
+            videoViewHeight: (CGFloat) videoHeight
+                 foldButton: (UIButton *)foldBtn
 {
     videoView = vView;
-    videoWrapper = ibVideoWrapperView;
-    pageWrapper = ibWrapperView;
-    foldButton = ibFoldBtn;
+    foldButton = foldBtn;
 
+    
+    CGRect window = [[UIScreen mainScreen] bounds];
+    maxH = window.size.height;
+    maxW = window.size.width;
+    
+    videoWrapper = [[UIView alloc] init];
+    videoWrapper.frame = CGRectMake(0, 0, maxW, videoHeight);
+
+    pageWrapper = [[UIView alloc] init];
+    pageWrapper.frame = CGRectMake(0, 0, maxW, maxH);
+    
+    
+    
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 
     // adding Pan Gesture
@@ -161,8 +171,6 @@ const CGFloat flickVelocity = 1000;
 }
 
 - (void) beforeAppearAnimation {
-    maxH = self.parentViewFrame.size.height;
-    maxW = self.parentViewFrame.size.width;
     CGFloat videoHeight = videoWrapper.frame.size.height;
     CGFloat videoWidth = videoWrapper.frame.size.width;
     videoHeightRatio = videoHeight / videoWidth;
@@ -190,7 +198,6 @@ const CGFloat flickVelocity = 1000;
     // disable AutoLayout
     videoWrapper.translatesAutoresizingMaskIntoConstraints = YES;
     pageWrapper.translatesAutoresizingMaskIntoConstraints = YES;
-    
     
     videoWrapper.frame = videoWrapperFrame;
     pageWrapper.frame = pageWrapperFrame;

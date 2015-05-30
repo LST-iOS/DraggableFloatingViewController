@@ -62,7 +62,8 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
         
         removeSecondController()
         
-        self.secondViewController = self.storyboard!.instantiateViewControllerWithIdentifier("VideoDetailController") as! BSVideoDetailController
+//        self.secondViewController = self.storyboard!.instantiateViewControllerWithIdentifier("VideoDetailController") as! BSVideoDetailController
+        self.secondViewController = VideoDetailViewController()
         
         self.secondViewController.delegate = self
         

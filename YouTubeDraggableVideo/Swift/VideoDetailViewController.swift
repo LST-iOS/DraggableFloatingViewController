@@ -11,20 +11,20 @@ import UIKit
 
 class VideoDetailViewController: BSVideoDetailController {
 
-    @IBOutlet weak var ibVideoWrapperView: UIView!
-    @IBOutlet weak var ibPageWrapperView: UIView!
-    @IBOutlet weak var ibFoldButton: UIButton!
-
     var moviePlayer: MPMoviePlayerController!
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let foldBtn = UIButton()
+        foldBtn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        foldBtn.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
+        
         setupMoviePlayer()
-        self.setupWithVideoView(moviePlayer.view, videoWrapperView: ibVideoWrapperView, pageWrapperView: ibPageWrapperView, foldButton: ibFoldButton)
+        self.setupWithVideoView(moviePlayer.view, videoViewHeight: 160, foldButton: foldBtn);
 
-        
-        
         // play
         let seconds = 1.0
         let delay = seconds * Double(NSEC_PER_SEC)// nanoseconds per seconds

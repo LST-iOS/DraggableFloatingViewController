@@ -94,14 +94,14 @@
 		253F2E291A7F5907007FD89E /* YouTubeDraggableVideo */ = {
 			isa = PBXGroup;
 			children = (
-				B04E93C71B16946A004384E8 /* Swift */,
 				253F2E5A1A7F5A68007FD89E /* AppDelegate */,
-				253F2E521A7F5A4A007FD89E /* FirstController */,
-				B04E93C11B168CEB004384E8 /* sampleMovies */,
+				B04E93C71B16946A004384E8 /* Swift */,
 				253F2E551A7F5A4A007FD89E /* VideoController */,
 				253F2E341A7F5907007FD89E /* Main.storyboard */,
 				253F2E371A7F5907007FD89E /* Images.xcassets */,
 				253F2E391A7F5907007FD89E /* LaunchScreen.xib */,
+				253F2E521A7F5A4A007FD89E /* FirstController */,
+				B04E93C11B168CEB004384E8 /* sampleMovies */,
 				253F2E2A1A7F5907007FD89E /* Supporting Files */,
 			);
 			path = YouTubeDraggableVideo;
