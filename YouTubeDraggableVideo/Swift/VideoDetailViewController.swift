@@ -14,25 +14,18 @@ class VideoDetailViewController: BSVideoDetailController {
     var moviePlayer: MPMoviePlayerController!
     
     
-    init() {
-        super.init(nibName: nil, bundle: nil)
-        
-        let foldBtn = UIButton()
-        foldBtn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-        foldBtn.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
-        setupMoviePlayer()
-        self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160, foldButton: foldBtn);
-    }
-
-    required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        let foldBtn = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+        foldBtn.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
+
+        moviePlayer = MPMoviePlayerController()
+
+        self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160, foldButton: foldBtn);
+
+        setupMoviePlayer()
+
         // play
         let seconds = 1.0
         let delay = seconds * Double(NSEC_PER_SEC)// nanoseconds per seconds
@@ -40,7 +33,6 @@ class VideoDetailViewController: BSVideoDetailController {
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
             self.moviePlayer.play()
         })
-        
     }
     
     
@@ -49,7 +41,7 @@ class VideoDetailViewController: BSVideoDetailController {
         // setupMovie
         // var url = NSURL(string: "http://jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v")
         var url = NSURL.fileURLWithPath(NSBundle.mainBundle().pathForResource("test", ofType: "mp4")!)
-        moviePlayer = MPMoviePlayerController(contentURL: url)
+        moviePlayer.contentURL = url
         moviePlayer.fullscreen = false
         moviePlayer.controlStyle = MPMovieControlStyle.Embedded
         moviePlayer.repeatMode = MPMovieRepeatMode.None
@@ -60,6 +52,7 @@ class VideoDetailViewController: BSVideoDetailController {
             name: MPMoviePlayerPlaybackDidFinishNotification,
             object: moviePlayer)
     }
+
     // movie loop
     func moviePlayBackDidFinish(notification: NSNotification) {
         println("moviePlayBackDidFinish:")

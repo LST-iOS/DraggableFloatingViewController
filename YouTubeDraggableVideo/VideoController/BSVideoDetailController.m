@@ -90,14 +90,14 @@ const CGFloat flickVelocity = 1000;
 //PLEASE OVERRIDE
 - (BOOL) isFullScreen {
     NSLog(@"isFullScreen");
-    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!");
+//    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!");
     return false;
 }
 
 //PLEASE OVERRIDE
 - (void) goFullScreen {
     NSLog(@"goFullScreen");
-    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!!!");
+//    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!!!");
     //                    self.secondViewController.player.controlStyle =  MPMovieControlStyleDefault;
     //                    self.secondViewController.player.fullscreen = YES;
     //                      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willExitFullscreen:) name:MPMoviePlayerWillExitFullscreenNotification object:nil];
@@ -120,6 +120,24 @@ const CGFloat flickVelocity = 1000;
 
 # pragma mark - init
 
+
+- (void) showVideoViewControllerFromDelegateVC: (UIViewController<RemoveViewDelegate>*) parentVC {
+    NSLog(@"showVideoViewControllerFromDelegateVC");
+    
+    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])) {
+        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
+    }
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    
+    self.delegate = parentVC;
+    parentView = parentVC.view;
+    
+    [parentView addSubview:self.view];// then, "viewDidLoad" called
+    
+    // wait to run "viewDidLoad" before "showThisView"
+    [self performSelector:@selector(showThisView) withObject:nil afterDelay:0.0];
+}
 
 // VIEW DID LOAD
 - (void) setupViewsWithVideoView: (UIView *)vView
@@ -176,36 +194,26 @@ const CGFloat flickVelocity = 1000;
 
 
 
-- (void) showVideoViewControllerFromDelegateVC: (UIViewController<RemoveViewDelegate>*) parentVC {
-    NSLog(@"showVideoViewControllerFromDelegateVC");
-    
-    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])) {
-        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-    }
-    
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-    
-    self.delegate = parentVC;
-    parentView = parentVC.view;
+
+- (void) showThisView {
+    NSLog(@"show this view");
     
     // only first time, SubViews add to "self.view".
     // After animation, they move to "parentView"
     videoView.backgroundColor = [UIColor blackColor];
-    videoWrapper.backgroundColor = [UIColor blackColor];
     [pageWrapper addSubview:bodyArea];
     [videoWrapper addSubview:videoView];
     [self.view addSubview:pageWrapper];
     [self.view addSubview:videoWrapper];
-
+    
     self.view.frame = CGRectMake(parentView.frame.size.width - 50,
                                  parentView.frame.size.height - 50,
                                  parentView.frame.size.width,
                                  parentView.frame.size.height);
     self.view.transform = CGAffineTransformMakeScale(0.2, 0.2);
     self.view.alpha = 0;
-    [parentView addSubview:self.view];
-
-    [UIView animateWithDuration:0.25 animations:^ {
+    
+    [UIView animateWithDuration:0.2 animations:^ {
         self.view.transform = CGAffineTransformMakeScale(1.0, 1.0);
         self.view.alpha = 1;
         self.view.frame = CGRectMake(parentView.frame.origin.x,   parentView.frame.origin.y,
@@ -224,8 +232,8 @@ const CGFloat flickVelocity = 1000;
 
 -(void) afterAppearAnimation {
     videoView.backgroundColor = videoWrapper.backgroundColor = [UIColor clearColor];
-
     [parentView addSubview:transparentBlackSheet];
+    
     [parentView addSubview:pageWrapper];
     [parentView addSubview:videoWrapper];
 
