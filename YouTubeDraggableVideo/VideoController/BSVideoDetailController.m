@@ -76,7 +76,6 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     UIView *parentView;
 }
 
-//@synthesize player;
 
 const CGFloat finalMargin = 3.0;
 const CGFloat minimamVideoWidth = 140;
@@ -84,30 +83,6 @@ const CGFloat flickVelocity = 1000;
 
 
 
-
-
-
-
-
-//PLEASE OVERRIDE
-//- (void)viewDidLoad {
-//    [super viewDidLoad];
-
-//    UIView *vView = [[UIView alloc] init];
-//    vView.backgroundColor = [UIColor redColor];
-//    
-//    [self setupWithVideoView: vView
-//            videoWrapperView: self.ibVideoWrapperView
-//             pageWrapperView: self.ibWrapperView
-//                  foldButton: self.ibFoldBtn];
-//}
-
-//PLEASE OVERRIDE
-- (BOOL) isFullScreen {
-    NSLog(@"isFullScreen");
-//    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!");
-    return false;
-}
 
 //PLEASE OVERRIDE
 - (void) goFullScreen {
@@ -125,6 +100,13 @@ const CGFloat flickVelocity = 1000;
 //    }
 
 
+
+//PLEASE OVERRIDE
+- (BOOL) isFullScreen {
+    NSLog(@"isFullScreen");
+    //    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!");
+    return false;
+}
 
 
 
@@ -152,7 +134,7 @@ const CGFloat flickVelocity = 1000;
     // wait to run "viewDidLoad" before "showThisView"
     [self performSelector:@selector(showThisView) withObject:nil afterDelay:0.0];
 }
-
+// ↓
 // VIEW DID LOAD
 - (void) setupViewsWithVideoView: (UIView *)vView
             videoViewHeight: (CGFloat) videoHeight
@@ -205,10 +187,7 @@ const CGFloat flickVelocity = 1000;
     self.bodyArea.layer.borderColor = [[[UIColor orangeColor] colorWithAlphaComponent:1.0f] CGColor];
     self.bodyArea.layer.borderWidth = 8.0f;
 }
-
-
-
-
+// ↓
 - (void) showThisView {
     NSLog(@"show this view");
     
@@ -241,9 +220,7 @@ const CGFloat flickVelocity = 1000;
     transparentBlackSheet.backgroundColor = [UIColor blackColor];
     transparentBlackSheet.alpha = 0.9;
 }
-
-
-
+// ↓
 -(void) afterAppearAnimation {
     videoView.backgroundColor = videoWrapper.backgroundColor = [UIColor clearColor];
     [parentView addSubview:transparentBlackSheet];
@@ -279,26 +256,9 @@ const CGFloat flickVelocity = 1000;
 
 
 
-- (void) onTapDownButton {
-    [self minimizeViewOnPan];
-    NSLog(@"onTapButons");
-}
 
 
-- (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
-    NSLog(@"expandViewOnTap");
-    [self expandViewOnPan];
-    for (UIGestureRecognizer *recognizer in videoWrapper.gestureRecognizers) {
-        
-        if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-            [videoWrapper removeGestureRecognizer:recognizer];
-        }
-    }
-}
-
-
-
-#pragma mark - Orientation
+#pragma mark - Orientation handling
 
 - (void) orientationChanged:(NSNotification *)notification {
     [self adjustViewsForOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
@@ -323,7 +283,6 @@ const CGFloat flickVelocity = 1000;
                     [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
                 }
             }
-            
         }
         break;
 
@@ -363,6 +322,24 @@ const CGFloat flickVelocity = 1000;
 
 
 
+
+# pragma  mark - tap action
+- (void) onTapDownButton {
+    [self minimizeViewOnPan];
+    NSLog(@"onTapButons");
+}
+
+
+- (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
+    NSLog(@"expandViewOnTap");
+    [self expandViewOnPan];
+    for (UIGestureRecognizer *recognizer in videoWrapper.gestureRecognizers) {
+        
+        if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+            [videoWrapper removeGestureRecognizer:recognizer];
+        }
+    }
+}
 
 
 
