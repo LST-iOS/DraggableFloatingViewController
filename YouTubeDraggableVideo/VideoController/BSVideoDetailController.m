@@ -11,6 +11,19 @@
 #import "QuartzCore/CALayer.h"
 
 
+typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
+    UIPanGestureRecognizerDirectionUndefined,
+    UIPanGestureRecognizerDirectionUp,
+    UIPanGestureRecognizerDirectionDown,
+    UIPanGestureRecognizerDirectionLeft,
+    UIPanGestureRecognizerDirectionRight
+};
+
+
+
+
+
+
 @interface BSVideoDetailController ()
 @end
 
@@ -18,6 +31,8 @@
 
 @implementation BSVideoDetailController
 {
+ 
+    id  <RemoveViewDelegate> delegate;
     
     //local Frame store
     CGRect videoWrapperFrame;
@@ -35,6 +50,7 @@
     //detecting Pan gesture Direction
     UIPanGestureRecognizerDirection direction;
     
+    UITapGestureRecognizer *tapRecognizer;
     
     //Creating a transparent Black layer view
     UIView *transparentBlackSheet;
@@ -129,7 +145,7 @@ const CGFloat flickVelocity = 1000;
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
     
-    self.delegate = parentVC;
+    delegate = parentVC;
     parentView = parentVC.view;
     
     [parentView addSubview:self.view];// then, "viewDidLoad" called
@@ -188,7 +204,7 @@ const CGFloat flickVelocity = 1000;
     //dev
     bodyArea.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:1.0f];
     bodyArea.layer.borderColor = [[[UIColor orangeColor] colorWithAlphaComponent:1.0f] CGColor];
-    bodyArea.layer.borderWidth = 4.0f;
+    bodyArea.layer.borderWidth = 8.0f;
 }
 
 
@@ -368,7 +384,7 @@ const CGFloat flickVelocity = 1000;
         _touchPositionInHeaderX = [recognizer locationInView:videoWrapper].x;
         if(direction==UIPanGestureRecognizerDirectionDown) {
             // player.controlStyle = MPMovieControlStyleNone;
-            [self.delegate onDownGesture];
+            [delegate onDownGesture];
         }
     }
 
@@ -442,7 +458,7 @@ const CGFloat flickVelocity = 1000;
                 {
                     [self.view removeFromSuperview];
                     [self removeView];
-                    [self.delegate removeVideoViewController];
+                    [delegate removeVideoViewController];
                     
                 }
                 else
@@ -461,7 +477,7 @@ const CGFloat flickVelocity = 1000;
                 {
                     [self.view removeFromSuperview];
                     [self removeView];
-                    [self.delegate removeVideoViewController];
+                    [delegate removeVideoViewController];
                     
                 }
                 else
@@ -477,7 +493,7 @@ const CGFloat flickVelocity = 1000;
 -(void)removeView
 {
     //    [self.player stop];
-    [self.delegate onRemoveView];
+    [delegate onRemoveView];
     [videoWrapper removeFromSuperview];
     [pageWrapper removeFromSuperview];
     [transparentBlackSheet removeFromSuperview];
@@ -741,7 +757,7 @@ const CGFloat flickVelocity = 1000;
                      }
                      completion:^(BOOL finished) {
                          //                         player.controlStyle = MPMovieControlStyleDefault;
-                         [self.delegate onExpanded];
+                         [delegate onExpanded];
                          isExpandedMode = TRUE;
                          foldButton.hidden = FALSE;
                      }];
@@ -774,14 +790,14 @@ const CGFloat flickVelocity = 1000;
                      }
                      completion:^(BOOL finished) {
                          //add tap gesture
-                         self.tapRecognizer=nil;
-                         if(self.tapRecognizer==nil)
+                         tapRecognizer=nil;
+                         if(tapRecognizer==nil)
                          {
-                             self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
-                             self.tapRecognizer.numberOfTapsRequired = 1;
-                             self.tapRecognizer.delegate = self;
-//                             self.tapRecognizer.minimumPressDuration = 0.1;
-                             [videoWrapper addGestureRecognizer:self.tapRecognizer];
+                             tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
+                             tapRecognizer.numberOfTapsRequired = 1;
+                             tapRecognizer.delegate = self;
+//                             tapRecognizer.minimumPressDuration = 0.1;
+                             [videoWrapper addGestureRecognizer:tapRecognizer];
                          }
                          
                          isExpandedMode=FALSE;
