@@ -10,7 +10,7 @@ import UIKit
 
 class FirstViewController: UIViewController , RemoveViewDelegate {
     
-    var secondViewController: BSVideoDetailController!
+    var secondViewController: DraggableFloatingViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()

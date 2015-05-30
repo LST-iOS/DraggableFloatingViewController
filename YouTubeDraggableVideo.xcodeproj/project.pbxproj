@@ -14,7 +14,7 @@
 		253F2E3B1A7F5907007FD89E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253F2E391A7F5907007FD89E /* LaunchScreen.xib */; };
 		253F2E471A7F5907007FD89E /* YouTubeDraggableVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 253F2E461A7F5907007FD89E /* YouTubeDraggableVideoTests.m */; };
 		253F2E581A7F5A4A007FD89E /* FirstVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 253F2E541A7F5A4A007FD89E /* FirstVC.m */; };
-		253F2E591A7F5A4A007FD89E /* BSVideoDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253F2E571A7F5A4A007FD89E /* BSVideoDetailController.m */; };
+		253F2E591A7F5A4A007FD89E /* DraggableFloatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253F2E571A7F5A4A007FD89E /* DraggableFloatingViewController.m */; };
 		253F2E5C1A7F6027007FD89E /* profilePhoto.png in Resources */ = {isa = PBXBuildFile; fileRef = 253F2E5B1A7F6027007FD89E /* profilePhoto.png */; };
 		B04E93C31B168CEB004384E8 /* test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B04E93C21B168CEB004384E8 /* test.mp4 */; };
 		B04E93CB1B16946A004384E8 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04E93C81B16946A004384E8 /* FirstViewController.swift */; };
@@ -45,8 +45,8 @@
 		253F2E461A7F5907007FD89E /* YouTubeDraggableVideoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YouTubeDraggableVideoTests.m; sourceTree = "<group>"; };
 		253F2E531A7F5A4A007FD89E /* FirstVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstVC.h; sourceTree = "<group>"; };
 		253F2E541A7F5A4A007FD89E /* FirstVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstVC.m; sourceTree = "<group>"; };
-		253F2E561A7F5A4A007FD89E /* BSVideoDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSVideoDetailController.h; sourceTree = "<group>"; };
-		253F2E571A7F5A4A007FD89E /* BSVideoDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSVideoDetailController.m; sourceTree = "<group>"; };
+		253F2E561A7F5A4A007FD89E /* DraggableFloatingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DraggableFloatingViewController.h; sourceTree = "<group>"; };
+		253F2E571A7F5A4A007FD89E /* DraggableFloatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DraggableFloatingViewController.m; sourceTree = "<group>"; };
 		253F2E5B1A7F6027007FD89E /* profilePhoto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profilePhoto.png; sourceTree = "<group>"; };
 		B04E93C21B168CEB004384E8 /* test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.mp4; sourceTree = "<group>"; };
 		B04E93C41B168D16004384E8 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
@@ -146,8 +146,8 @@
 		253F2E551A7F5A4A007FD89E /* VideoController */ = {
 			isa = PBXGroup;
 			children = (
-				253F2E561A7F5A4A007FD89E /* BSVideoDetailController.h */,
-				253F2E571A7F5A4A007FD89E /* BSVideoDetailController.m */,
+				253F2E561A7F5A4A007FD89E /* DraggableFloatingViewController.h */,
+				253F2E571A7F5A4A007FD89E /* DraggableFloatingViewController.m */,
 			);
 			path = VideoController;
 			sourceTree = "<group>";
@@ -288,7 +288,7 @@
 				253F2E581A7F5A4A007FD89E /* FirstVC.m in Sources */,
 				253F2E301A7F5907007FD89E /* AppDelegate.m in Sources */,
 				253F2E2D1A7F5907007FD89E /* main.m in Sources */,
-				253F2E591A7F5A4A007FD89E /* BSVideoDetailController.m in Sources */,
+				253F2E591A7F5A4A007FD89E /* DraggableFloatingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

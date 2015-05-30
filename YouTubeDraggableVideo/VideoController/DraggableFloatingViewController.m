@@ -7,7 +7,7 @@
 //
 
 
-#import "BSVideoDetailController.h"
+#import "DraggableFloatingViewController.h"
 #import "QuartzCore/CALayer.h"
 
 
@@ -24,12 +24,12 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 
 
 
-@interface BSVideoDetailController ()
+@interface DraggableFloatingViewController ()
 @end
 
 
 
-@implementation BSVideoDetailController
+@implementation DraggableFloatingViewController
 {
  
     id  <RemoveViewDelegate> delegate;

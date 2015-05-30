@@ -23,7 +23,7 @@
 
 
 // please extend
-@interface BSVideoDetailController : UIViewController<UIGestureRecognizerDelegate>
+@interface DraggableFloatingViewController : UIViewController<UIGestureRecognizerDelegate>
 
 - (BOOL) isFullScreen;// please override
 - (void) goFullScreen;// please override

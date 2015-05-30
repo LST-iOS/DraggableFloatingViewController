@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class VideoDetailViewController: BSVideoDetailController {
+class VideoDetailViewController: DraggableFloatingViewController {
 
     var moviePlayer: MPMoviePlayerController!
     
