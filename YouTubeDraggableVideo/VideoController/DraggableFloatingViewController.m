@@ -253,6 +253,17 @@ const CGFloat flickVelocity = 1000;
 
 
 
+-(void)removeView
+{
+    [videoWrapper removeFromSuperview];
+    [pageWrapper removeFromSuperview];
+    [transparentBlackSheet removeFromSuperview];
+    [self.view removeFromSuperview];
+}
+
+
+
+
 
 
 
@@ -462,13 +473,6 @@ const CGFloat flickVelocity = 1000;
             }
         }
     }
-}
-
--(void)removeView
-{
-    [videoWrapper removeFromSuperview];
-    [pageWrapper removeFromSuperview];
-    [transparentBlackSheet removeFromSuperview];
 }
 
 

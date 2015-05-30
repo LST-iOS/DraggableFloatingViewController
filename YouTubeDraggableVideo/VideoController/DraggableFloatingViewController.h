@@ -24,8 +24,11 @@
 @interface DraggableFloatingViewController : UIViewController<UIGestureRecognizerDelegate>
 - (BOOL) isFullScreen;// please override
 - (void) goFullScreen;// please override
+
+
 - (void) hideVideoControl;// optional override
 - (void) showVideoControl;// optional override
+
 
 // please add subview on this
 @property(nonatomic, strong) UIView *bodyArea;

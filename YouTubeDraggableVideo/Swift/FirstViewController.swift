@@ -60,7 +60,6 @@ class FirstViewController: UIViewController , DraggableFloatingViewControllerDel
 //        self.secondViewController = nil
         if self.secondViewController != nil {
             self.secondViewController.removeView()
-            self.secondViewController.view.removeFromSuperview()
             self.secondViewController = nil
         }
 
