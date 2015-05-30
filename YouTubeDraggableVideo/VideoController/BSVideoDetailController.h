@@ -11,8 +11,6 @@
 
 
 
-
-
 @protocol RemoveViewDelegate
 @required
 - (void)removeVideoViewController;
@@ -31,7 +29,7 @@
 - (void) goFullScreen;// please override
 
 // please add subview on this
-@property(nonatomic,strong) UIView *bodyArea;
+@property(nonatomic, strong) UIView *bodyArea;
 
 // please call from "viewDidLoad" from sub class
 - (void) setupViewsWithVideoView: (UIView *)vView

@@ -66,7 +66,6 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     UIView *videoView;
     // border of mini vieo view
     UIView *borderView;
-    UIView *bodyArea;
 
     CGFloat maxH;
     CGFloat maxW;
@@ -199,12 +198,12 @@ const CGFloat flickVelocity = 1000;
                                   videoView.frame.size.width + 1,
                                   videoView.frame.size.height + 1);
 
-    bodyArea = [[UIView alloc] init];
-    bodyArea.frame = CGRectMake(0, videoHeight, maxW, maxH - videoHeight);
+    self.bodyArea = [[UIView alloc] init];
+    self.bodyArea.frame = CGRectMake(0, videoHeight, maxW, maxH - videoHeight);
     //dev
-    bodyArea.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:1.0f];
-    bodyArea.layer.borderColor = [[[UIColor orangeColor] colorWithAlphaComponent:1.0f] CGColor];
-    bodyArea.layer.borderWidth = 8.0f;
+    self.bodyArea.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:1.0f];
+    self.bodyArea.layer.borderColor = [[[UIColor orangeColor] colorWithAlphaComponent:1.0f] CGColor];
+    self.bodyArea.layer.borderWidth = 8.0f;
 }
 
 
@@ -216,7 +215,7 @@ const CGFloat flickVelocity = 1000;
     // only first time, SubViews add to "self.view".
     // After animation, they move to "parentView"
     videoView.backgroundColor = [UIColor blackColor];
-    [pageWrapper addSubview:bodyArea];
+    [pageWrapper addSubview:self.bodyArea];
     [videoWrapper addSubview:videoView];
     [self.view addSubview:pageWrapper];
     [self.view addSubview:videoWrapper];
@@ -561,11 +560,11 @@ const CGFloat flickVelocity = 1000;
                                                           videoView.frame.origin.x,  videoView.frame.origin.x,
                                                           vFrame.size.width, vFrame.size.height
                                                           );
-                             bodyArea.frame = CGRectMake(
+                             self.bodyArea.frame = CGRectMake(
                                                          0,
                                                          videoView.frame.size.height,// keep stay on bottom of videoView
-                                                         bodyArea.frame.size.width,
-                                                         bodyArea.frame.size.height
+                                                         self.bodyArea.frame.size.width,
+                                                         self.bodyArea.frame.size.height
                                                          );
                              
                              borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
@@ -597,11 +596,11 @@ const CGFloat flickVelocity = 1000;
                              videoWrapper.frame = vFrame;
                              videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                              
-                             bodyArea.frame = CGRectMake(
+                             self.bodyArea.frame = CGRectMake(
                                                          0,
                                                          videoView.frame.size.height,// keep stay on bottom of videoView
-                                                         bodyArea.frame.size.width,
-                                                         bodyArea.frame.size.height
+                                                         self.bodyArea.frame.size.width,
+                                                         self.bodyArea.frame.size.height
                                                          );
                              borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
                                                            videoView.frame.origin.x - 1,
@@ -741,11 +740,11 @@ const CGFloat flickVelocity = 1000;
                          transparentBlackSheet.alpha = 1.0;
                          borderView.alpha = 0.0;
 
-                         bodyArea.frame = CGRectMake(
+                         self.bodyArea.frame = CGRectMake(
                                                      0,
                                                      videoView.frame.size.height,// keep stay on bottom of videoView
-                                                     bodyArea.frame.size.width,
-                                                     bodyArea.frame.size.height
+                                                     self.bodyArea.frame.size.width,
+                                                     self.bodyArea.frame.size.height
                                                      );
 
                          borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
