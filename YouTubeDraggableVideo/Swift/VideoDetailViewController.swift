@@ -14,17 +14,25 @@ class VideoDetailViewController: BSVideoDetailController {
     var moviePlayer: MPMoviePlayerController!
     
     
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    init() {
+        super.init(nibName: nil, bundle: nil)
         
         let foldBtn = UIButton()
         foldBtn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         foldBtn.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
-        
         setupMoviePlayer()
-        self.setupWithVideoView(moviePlayer.view, videoViewHeight: 160, foldButton: foldBtn);
+        self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160, foldButton: foldBtn);
+    }
 
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
         // play
         let seconds = 1.0
         let delay = seconds * Double(NSEC_PER_SEC)// nanoseconds per seconds

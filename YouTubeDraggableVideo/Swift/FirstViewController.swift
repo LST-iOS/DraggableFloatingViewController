@@ -20,7 +20,7 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
         super.viewWillAppear(animated)
         
         // dev
-        let seconds = 0.1
+        let seconds = 0.3
         let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
         var dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
@@ -31,7 +31,7 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
     
     override func viewWillDisappear(animated: Bool) {
         if self.secondViewController != nil && !self.secondViewController.isFullScreen() {
-            removeSecondController()
+            removeVideoViewController()
         }
     }
     
@@ -45,58 +45,53 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
         super.didReceiveMemoryWarning()
     }
 
-    func removeSecondController() {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    func showSecondController() {
+
+        removeVideoViewController()
+        self.secondViewController = VideoDetailViewController()
+        self.secondViewController.showVideoViewControllerFromDelegateVC(self)
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: DraggableFloatingViewController delegate
+    // TODO: rename
+    func removeVideoViewController() {
+        println("🌠removeController")
+//        self.secondViewController = nil
         if self.secondViewController != nil {
             self.secondViewController.removeView()
             self.secondViewController.view.removeFromSuperview()
             self.secondViewController = nil
         }
-    }
-    
-    func showSecondController() {
-
-        if (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication().statusBarOrientation)) {
-            var portrait = UIInterfaceOrientation.Portrait.rawValue as NSNumber
-            UIDevice.currentDevice().setValue(portrait, forKey: "orientation")
-        }
-        
-        removeSecondController()
-        
-//        self.secondViewController = self.storyboard!.instantiateViewControllerWithIdentifier("VideoDetailController") as! BSVideoDetailController
-        self.secondViewController = VideoDetailViewController()
-        
-        self.secondViewController.delegate = self
-        
-        // initial frame
-        self.secondViewController.view.frame = CGRectMake(
-            self.view.frame.size.width - 50, self.view.frame.size.height - 50,
-            self.view.frame.size.width, self.view.frame.size.height
-        )
-        self.secondViewController.parentViewFrame = self.view.frame
-
-        self.secondViewController.view.alpha = 0
-        self.secondViewController.view.transform = CGAffineTransformMakeScale(0.2, 0.2)
-        
-        self.view.addSubview(self.secondViewController.view)
-        self.secondViewController.parentView = self.view;
-        
-
-        self.secondViewController.beforeAppearAnimation()
-        
-        UIView.animateWithDuration(0.25, animations: { ()-> Void in
-            self.secondViewController.view.transform = CGAffineTransformMakeScale(1.0, 1.0)
-            self.secondViewController.view.alpha = 1
-            self.secondViewController.view.frame = CGRectMake(
-                self.view.frame.origin.x, self.view.frame.origin.y,
-                self.view.frame.size.width, self.view.frame.size.height
-            )
-        });
-    }
-
-    // TODO: rename
-    func removeController() {
-        println("🌠removeController")
-        self.secondViewController = nil
     }
     func onExpanded() {
         println("🌠onExpanded")

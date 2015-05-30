@@ -13,7 +13,7 @@
 
 @protocol RemoveViewDelegate
 @required
-- (void)removeController;
+- (void)removeVideoViewController;
 @optional
 - (void)onExpanded;//MPMoviewControlStyleDeafult
 - (void)onRemoveView;//stop the player
@@ -37,23 +37,24 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 // PLEASE EXTEND
 @interface BSVideoDetailController : UIViewController<UIGestureRecognizerDelegate>
 
+
+- (void) showVideoViewControllerFromDelegateVC: (UIViewController<RemoveViewDelegate>*) parentVC;
+
+
 @property(nonatomic,strong) UIView *bodyArea;// please add subview on this
 - (BOOL) isFullScreen;// please override
 - (void) goFullScreen;// please override
-@property (nonatomic, assign) id  <RemoveViewDelegate> delegate;// please use
-- (void) beforeAppearAnimation;// please call
 
 
 
-- (void) setupWithVideoView: (UIView *)vView
-            videoViewHeight: (CGFloat) videoHeight
-                 foldButton: (UIButton *)ibFoldBtn;
+- (void) setupViewsWithVideoView: (UIView *)vView
+                 videoViewHeight: (CGFloat) videoHeight
+                      foldButton: (UIButton *)ibFoldBtn;
 - (void) removeView;
 
 
-@property(nonatomic)CGRect parentViewFrame;
+// TODO make them private variable
 @property(nonatomic,strong) UIPanGestureRecognizer *panRecognizer;
 @property(nonatomic,strong) UITapGestureRecognizer *tapRecognizer;
-@property(nonatomic,strong) UIView *parentView;
-
+@property (nonatomic, assign) id  <RemoveViewDelegate> delegate;
 @end
