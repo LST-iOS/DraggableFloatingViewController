@@ -120,7 +120,6 @@ const CGFloat flickVelocity = 1000;
 
 # pragma mark - init
 
-
 - (void) showVideoViewControllerFromDelegateVC: (UIViewController<RemoveViewDelegate>*) parentVC {
     NSLog(@"showVideoViewControllerFromDelegateVC");
     
@@ -156,7 +155,7 @@ const CGFloat flickVelocity = 1000;
     minimamVideoHeight = minimamVideoWidth * videoHeightRatio;
     finalViewOffsetY = maxH - minimamVideoHeight - finalMargin;
 
-
+    
     videoWrapper = [[UIView alloc] init];
     videoWrapper.frame = CGRectMake(0, 0, videoWidth, videoHeight);
     
@@ -527,7 +526,7 @@ const CGFloat flickVelocity = 1000;
 
     CGFloat progressRate = newOffsetY / finalViewOffsetY;
     
-    if(progressRate >= 0.97) {
+    if(progressRate >= 0.99) {
         progressRate = 1;
         newOffsetY = finalViewOffsetY;
     }
