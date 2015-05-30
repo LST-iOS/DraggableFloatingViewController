@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FirstViewController: UIViewController , RemoveViewDelegate {
+class FirstViewController: UIViewController , DraggableFloatingViewControllerDelegate {
     
     var secondViewController: DraggableFloatingViewController!
     
@@ -30,7 +30,7 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
     
     override func viewWillDisappear(animated: Bool) {
         if self.secondViewController != nil && !self.secondViewController.isFullScreen() {
-            removeVideoViewController()
+            removeDraggableFloatingViewController()
         }
     }
     
@@ -48,34 +48,23 @@ class FirstViewController: UIViewController , RemoveViewDelegate {
     
     
     func showSecondController() {
-        removeVideoViewController()
+        removeDraggableFloatingViewController()
         self.secondViewController = VideoDetailViewController()
         self.secondViewController.showVideoViewControllerFromDelegateVC(self)
     }
 
     
-    // MARK: DraggableFloatingViewController delegate
-    // TODO: rename
-    func removeVideoViewController() {
-        println("🌠removeController")
+    // MARK: DraggableFloatingViewControllerDelegate
+    func removeDraggableFloatingViewController() {
+        println("🌠removeDraggableFloatingViewController")
 //        self.secondViewController = nil
         if self.secondViewController != nil {
             self.secondViewController.removeView()
             self.secondViewController.view.removeFromSuperview()
             self.secondViewController = nil
         }
-    }
-    func onExpanded() {
-        println("🌠onExpanded")
-        //MPMoviewControlStyleDeafult
+
+        //TODO: stop the player
     }
     
-    func onRemoveView(){
-        println("🌠onRemoveView")
-        //stop the player
-    }
-    func onDownGesture(){
-        println("🌠onDownGesture")
-        //MPMoviewControlStyleNone
-    }
 }

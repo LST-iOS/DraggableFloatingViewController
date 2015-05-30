@@ -14,6 +14,7 @@ class VideoDetailViewController: DraggableFloatingViewController {
     var moviePlayer: MPMoviePlayerController!
     
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -84,6 +85,16 @@ class VideoDetailViewController: DraggableFloatingViewController {
         }
     }
 
+    
+    override func showVideoControl() {
+        println("showVideoControl");
+        moviePlayer.controlStyle = MPMovieControlStyle.Embedded
+    }
+    
+    override func hideVideoControl() {
+        println("hideVideoControl")
+        moviePlayer.controlStyle = MPMovieControlStyle.None
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

@@ -11,22 +11,21 @@
 
 
 
-@protocol RemoveViewDelegate
+@protocol DraggableFloatingViewControllerDelegate
 @required
-- (void)removeVideoViewController;
-@optional
-- (void)onExpanded;//MPMoviewControlStyleDeafult
-- (void)onRemoveView;//stop the player
-- (void)onDownGesture;//MPMoviewControlStyleNone
+- (void)removeDraggableFloatingViewController;
 @end
+
+
 
 
 
 // please extend
 @interface DraggableFloatingViewController : UIViewController<UIGestureRecognizerDelegate>
-
 - (BOOL) isFullScreen;// please override
 - (void) goFullScreen;// please override
+- (void) hideVideoControl;// optional override
+- (void) showVideoControl;// optional override
 
 // please add subview on this
 @property(nonatomic, strong) UIView *bodyArea;
@@ -36,9 +35,7 @@
                  videoViewHeight: (CGFloat) videoHeight
                       foldButton: (UIButton *)ibFoldBtn;
 
-
 // please call from parent view controller
-- (void) showVideoViewControllerFromDelegateVC: (UIViewController<RemoveViewDelegate>*) parentVC;
+- (void) showVideoViewControllerFromDelegateVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC;
 - (void) removeView;
-
 @end

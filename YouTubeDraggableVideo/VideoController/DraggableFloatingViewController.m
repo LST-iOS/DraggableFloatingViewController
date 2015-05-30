@@ -11,6 +11,8 @@
 #import "QuartzCore/CALayer.h"
 
 
+
+
 typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     UIPanGestureRecognizerDirectionUndefined,
     UIPanGestureRecognizerDirectionUp,
@@ -28,13 +30,12 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 @end
 
 
-
 @implementation DraggableFloatingViewController
 {
  
-    id  <RemoveViewDelegate> delegate;
+    id  <DraggableFloatingViewControllerDelegate> delegate;
     
-    //local Frame store
+    //local Frame storee
     CGRect videoWrapperFrame;
     CGRect minimizedVideoFrame;
     CGRect pageWrapperFrame;
@@ -84,32 +85,33 @@ const CGFloat flickVelocity = 1000;
 
 
 
-//PLEASE OVERRIDE
-- (void) goFullScreen {
-    NSLog(@"goFullScreen");
-//    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!!!");
-    //                    self.secondViewController.player.controlStyle =  MPMovieControlStyleDefault;
-    //                    self.secondViewController.player.fullscreen = YES;
-    //                      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willExitFullscreen:) name:MPMoviePlayerWillExitFullscreenNotification object:nil];
-}
-
-//    - (void)willExitFullscreen:(NSNotification*)notification {
-//    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-//    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerWillExitFullscreenNotification object:nil];
-//    }
 
 
-
-//PLEASE OVERRIDE
+// PLEASE OVERRIDE
 - (BOOL) isFullScreen {
     NSLog(@"isFullScreen");
-    //    NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!");
+        NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!");
     return false;
 }
 
 
 
+// PLEASE OVERRIDE
+- (void) goFullScreen {
+    NSLog(@"goFullScreen");
+     NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!!!");
+}
+
+
+
+// optional override
+- (void) hideVideoControl {
+    // moviePlayer.controlStyle = MPMoviewControlStyleDeafult
+}
+// optional override
+- (void) showVideoControl {
+    // moviePlayer.controlStyle = MPMoviewControlStyleNone
+}
 
 
 
@@ -117,8 +119,7 @@ const CGFloat flickVelocity = 1000;
 
 # pragma mark - init
 
-- (void) showVideoViewControllerFromDelegateVC: (UIViewController<RemoveViewDelegate>*) parentVC {
-    NSLog(@"showVideoViewControllerFromDelegateVC");
+- (void) showVideoViewControllerFromDelegateVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC {
     
     if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])) {
         [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
@@ -140,7 +141,6 @@ const CGFloat flickVelocity = 1000;
             videoViewHeight: (CGFloat) videoHeight
                  foldButton: (UIButton *)foldBtn
 {
-    NSLog(@"setup video view");
     videoView = vView;
     foldButton = foldBtn;
     
@@ -189,8 +189,6 @@ const CGFloat flickVelocity = 1000;
 }
 // ↓
 - (void) showThisView {
-    NSLog(@"show this view");
-    
     // only first time, SubViews add to "self.view".
     // After animation, they move to "parentView"
     videoView.backgroundColor = [UIColor blackColor];
@@ -360,7 +358,7 @@ const CGFloat flickVelocity = 1000;
         _touchPositionInHeaderX = [recognizer locationInView:videoWrapper].x;
         if(direction==UIPanGestureRecognizerDirectionDown) {
             // player.controlStyle = MPMovieControlStyleNone;
-            [delegate onDownGesture];
+            [self hideVideoControl];
         }
     }
 
@@ -434,7 +432,7 @@ const CGFloat flickVelocity = 1000;
                 {
                     [self.view removeFromSuperview];
                     [self removeView];
-                    [delegate removeVideoViewController];
+                    [delegate removeDraggableFloatingViewController];
                     
                 }
                 else
@@ -453,7 +451,7 @@ const CGFloat flickVelocity = 1000;
                 {
                     [self.view removeFromSuperview];
                     [self removeView];
-                    [delegate removeVideoViewController];
+                    [delegate removeDraggableFloatingViewController];
                     
                 }
                 else
@@ -468,8 +466,6 @@ const CGFloat flickVelocity = 1000;
 
 -(void)removeView
 {
-    //    [self.player stop];
-    [delegate onRemoveView];
     [videoWrapper removeFromSuperview];
     [pageWrapper removeFromSuperview];
     [transparentBlackSheet removeFromSuperview];
@@ -733,7 +729,7 @@ const CGFloat flickVelocity = 1000;
                      }
                      completion:^(BOOL finished) {
                          //                         player.controlStyle = MPMovieControlStyleDefault;
-                         [delegate onExpanded];
+                         [self showVideoControl];
                          isExpandedMode = TRUE;
                          foldButton.hidden = FALSE;
                      }];
@@ -765,6 +761,7 @@ const CGFloat flickVelocity = 1000;
 
                      }
                      completion:^(BOOL finished) {
+                         [self hideVideoControl];
                          //add tap gesture
                          tapRecognizer=nil;
                          if(tapRecognizer==nil)
