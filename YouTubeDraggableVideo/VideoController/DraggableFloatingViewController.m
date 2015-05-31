@@ -101,7 +101,7 @@ const CGFloat flickVelocity = 1000;
 {
     self = [super init];
     if (self) {
-        self.bodyArea = [[UIView alloc] init];
+        self.bodyView = [[UIView alloc] init];
     }
     return self;
 }
@@ -182,18 +182,14 @@ const CGFloat flickVelocity = 1000;
                                   videoView.frame.size.width + 1,
                                   videoView.frame.size.height + 1);
 
-    self.bodyArea.frame = CGRectMake(0, videoHeight, maxW, maxH - videoHeight);
-    //dev
-    self.bodyArea.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1.0f];
-    self.bodyArea.layer.borderColor = [[[UIColor redColor] colorWithAlphaComponent:1.0f] CGColor];
-    self.bodyArea.layer.borderWidth = 10.0f;
+    self.bodyView.frame = CGRectMake(0, videoHeight, maxW, maxH - videoHeight);
 }
 // ↓
 - (void) showThisView {
     // only first time, SubViews add to "self.view".
     // After animation, they move to "parentView"
     videoView.backgroundColor = [UIColor blackColor];
-    [pageWrapper addSubview:self.bodyArea];
+    [pageWrapper addSubview:self.bodyView];
     [videoWrapper addSubview:videoView];
     [self.view addSubview:pageWrapper];
     [self.view addSubview:videoWrapper];
@@ -319,11 +315,10 @@ const CGFloat flickVelocity = 1000;
     else if(recognizer.state == UIGestureRecognizerStateChanged) {
         if(direction == UIPanGestureRecognizerDirectionDown || direction == UIPanGestureRecognizerDirectionUp) {
 
-            CGFloat appendY = 0;
-//            if (direction == UIPanGestureRecognizerDirectionDown) appendY = 40;
-//            else appendY = -40;
+//            CGFloat appendY = 20;
+//            if (direction == UIPanGestureRecognizerDirectionUp) appendY = -appendY;
             
-            CGFloat newOffsetY = touchPosInViewY - _touchPositionInHeaderY + appendY;
+            CGFloat newOffsetY = touchPosInViewY - _touchPositionInHeaderY;// + appendY;
 
             // CGFloat newOffsetX = newOffsetY * 0.35;
             [self adjustViewOnVerticalPan:newOffsetY recognizer:recognizer];
@@ -381,7 +376,6 @@ const CGFloat flickVelocity = 1000;
             {
                 if(velocity.x < -flickVelocity)
                 {
-                    NSLog(@"flick left");
                     [self fadeOutViewToLeft:recognizer completion: ^{
                         [self.delegate removeDraggableFloatingViewController];
                     }];
@@ -405,7 +399,6 @@ const CGFloat flickVelocity = 1000;
             {
                 if(velocity.x > flickVelocity)
                 {
-                    NSLog(@"flick right");
                     [self fadeOutViewToRight:recognizer completion: ^{
                         [self.delegate removeDraggableFloatingViewController];
                     }];
@@ -417,7 +410,6 @@ const CGFloat flickVelocity = 1000;
                 }
                 else
                 {
-//                    [self animateViewToLeft:recognizer completion:nil];
                     [self animateMiniViewToNormalPosition:recognizer completion:nil];
                 }
             }
@@ -480,11 +472,11 @@ const CGFloat flickVelocity = 1000;
                                                           videoView.frame.origin.x,  videoView.frame.origin.x,
                                                           vFrame.size.width, vFrame.size.height
                                                           );
-                             self.bodyArea.frame = CGRectMake(
+                             self.bodyView.frame = CGRectMake(
                                                          0,
                                                          videoView.frame.size.height,// keep stay on bottom of videoView
-                                                         self.bodyArea.frame.size.width,
-                                                         self.bodyArea.frame.size.height
+                                                         self.bodyView.frame.size.width,
+                                                         self.bodyView.frame.size.height
                                                          );
                              
                              borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
@@ -516,11 +508,11 @@ const CGFloat flickVelocity = 1000;
                              videoWrapper.frame = vFrame;
                              videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                              
-                             self.bodyArea.frame = CGRectMake(
+                             self.bodyView.frame = CGRectMake(
                                                          0,
                                                          videoView.frame.size.height,// keep stay on bottom of videoView
-                                                         self.bodyArea.frame.size.width,
-                                                         self.bodyArea.frame.size.height
+                                                         self.bodyView.frame.size.width,
+                                                         self.bodyView.frame.size.height
                                                          );
                              borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
                                                            videoView.frame.origin.x - 1,
@@ -660,11 +652,11 @@ const CGFloat flickVelocity = 1000;
                          transparentBlackSheet.alpha = 1.0;
                          borderView.alpha = 0.0;
 
-                         self.bodyArea.frame = CGRectMake(
+                         self.bodyView.frame = CGRectMake(
                                                      0,
                                                      videoView.frame.size.height,// keep stay on bottom of videoView
-                                                     self.bodyArea.frame.size.width,
-                                                     self.bodyArea.frame.size.height
+                                                     self.bodyView.frame.size.width,
+                                                     self.bodyView.frame.size.height
                                                      );
 
                          borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
@@ -748,9 +740,9 @@ const CGFloat flickVelocity = 1000;
                                                     vFrame.size.width,
                                                     vFrame.size.height
                                                 );
-                         pageWrapper.alpha=0;
-                         videoWrapper.alpha=1;
-                         borderView.alpha = 0.0;
+                         pageWrapper.alpha = 0;
+                         videoWrapper.alpha = 1;
+                         borderView.alpha = 1;
                      }
                      completion:^(BOOL finished) {
                          if (completion) completion();
@@ -762,7 +754,7 @@ const CGFloat flickVelocity = 1000;
 //    [self.txtViewGrowing resignFirstResponder];
     
     vFrame.origin.x = maxW + minimamVideoWidth;
-    wFrame.origin.x = vFrame.origin.x;
+    wFrame.origin.x = maxW + minimamVideoWidth;
 
     [UIView animateWithDuration:0.1
                           delay:0.0
@@ -771,9 +763,9 @@ const CGFloat flickVelocity = 1000;
                          pageWrapper.frame = wFrame;
                          videoWrapper.frame = vFrame;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                         pageWrapper.alpha=0;
-                         videoWrapper.alpha=1;
-                         borderView.alpha = 0.0;
+                         pageWrapper.alpha = 0;
+                         videoWrapper.alpha = 0;
+                         borderView.alpha = 0;
                      }
                      completion:^(BOOL finished) {
                          if (completion) completion();
@@ -784,10 +776,10 @@ const CGFloat flickVelocity = 1000;
 -(void)fadeOutViewToLeft:(UIPanGestureRecognizer *)recognizer completion:(void (^)())completion {
 //    [self.txtViewGrowing resignFirstResponder];
     
-    vFrame.origin.x = -minimamVideoWidth;
-    wFrame.origin.x = -minimamVideoWidth;
+    vFrame.origin.x = -maxW;
+    wFrame.origin.x = -maxW;
 
-    [UIView animateWithDuration:0.2
+    [UIView animateWithDuration:0.1
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {

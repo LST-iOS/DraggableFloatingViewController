@@ -24,7 +24,7 @@
 @interface DraggableFloatingViewController : UIViewController<UIGestureRecognizerDelegate>
 
 // please add subview on this
-@property(nonatomic, strong) UIView *bodyArea;
+@property(nonatomic, strong) UIView *bodyView;
 
 // please call from "viewDidLoad" from sub class
 - (void) setupViewsWithVideoView: (UIView *)vView

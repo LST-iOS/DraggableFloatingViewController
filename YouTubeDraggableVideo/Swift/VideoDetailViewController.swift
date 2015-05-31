@@ -31,8 +31,14 @@ class VideoDetailViewController: DraggableFloatingViewController {
         testView.frame = CGRect(x: 20, y: 10, width: 100, height: 40)
         testView.text = "body view"
         testView.textColor = UIColor.redColor()
-        self.bodyArea.addSubview(testView)
+        self.bodyView.addSubview(testView)
 
+        //dev
+        self.bodyView.backgroundColor = UIColor.whiteColor()
+        self.bodyView.layer.borderColor = UIColor.redColor().CGColor
+        self.bodyView.layer.borderWidth = 10.0
+
+        
         setupMoviePlayer()
         addObserver(selector: "onOrientationChanged", name: UIDeviceOrientationDidChangeNotification)
     }
