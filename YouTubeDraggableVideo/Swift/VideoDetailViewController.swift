@@ -33,14 +33,13 @@ class VideoDetailViewController: DraggableFloatingViewController {
     
     
     
+    
     override func onExpand() {
         showVideoControl()
     }
     override func onMinimized() {
         hideVideoControl()
     }
-    
-    
     
     
     
@@ -78,7 +77,7 @@ class VideoDetailViewController: DraggableFloatingViewController {
     
     
     
-    // ------------------------- events ---------------------------------
+    // ----------------------------- events -----------------------------------------------
     
     // MARK: Orientation
     func onOrientationChanged() {
@@ -151,6 +150,8 @@ class VideoDetailViewController: DraggableFloatingViewController {
         println("hideVideoControl")
         moviePlayer.controlStyle = MPMovieControlStyle.None
     }
+    
+    
     
     
     //-----------------------------------------------------------------------------------

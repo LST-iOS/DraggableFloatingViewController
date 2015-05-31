@@ -23,6 +23,10 @@
 // please extend
 @interface DraggableFloatingViewController : UIViewController<UIGestureRecognizerDelegate>
 
+
+@property (nonatomic, assign) id <DraggableFloatingViewControllerDelegate> delegate;
+
+
 // please add subview on this
 @property(nonatomic, strong) UIView *bodyArea;
 
@@ -31,9 +35,11 @@
                  videoViewHeight: (CGFloat) videoHeight
                       foldButton: (UIButton *)ibFoldBtn;
 
+- (void) onDealloc;// MUST OVERRIDE
+
 // please call from parent view controller
-- (void) showVideoViewControllerFromDelegateVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC;
-- (void) removeView;
+- (void) showVideoViewControllerOnParentVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC;
+- (void) removeAllViews;
 
 // please override if you want
 - (void) onExpand;

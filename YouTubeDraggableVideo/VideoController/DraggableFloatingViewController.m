@@ -32,8 +32,6 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
 
 @implementation DraggableFloatingViewController
 {
- 
-    id  <DraggableFloatingViewControllerDelegate> delegate;
     
     //local Frame storee
     CGRect videoWrapperFrame;
@@ -84,31 +82,36 @@ const CGFloat flickVelocity = 1000;
 
 
 
+// please override if you want
+- (void) onExpand{}
+- (void) onMinimized{}
 
-- (void) onExpand{}// please override
-- (void) onMinimized{}// please override
 
-
-
-- (void)dealloc
-{
-    NSLog(@"dealloc DraggableFloatingViewController");
-}
+//- (void)dealloc
+//{
+//    NSLog(@"dealloc DraggableFloatingViewController");
+//}
 
 
 
 
 # pragma mark - init
 
-- (void) showVideoViewControllerFromDelegateVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC {
+- (void) showVideoViewControllerOnParentVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC {
     
+    if( ![parentVC conformsToProtocol:@protocol(DraggableFloatingViewControllerDelegate)] ) {
+        NSAssert(NO, @"Parent view controller must confirm to protocol <DraggableFloatingViewControllerDelegate>.");
+    }
+    self.delegate = parentVC;
+
+    
+    // set portrait
     if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])) {
         [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
     }
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
     
-    delegate = parentVC;
     parentView = parentVC.view;
     
     [parentView addSubview:self.view];// then, "viewDidLoad" called
@@ -234,7 +237,7 @@ const CGFloat flickVelocity = 1000;
 
 
 
--(void)removeView
+-(void)removeAllViews
 {
     [videoWrapper removeFromSuperview];
     [pageWrapper removeFromSuperview];
@@ -368,8 +371,8 @@ const CGFloat flickVelocity = 1000;
                 if(recognizer.view.frame.origin.x<0)
                 {
                     [self.view removeFromSuperview];
-                    [self removeView];
-                    [delegate removeDraggableFloatingViewController];
+                    [self removeAllViews];
+                    [self.delegate removeDraggableFloatingViewController];
                     
                 }
                 else
@@ -387,8 +390,8 @@ const CGFloat flickVelocity = 1000;
                 if(recognizer.view.frame.origin.x>parentView.frame.size.width-50)
                 {
                     [self.view removeFromSuperview];
-                    [self removeView];
-                    [delegate removeDraggableFloatingViewController];
+                    [self removeAllViews];
+                    [self.delegate removeDraggableFloatingViewController];
                     
                 }
                 else
@@ -531,7 +534,7 @@ const CGFloat flickVelocity = 1000;
         
         if (direction==UIPanGestureRecognizerDirectionLeft)
         {
-            NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
+//            NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
             CGPoint velocity = [recognizer velocityInView:recognizer.view];
             
             BOOL isVerticalGesture = fabs(velocity.y) > fabs(velocity.x);
@@ -555,7 +558,7 @@ const CGFloat flickVelocity = 1000;
         }
         else if (direction==UIPanGestureRecognizerDirectionRight)
         {
-            NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
+//            NSLog(@"recognizer x=%f",recognizer.view.frame.origin.x);
             CGPoint velocity = [recognizer velocityInView:recognizer.view];
             
             BOOL isVerticalGesture = fabs(velocity.y) > fabs(velocity.x);
