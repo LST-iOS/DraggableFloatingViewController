@@ -184,9 +184,9 @@ const CGFloat flickVelocity = 1000;
 
     self.bodyArea.frame = CGRectMake(0, videoHeight, maxW, maxH - videoHeight);
     //dev
-    self.bodyArea.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:1.0f];
-    self.bodyArea.layer.borderColor = [[[UIColor orangeColor] colorWithAlphaComponent:1.0f] CGColor];
-    self.bodyArea.layer.borderWidth = 8.0f;
+    self.bodyArea.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1.0f];
+    self.bodyArea.layer.borderColor = [[[UIColor redColor] colorWithAlphaComponent:1.0f] CGColor];
+    self.bodyArea.layer.borderWidth = 10.0f;
 }
 // ↓
 - (void) showThisView {
@@ -319,9 +319,9 @@ const CGFloat flickVelocity = 1000;
     else if(recognizer.state == UIGestureRecognizerStateChanged) {
         if(direction == UIPanGestureRecognizerDirectionDown || direction == UIPanGestureRecognizerDirectionUp) {
 
-            CGFloat appendY;
-            if (direction == UIPanGestureRecognizerDirectionDown) appendY = 80;
-            else appendY = -80;
+            CGFloat appendY = 0;
+//            if (direction == UIPanGestureRecognizerDirectionDown) appendY = 40;
+//            else appendY = -40;
             
             CGFloat newOffsetY = touchPosInViewY - _touchPositionInHeaderY + appendY;
 

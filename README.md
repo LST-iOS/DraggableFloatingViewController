@@ -3,7 +3,7 @@
 
 # DraggableFloatingViewController
 
-** YouTube like ViewController **
+### YouTube like ViewController
 
 DraggableFloatingViewController allows you to play videos on a floating mini window at the bottom of your screen from sites like YouTube, Vimeo & Facebook or custom video , yes you have to prepare your video view for that.
 
@@ -16,10 +16,6 @@ Screenshot
 ------------
 
  ![Output sample](https://github.com/vizllx/DraggableYoutubeFloatingVideo/raw/master/Screenshot.gif)
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/vizllx/draggableyoutubefloatingvideo/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
 
 
 
@@ -35,7 +31,7 @@ class VideoDetailViewController: DraggableFloatingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // prepare your player
+        // prepare your video player
         moviePlayer = MPMoviePlayerController()
 
         // prepare your closing button

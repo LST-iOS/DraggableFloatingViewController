@@ -28,8 +28,9 @@ class VideoDetailViewController: DraggableFloatingViewController {
 
         // add sub views on body area
         let testView = UILabel()
-        testView.frame = CGRect(x: 20, y: 20, width: 100, height: 40)
-        testView.text = "test view"
+        testView.frame = CGRect(x: 20, y: 10, width: 100, height: 40)
+        testView.text = "body view"
+        testView.textColor = UIColor.redColor()
         self.bodyArea.addSubview(testView)
 
         setupMoviePlayer()
@@ -55,7 +56,7 @@ class VideoDetailViewController: DraggableFloatingViewController {
         var url = NSURL.fileURLWithPath(NSBundle.mainBundle().pathForResource("test", ofType: "mp4")!)
         moviePlayer.contentURL = url
         moviePlayer.fullscreen = false
-        moviePlayer.controlStyle = MPMovieControlStyle.Embedded
+        moviePlayer.controlStyle = MPMovieControlStyle.None
         moviePlayer.repeatMode = MPMovieRepeatMode.None
         moviePlayer.prepareToPlay()
         
@@ -148,7 +149,7 @@ class VideoDetailViewController: DraggableFloatingViewController {
     // FIXIT: Don't work
     func showVideoControl() {
 //        println("showVideoControl");
-        moviePlayer.controlStyle = MPMovieControlStyle.Embedded
+        moviePlayer.controlStyle = MPMovieControlStyle.None
     }
     
     // FIXIT: Don't work
