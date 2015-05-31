@@ -26,21 +26,26 @@ class VideoDetailViewController: DraggableFloatingViewController {
         self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160, foldButton: foldBtn);
 
         setupMoviePlayer()
-
-        // play
-        let seconds = 1.0
-        let delay = seconds * Double(NSEC_PER_SEC)// nanoseconds per seconds
-        var dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-            self.moviePlayer.play()
-        })
+        
+        // orientation handling
+        addObserver(selector: "onOrientationChanged", name: UIDeviceOrientationDidChangeNotification)
     }
+    
+    
+    
+    override func onExpand() {
+        showVideoControl()
+    }
+    override func onMinimized() {
+        hideVideoControl()
+    }
+    
+    
     
     
     
     func setupMoviePlayer() {
         // setupMovie
-        // var url = NSURL(string: "http://jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v")
         var url = NSURL.fileURLWithPath(NSBundle.mainBundle().pathForResource("test", ofType: "mp4")!)
         moviePlayer.contentURL = url
         moviePlayer.fullscreen = false
@@ -48,6 +53,14 @@ class VideoDetailViewController: DraggableFloatingViewController {
         moviePlayer.repeatMode = MPMovieRepeatMode.None
         moviePlayer.prepareToPlay()
         
+        // play
+        let seconds = 1.0
+        let delay = seconds * Double(NSEC_PER_SEC)// nanoseconds per seconds
+        var dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            self.moviePlayer.play()
+        })
+
         // for movie loop
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "moviePlayBackDidFinish:",
             name: MPMoviePlayerPlaybackDidFinishNotification,
@@ -58,45 +71,114 @@ class VideoDetailViewController: DraggableFloatingViewController {
     func moviePlayBackDidFinish(notification: NSNotification) {
         println("moviePlayBackDidFinish:")
         moviePlayer.play()
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: MPMoviePlayerPlaybackDidFinishNotification, object: nil)
+//        NSNotificationCenter.defaultCenter().removeObserver(self, name: MPMoviePlayerPlaybackDidFinishNotification, object: nil)
+        removeObserver(MPMoviePlayerPlaybackDidFinishNotification)
     }
     
     
     
     
-    // MARK: FullScreen Method
-    override func isFullScreen() -> Bool {
-        println("isFullScreen: " + String(stringInterpolationSegment: moviePlayer.fullscreen))
-        return moviePlayer.fullscreen
-    }
-    override func goFullScreen() {
-        println("goFullScreen")
-        moviePlayer.controlStyle = MPMovieControlStyle.Fullscreen
-        moviePlayer.fullscreen = true
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willExitFullScreen", name:MPMoviePlayerWillExitFullscreenNotification, object: nil)
-    }
-    func willExitFullScreen() {
-        println("willExitFullScreen")
-        if (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication().statusBarOrientation))
-        {
-            var portrait = UIInterfaceOrientation.Portrait.rawValue as NSNumber
-            UIDevice.currentDevice().setValue(portrait, forKey: "orientation")
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: MPMoviePlayerWillExitFullscreenNotification, object: nil)
-        }
-    }
+    // ------------------------- events ---------------------------------
+    
+    // MARK: Orientation
+    func onOrientationChanged() {
+        let orientation: UIInterfaceOrientation = getOrientation()
+        
+        switch orientation {
+        
+        case .Portrait, .PortraitUpsideDown:
+            println("portrait")
+            exitFullScreen()
 
-    
-    override func showVideoControl() {
-        println("showVideoControl");
-        moviePlayer.controlStyle = MPMovieControlStyle.Embedded
-    }
-    
-    override func hideVideoControl() {
-        println("hideVideoControl")
-        moviePlayer.controlStyle = MPMovieControlStyle.None
+        case .LandscapeLeft, .LandscapeRight:
+            println("landscape")
+            goFullScreen()
+
+        default:
+            println("no action for this orientation:" + orientation.rawValue.description)
+        }
+        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    
+    
+    
+    
+    // --------------------------------- util ------------------------------------------
+    
+    // MARK: FullScreen Method
+    func isFullScreen() -> Bool {
+        println("isFullScreen: " + String(stringInterpolationSegment: moviePlayer.fullscreen))
+        return moviePlayer.fullscreen
+    }
+    func goFullScreen() {
+        if !isFullScreen() {
+            println("goFullScreen")
+            moviePlayer.controlStyle = MPMovieControlStyle.Fullscreen
+            moviePlayer.fullscreen = true
+            addObserver(selector: "willExitFullScreen", name: MPMoviePlayerWillExitFullscreenNotification)
+        }
+    }
+    func exitFullScreen() {
+        if isFullScreen() {
+            println("exit fullscreen");
+            moviePlayer.fullscreen = false
+        }
+    }
+    func willExitFullScreen() {
+        println("willExitFullScreen")
+        if isLandscape()
+        {
+            setOrientation(.Portrait)
+        }
+
+        removeObserver(MPMoviePlayerWillExitFullscreenNotification)
+    }
+
+    
+    // FIXIT: Don't work
+    func showVideoControl() {
+        println("showVideoControl");
+        moviePlayer.controlStyle = MPMovieControlStyle.Embedded
+    }
+    
+    // FIXIT: Don't work
+    func hideVideoControl() {
+        println("hideVideoControl")
+        moviePlayer.controlStyle = MPMovieControlStyle.None
+    }
+    
+    
+    //-----------------------------------------------------------------------------------
+    
+    func getOrientation() -> UIInterfaceOrientation {
+        return UIApplication.sharedApplication().statusBarOrientation
+    }
+    
+    func setOrientation(orientation: UIInterfaceOrientation) {
+        var orientationNum: NSNumber = NSNumber(integer: orientation.rawValue)
+        UIDevice.currentDevice().setValue(orientationNum, forKey: "orientation")
+    }
+    
+    func addObserver(selector aSelector: Selector, name aName: String? ) {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: aSelector, name:aName, object: nil)
+
+    }
+    
+    func removeObserver(aName: String?) {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: aName, object: nil)
+    }
+    
+    func isLandscape() -> Bool {
+        if (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication().statusBarOrientation)) {
+            return true
+        }
+        else {
+            return false
+        }
     }
 }

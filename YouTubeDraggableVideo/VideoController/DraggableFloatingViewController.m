@@ -85,43 +85,14 @@ const CGFloat flickVelocity = 1000;
 
 
 
-
-
-// PLEASE OVERRIDE
-- (BOOL) isFullScreen {
-    NSLog(@"isFullScreen");
-        NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!");
-    return false;
-}
-
-
-
-// PLEASE OVERRIDE
-- (void) goFullScreen {
-    NSLog(@"goFullScreen");
-     NSAssert(NO, @"This is an abstract method and should be overridden!!!!!!!!!!!");
-}
-
-
-
-// optional override
-- (void) hideVideoControl {
-    // moviePlayer.controlStyle = MPMoviewControlStyleDeafult
-}
-// optional override
-- (void) showVideoControl {
-    // moviePlayer.controlStyle = MPMoviewControlStyleNone
-}
-
-
-
+- (void) onExpand{}// please override
+- (void) onMinimized{}// please override
 
 
 
 - (void)dealloc
 {
-    //後始末処理
-    NSLog(@"dealloc");
+    NSLog(@"dealloc DraggableFloatingViewController");
 }
 
 
@@ -250,10 +221,10 @@ const CGFloat flickVelocity = 1000;
     [videoWrapper addGestureRecognizer:pan];
     
     // orientation behaver
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(orientationChanged:)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(orientationChanged:)
+//                                                 name:UIDeviceOrientationDidChangeNotification
+//                                               object:nil];
 
     [foldButton addTarget:self action:@selector(onTapDownButton) forControlEvents:UIControlEventTouchUpInside];
 
@@ -276,61 +247,6 @@ const CGFloat flickVelocity = 1000;
 
 
 
-
-#pragma mark - Orientation handling
-
-- (void) orientationChanged:(NSNotification *)notification {
-    [self adjustViewsForOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-}
-
-- (void) adjustViewsForOrientation:(UIInterfaceOrientation) orientation {
-    
-    NSLog(@"adjust for orientation:%ld", (long)orientation);
-    
-    switch (orientation)
-    {
-        case UIInterfaceOrientationPortrait:
-        case UIInterfaceOrientationPortraitUpsideDown:
-        {
-            NSLog(@"portrait called;");
-            //load the portrait view
-                // FIX: rewrite after
-            if([self isFullScreen])
-            {
-                if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-                {
-                    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-                }
-            }
-        }
-        break;
-
-        //　if Landscapemode then Fullscreen
-        case UIInterfaceOrientationLandscapeLeft:
-        case UIInterfaceOrientationLandscapeRight:
-        {
-            NSLog(@"landscape called;");
-            
-//            if(self.secondViewController!=nil)
-//            {
-                 if(![self isFullScreen])// && wrapperView.alpha >= 1)
-                {
-                
-                    // FIX: rewrite after
-                    [self goFullScreen];
-                }
-                /* else if( self.secondViewController.viewTable.alpha<=0)
-                 {
-                 if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-                 [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-                 } */
-//            }
-        }
-        break;
-        
-        case UIInterfaceOrientationUnknown:break;
-    }
-}
 
 
 
@@ -379,7 +295,7 @@ const CGFloat flickVelocity = 1000;
         _touchPositionInHeaderX = [recognizer locationInView:videoWrapper].x;
         if(direction==UIPanGestureRecognizerDirectionDown) {
             // player.controlStyle = MPMovieControlStyleNone;
-            [self hideVideoControl];
+//            [self hideVideoControl];
         }
     }
 
@@ -743,7 +659,8 @@ const CGFloat flickVelocity = 1000;
                      }
                      completion:^(BOOL finished) {
                          //                         player.controlStyle = MPMovieControlStyleDefault;
-                         [self showVideoControl];
+//                         [self showVideoControl];
+                         [self onExpand];
                          isExpandedMode = TRUE;
                          foldButton.hidden = FALSE;
                      }];
@@ -775,7 +692,8 @@ const CGFloat flickVelocity = 1000;
 
                      }
                      completion:^(BOOL finished) {
-                         [self hideVideoControl];
+//                         [self hideVideoControl];
+                         [self onMinimized];
                          //add tap gesture
                          tapRecognizer=nil;
                          if(tapRecognizer==nil)
@@ -837,7 +755,6 @@ const CGFloat flickVelocity = 1000;
                      }];
     
     [recognizer setTranslation:CGPointZero inView:recognizer.view];
-    
 }
 
 

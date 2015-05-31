@@ -22,13 +22,6 @@
 
 // please extend
 @interface DraggableFloatingViewController : UIViewController<UIGestureRecognizerDelegate>
-- (BOOL) isFullScreen;// please override
-- (void) goFullScreen;// please override
-
-
-- (void) hideVideoControl;// optional override
-- (void) showVideoControl;// optional override
-
 
 // please add subview on this
 @property(nonatomic, strong) UIView *bodyArea;
@@ -41,4 +34,8 @@
 // please call from parent view controller
 - (void) showVideoViewControllerFromDelegateVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC;
 - (void) removeView;
+
+// please override if you want
+- (void) onExpand;
+- (void) onMinimized;
 @end
