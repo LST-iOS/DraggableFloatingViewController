@@ -32,9 +32,9 @@ class VideoDetailViewController: DraggableFloatingViewController {
         testView.text = "body view"
         testView.textColor = UIColor.redColor()
         self.bodyView.addSubview(testView)
+        self.bodyView.backgroundColor = UIColor.whiteColor()
 
         //dev
-        self.bodyView.backgroundColor = UIColor.whiteColor()
         self.bodyView.layer.borderColor = UIColor.redColor().CGColor
         self.bodyView.layer.borderWidth = 10.0
 
@@ -43,10 +43,10 @@ class VideoDetailViewController: DraggableFloatingViewController {
         addObserver(selector: "onOrientationChanged", name: UIDeviceOrientationDidChangeNotification)
     }
     
-    override func onExpand() {
+    override func didExpand() {
         showVideoControl()
     }
-    override func onMinimized() {
+    override func didMinimize() {
         hideVideoControl()
     }
     

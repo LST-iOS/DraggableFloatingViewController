@@ -85,14 +85,14 @@ const CGFloat flickVelocity = 1000;
 
 
 // please override if you want
-- (void) onExpand{}
-- (void) onMinimized{}
+- (void) didExpand{}
+- (void) didMinimize{}
 
 
-//- (void)dealloc
-//{
-//    NSLog(@"dealloc DraggableFloatingViewController");
-//}
+- (void)dealloc
+{
+    NSLog(@"dealloc DraggableFloatingViewController");
+}
 
 
 
@@ -248,6 +248,7 @@ const CGFloat flickVelocity = 1000;
 
 -(void)removeAllViews
 {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
     [videoWrapper removeFromSuperview];
     [pageWrapper removeFromSuperview];
     [transparentBlackSheet removeFromSuperview];
@@ -669,7 +670,7 @@ const CGFloat flickVelocity = 1000;
                      completion:^(BOOL finished) {
                          //                         player.controlStyle = MPMovieControlStyleDefault;
 //                         [self showVideoControl];
-                         [self onExpand];
+                         [self didExpand];
                          isExpandedMode = TRUE;
                          foldButton.hidden = FALSE;
                      }];
@@ -702,7 +703,7 @@ const CGFloat flickVelocity = 1000;
                      }
                      completion:^(BOOL finished) {
 //                         [self hideVideoControl];
-                         [self onMinimized];
+                         [self didMinimize];
                          //add tap gesture
                          tapRecognizer=nil;
                          if(tapRecognizer==nil)

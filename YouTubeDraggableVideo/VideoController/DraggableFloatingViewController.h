@@ -37,6 +37,6 @@
 @property (nonatomic, assign) id <DraggableFloatingViewControllerDelegate> delegate;
 
 // please override if you want
-- (void) onExpand;
-- (void) onMinimized;
+- (void) didExpand;
+- (void) didMinimize;
 @end
