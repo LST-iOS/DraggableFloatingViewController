@@ -3,50 +3,74 @@
 
 # DraggableFloatingViewController
 
+** ViewController like YouTube**
+
 DraggableFloatingViewController allows you to play videos on a floating mini window at the bottom of your screen from sites like YouTube, Vimeo & Facebook or custom video , yes you have to prepare your video view for that.
 
 
 
-Usage
------
-```swift:FirstViewController.swift
+# Usage
 
-import UIKit
+## extend Class
+```swift
 
-class FirstViewController: UIViewController , DraggableFloatingViewControllerDelegate {
+class VideoDetailViewController: DraggableFloatingViewController {
 
-    var videoViewController: VideoDetailViewController!
+    var moviePlayer: MPMoviePlayerController!
 
-    @IBAction func onTapButton(sender: AnyObject) {
-        self.showSecondController()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        let foldBtn = UIButton()
+        foldBtn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        foldBtn.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
+
+        moviePlayer = MPMoviePlayerController()
+
+        self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160, foldButton: foldBtn);
+
+        // add sub views on body area
+        let testView = UILabel()
+        testView.frame = CGRect(x: 20, y: 20, width: 100, height: 40)
+        testView.text = "test view"
+        self.bodyArea.addSubview(testView)
     }
 
-    override func viewWillDisappear(animated: Bool) {
-        // when go to fullscreen, this is also called
-        if !self.videoViewController.isFullScreen() {
-            removeDraggableFloatingViewController()
-        }
+    override func onExpand() {
+        showVideoControl()
     }
-
-    func showSecondController() {
-        removeDraggableFloatingViewController()
-        self.videoViewController = VideoDetailViewController()
-        self.videoViewController.delegate = self
-        self.videoViewController.showVideoViewControllerOnParentVC(self)
+    override func onMinimized() {
+        hideVideoControl()
     }
-
-    // DraggableFloatingViewControllerDelegate
-    func removeDraggableFloatingViewController() {
-        println("🌠removeDraggableFloatingViewController")
-        if self.videoViewController != nil {
-            self.videoViewController.removeAllViews()
-            self.videoViewController = nil
-        }
-    }
-
 }
-
 ```
+
+
+
+## show
+
+```swift
+func showSecondController() {
+    removeDraggableFloatingViewController()
+    self.videoViewController = VideoDetailViewController()
+    self.videoViewController.delegate = self
+    self.videoViewController.showVideoViewControllerOnParentVC(self)
+}
+```
+
+
+## dismiss
+
+```swift
+func removeDraggableFloatingViewController() {
+    if self.videoViewController != nil {
+        self.videoViewController.removeAllViews()
+        self.videoViewController = nil
+    }
+}
+```
+
+
 
 How it works
 ------------

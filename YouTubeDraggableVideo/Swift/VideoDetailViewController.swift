@@ -117,12 +117,12 @@ class VideoDetailViewController: DraggableFloatingViewController {
     
     // MARK: FullScreen Method
     func isFullScreen() -> Bool {
-        println("isFullScreen: " + String(stringInterpolationSegment: moviePlayer.fullscreen))
+//        println("isFullScreen: " + String(stringInterpolationSegment: moviePlayer.fullscreen))
         return moviePlayer.fullscreen
     }
     func goFullScreen() {
         if !isFullScreen() {
-            println("goFullScreen")
+//            println("goFullScreen")
             moviePlayer.controlStyle = MPMovieControlStyle.Fullscreen
             moviePlayer.fullscreen = true
             addObserver(selector: "willExitFullScreen", name: MPMoviePlayerWillExitFullscreenNotification)
@@ -130,12 +130,12 @@ class VideoDetailViewController: DraggableFloatingViewController {
     }
     func exitFullScreen() {
         if isFullScreen() {
-            println("exit fullscreen");
+//            println("exit fullscreen");
             moviePlayer.fullscreen = false
         }
     }
     func willExitFullScreen() {
-        println("willExitFullScreen")
+//        println("willExitFullScreen")
         if isLandscape()
         {
             setOrientation(.Portrait)
@@ -147,13 +147,13 @@ class VideoDetailViewController: DraggableFloatingViewController {
     
     // FIXIT: Don't work
     func showVideoControl() {
-        println("showVideoControl");
+//        println("showVideoControl");
         moviePlayer.controlStyle = MPMovieControlStyle.Embedded
     }
     
     // FIXIT: Don't work
     func hideVideoControl() {
-        println("hideVideoControl")
+//        println("hideVideoControl")
         moviePlayer.controlStyle = MPMovieControlStyle.None
     }
     
