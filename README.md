@@ -3,7 +3,7 @@
 
 # DraggableFloatingViewController
 
-### YouTube like ViewController
+### Like YouTube app
 
 DraggableFloatingViewController allows you to play videos on a floating mini window at the bottom of your screen from sites like YouTube, Vimeo & Facebook or custom video , yes you have to prepare your video view for that.
 
@@ -96,7 +96,7 @@ override func onMinimized() {
 ## Please see demo app
 If you want to use this, you have to check this demo app.
 
-## Minimam Sample Classes
+## Minimam example Classes
 
 ### Minimam subclass
 
