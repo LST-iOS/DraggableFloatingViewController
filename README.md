@@ -167,7 +167,6 @@ class FirstViewController: UIViewController , DraggableFloatingViewControllerDel
 
     // DraggableFloatingViewControllerDelegate
     func removeDraggableFloatingViewController() {
-//        println("removeDraggableFloatingViewController")
         if self.videoViewController != nil {
             self.videoViewController.removeAllViews()
             self.videoViewController = nil
