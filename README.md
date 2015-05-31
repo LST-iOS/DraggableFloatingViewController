@@ -15,7 +15,7 @@ The view will animate the view just like Youtube mobile app, while tapping on vi
 Screenshot
 ------------
 
- ![Output sample](https://github.com/vizllx/DraggableYoutubeFloatingVideo/raw/master/Screenshot.gif)
+ ![Output sample](https://github.com/entotsu/DraggableFloatingViewController/raw/master/Screenshot2.gif)
 
 
 
