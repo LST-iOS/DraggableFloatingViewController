@@ -82,6 +82,8 @@ const CGFloat flickVelocity = 1000;
 
 
 
+
+
 // please override if you want
 - (void) onExpand{}
 - (void) onMinimized{}
@@ -91,6 +93,11 @@ const CGFloat flickVelocity = 1000;
 //{
 //    NSLog(@"dealloc DraggableFloatingViewController");
 //}
+
+
+
+
+
 
 
 
@@ -223,16 +230,12 @@ const CGFloat flickVelocity = 1000;
     pan.delegate = self;
     [videoWrapper addGestureRecognizer:pan];
     
-    // orientation behaver
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(orientationChanged:)
-//                                                 name:UIDeviceOrientationDidChangeNotification
-//                                               object:nil];
-
     [foldButton addTarget:self action:@selector(onTapDownButton) forControlEvents:UIControlEventTouchUpInside];
 
     isExpandedMode = TRUE;
 }
+
+
 
 
 
@@ -405,10 +408,6 @@ const CGFloat flickVelocity = 1000;
 }
 
 
-
-
-
-
 -(void)detectPanDirection:(CGPoint )velocity
 {
     foldButton.hidden=TRUE;
@@ -435,9 +434,6 @@ const CGFloat flickVelocity = 1000;
         }
     }
 }
-
-
-
 
 
 
