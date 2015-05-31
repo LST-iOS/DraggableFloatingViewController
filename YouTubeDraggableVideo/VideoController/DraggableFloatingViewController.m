@@ -336,12 +336,11 @@ const CGFloat flickVelocity = 1000;
 
     
     else if(recognizer.state == UIGestureRecognizerStateEnded){
-        
+
+        CGPoint velocity = [recognizer velocityInView:recognizer.view];
+
         if(direction == UIPanGestureRecognizerDirectionDown || direction == UIPanGestureRecognizerDirectionUp)
         {
-            
-            CGPoint velocity = [recognizer velocityInView:recognizer.view];
-            
             if(velocity.y < -flickVelocity)
             {
                 NSLog(@"flick up");
@@ -378,19 +377,23 @@ const CGFloat flickVelocity = 1000;
         
         else if (direction==UIPanGestureRecognizerDirectionLeft)
         {
-            if(pageWrapper.alpha<=0)
+            if(pageWrapper.alpha <= 0)
             {
-                
-                if(recognizer.view.frame.origin.x<0)
+                if(velocity.x < -flickVelocity)
                 {
-                    [self.view removeFromSuperview];
-                    [self removeAllViews];
+                    NSLog(@"flick left");
+                    [self fadeOutViewToLeft:recognizer completion: ^{
+                        [self.delegate removeDraggableFloatingViewController];
+                    }];
+                    return;
+                }
+                else if(recognizer.view.frame.origin.x < 0)
+                {
                     [self.delegate removeDraggableFloatingViewController];
-                    
                 }
                 else
                 {
-                    [self animateViewToRight:recognizer];
+                    [self animateMiniViewToNormalPosition:recognizer completion:nil];
                     
                 }
             }
@@ -398,19 +401,24 @@ const CGFloat flickVelocity = 1000;
         
         else if (direction==UIPanGestureRecognizerDirectionRight)
         {
-            if(pageWrapper.alpha<=0)
+            if(pageWrapper.alpha <= 0)
             {
-                if(recognizer.view.frame.origin.x>parentView.frame.size.width-50)
+                if(velocity.x > flickVelocity)
                 {
-                    [self.view removeFromSuperview];
-                    [self removeAllViews];
+                    NSLog(@"flick right");
+                    [self fadeOutViewToRight:recognizer completion: ^{
+                        [self.delegate removeDraggableFloatingViewController];
+                    }];
+                    return;
+                }
+                if(recognizer.view.frame.origin.x > parentView.frame.size.width - 50)
+                {
                     [self.delegate removeDraggableFloatingViewController];
-                    
                 }
                 else
                 {
-                    [self animateViewToLeft:recognizer];
-                    
+//                    [self animateViewToLeft:recognizer completion:nil];
+                    [self animateMiniViewToNormalPosition:recognizer completion:nil];
                 }
             }
         }
@@ -462,10 +470,10 @@ const CGFloat flickVelocity = 1000;
 
 //    if (pageWrapper.frame.origin.y < finalViewOffsetY && pageWrapper.frame.origin.y > 0) {
     if (progressRate <= 1 && pageWrapper.frame.origin.y > 0) {
-        [UIView animateWithDuration:0.03
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^ {
+//        [UIView animateWithDuration:0.03
+//                              delay:0.0
+//                            options:UIViewAnimationOptionCurveEaseInOut
+//                         animations:^ {
                              pageWrapper.frame = wFrame;
                              videoWrapper.frame = vFrame;
                              videoView.frame = CGRectMake(
@@ -489,21 +497,21 @@ const CGFloat flickVelocity = 1000;
                              pageWrapper.alpha = transparentBlackSheet.alpha = 1.0 - (percentage * 1.5);
                              if (percentage > 0.2) borderView.alpha = percentage;
                              else borderView.alpha = 0;
-                         }
-                         completion:^(BOOL finished) {
+//                         }
+//                         completion:^(BOOL finished) {
                              if(direction==UIPanGestureRecognizerDirectionDown)
                              {
                                  [parentView bringSubviewToFront:self.view];
                              }
-                         }];
+//                         }];
     }
     // what is this case...?
     else if (wFrame.origin.y < finalViewOffsetY && wFrame.origin.y > 0)
     {
-        [UIView animateWithDuration:0.09
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^ {
+//        [UIView animateWithDuration:0.09
+//                              delay:0.0
+//                            options:UIViewAnimationOptionCurveEaseInOut
+//                         animations:^ {
                              pageWrapper.frame = wFrame;
                              videoWrapper.frame = vFrame;
                              videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
@@ -520,7 +528,7 @@ const CGFloat flickVelocity = 1000;
                                                            videoView.frame.size.height + 1);
                              
                              borderView.alpha = progressRate;
-                         }completion:nil];
+//                         }completion:nil];
     }
 
     
@@ -724,43 +732,74 @@ const CGFloat flickVelocity = 1000;
                      }];
 }
 
+-(void)animateMiniViewToNormalPosition:(UIPanGestureRecognizer *)recognizer completion:(void (^)())completion {
 
--(void)animateViewToRight:(UIPanGestureRecognizer *)recognizer{
-//    [self.txtViewGrowing resignFirstResponder];
+    [self setFinalFrame];
+
     [UIView animateWithDuration:0.25
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
                          pageWrapper.frame = wFrame;
-                         videoWrapper.frame=vFrame;
+                         videoWrapper.frame = vFrame;
+                         videoView.frame=CGRectMake(
+                                                    videoView.frame.origin.x,
+                                                    videoView.frame.origin.x,
+                                                    vFrame.size.width,
+                                                    vFrame.size.height
+                                                );
+                         pageWrapper.alpha=0;
+                         videoWrapper.alpha=1;
+                         borderView.alpha = 0.0;
+                     }
+                     completion:^(BOOL finished) {
+                         if (completion) completion();
+                     }];
+    [recognizer setTranslation:CGPointZero inView:recognizer.view];
+}
+
+-(void)fadeOutViewToRight:(UIPanGestureRecognizer *)recognizer completion:(void (^)())completion {
+//    [self.txtViewGrowing resignFirstResponder];
+    
+    vFrame.origin.x = maxW + minimamVideoWidth;
+    wFrame.origin.x = vFrame.origin.x;
+
+    [UIView animateWithDuration:0.1
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         pageWrapper.frame = wFrame;
+                         videoWrapper.frame = vFrame;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
                          pageWrapper.alpha=0;
                          videoWrapper.alpha=1;
                          borderView.alpha = 0.0;
                      }
                      completion:^(BOOL finished) {
-                         
+                         if (completion) completion();
                      }];
     [recognizer setTranslation:CGPointZero inView:recognizer.view];
-    
 }
 
--(void)animateViewToLeft:(UIPanGestureRecognizer *)recognizer{
+-(void)fadeOutViewToLeft:(UIPanGestureRecognizer *)recognizer completion:(void (^)())completion {
 //    [self.txtViewGrowing resignFirstResponder];
     
-    [UIView animateWithDuration:0.25
+    vFrame.origin.x = -minimamVideoWidth;
+    wFrame.origin.x = -minimamVideoWidth;
+
+    [UIView animateWithDuration:0.2
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^ {
                          pageWrapper.frame = wFrame;
-                         videoWrapper.frame=vFrame;
+                         videoWrapper.frame = vFrame;
                          videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                         pageWrapper.alpha=0;
-                         videoWrapper.alpha=1;
-                         borderView.alpha = 1.0;
+                         pageWrapper.alpha = 0;
+                         videoWrapper.alpha = 0;
+                         borderView.alpha = 0;
                      }
                      completion:^(BOOL finished) {
-                         
+                         if (completion) completion();
                      }];
     
     [recognizer setTranslation:CGPointZero inView:recognizer.view];
