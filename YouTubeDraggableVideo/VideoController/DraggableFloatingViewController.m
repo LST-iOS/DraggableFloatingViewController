@@ -117,6 +117,16 @@ const CGFloat flickVelocity = 1000;
 
 
 
+
+- (void)dealloc
+{
+    //後始末処理
+    NSLog(@"dealloc");
+}
+
+
+
+
 # pragma mark - init
 
 - (void) showVideoViewControllerFromDelegateVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC {
