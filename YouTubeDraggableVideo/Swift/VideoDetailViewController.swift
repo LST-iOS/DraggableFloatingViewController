@@ -18,21 +18,23 @@ class VideoDetailViewController: DraggableFloatingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let foldBtn = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+        let foldBtn = UIButton()
+        foldBtn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         foldBtn.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
 
         moviePlayer = MPMoviePlayerController()
 
         self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160, foldButton: foldBtn);
 
+        // add sub views on body area
+        let testView = UILabel()
+        testView.frame = CGRect(x: 20, y: 20, width: 100, height: 40)
+        testView.text = "test view"
+        self.bodyArea.addSubview(testView)
+
         setupMoviePlayer()
-        
-        // orientation handling
         addObserver(selector: "onOrientationChanged", name: UIDeviceOrientationDidChangeNotification)
     }
-    
-    
-    
     
     override func onExpand() {
         showVideoControl()
@@ -42,6 +44,11 @@ class VideoDetailViewController: DraggableFloatingViewController {
     }
     
     
+    
+    
+    
+    
+    // --------------------------------------------------------------------------------------------------
     
     func setupMoviePlayer() {
         // setupMovie
@@ -70,7 +77,6 @@ class VideoDetailViewController: DraggableFloatingViewController {
     func moviePlayBackDidFinish(notification: NSNotification) {
         println("moviePlayBackDidFinish:")
         moviePlayer.play()
-//        NSNotificationCenter.defaultCenter().removeObserver(self, name: MPMoviePlayerPlaybackDidFinishNotification, object: nil)
         removeObserver(MPMoviePlayerPlaybackDidFinishNotification)
     }
     

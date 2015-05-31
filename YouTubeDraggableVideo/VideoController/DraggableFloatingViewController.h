@@ -12,8 +12,8 @@
 
 
 @protocol DraggableFloatingViewControllerDelegate
-    @required
-    - (void)removeDraggableFloatingViewController;
+@required
+- (void)removeDraggableFloatingViewController;
 @end
 
 
@@ -23,23 +23,20 @@
 // please extend
 @interface DraggableFloatingViewController : UIViewController<UIGestureRecognizerDelegate>
 
-    // please add subview on this
-    @property(nonatomic, strong) UIView *bodyArea;
+// please add subview on this
+@property(nonatomic, strong) UIView *bodyArea;
 
-    // please call from "viewDidLoad" from sub class
-    - (void) setupViewsWithVideoView: (UIView *)vView
-                     videoViewHeight: (CGFloat) videoHeight
-                          foldButton: (UIButton *)ibFoldBtn;
+// please call from "viewDidLoad" from sub class
+- (void) setupViewsWithVideoView: (UIView *)vView
+                 videoViewHeight: (CGFloat) videoHeight
+                      foldButton: (UIButton *)ibFoldBtn;
 
+// please call from parent view controller
+- (void) showVideoViewControllerOnParentVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC;
+- (void) removeAllViews;
+@property (nonatomic, assign) id <DraggableFloatingViewControllerDelegate> delegate;
 
-    // please call from parent view controller
-    - (void) showVideoViewControllerOnParentVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC;
-    - (void) removeAllViews;
-    @property (nonatomic, assign) id <DraggableFloatingViewControllerDelegate> delegate;
-
-
-
-    // please override if you want
-    - (void) onExpand;
-    - (void) onMinimized;
+// please override if you want
+- (void) onExpand;
+- (void) onMinimized;
 @end

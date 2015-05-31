@@ -97,7 +97,14 @@ const CGFloat flickVelocity = 1000;
 
 
 
-
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        self.bodyArea = [[UIView alloc] init];
+    }
+    return self;
+}
 
 
 
@@ -105,6 +112,8 @@ const CGFloat flickVelocity = 1000;
 # pragma mark - init
 
 - (void) showVideoViewControllerOnParentVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC {
+    
+    NSLog(@"showVideoViewControllerOnParentVC");
     
     if( ![parentVC conformsToProtocol:@protocol(DraggableFloatingViewControllerDelegate)] ) {
         NSAssert(NO, @"Parent view controller must confirm to protocol <DraggableFloatingViewControllerDelegate>.");
@@ -132,6 +141,8 @@ const CGFloat flickVelocity = 1000;
             videoViewHeight: (CGFloat) videoHeight
                  foldButton: (UIButton *)foldBtn
 {
+    NSLog(@"setupViewsWithVideoView");
+
     videoView = vView;
     foldButton = foldBtn;
     
@@ -171,7 +182,6 @@ const CGFloat flickVelocity = 1000;
                                   videoView.frame.size.width + 1,
                                   videoView.frame.size.height + 1);
 
-    self.bodyArea = [[UIView alloc] init];
     self.bodyArea.frame = CGRectMake(0, videoHeight, maxW, maxH - videoHeight);
     //dev
     self.bodyArea.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:1.0f];
