@@ -27,17 +27,16 @@ Screenshot
 #### set your video view in "viewDidLoad" of subclass
 
 ```swift
-self.setupViewsWithVideoView(yourMoivePlayer.view, //UIView
-    videoViewHeight: yourPlayerHeight, //CGFloat
-    foldButton: yourFoldButton //UIButton
-)
-```
+override func viewDidLoad() {
 
-#### add sub views to body view
+    self.setupViewsWithVideoView(yourMoivePlayer.view, //UIView
+        videoViewHeight: yourPlayerHeight, //CGFloat
+        foldButton: yourFoldButton //UIButton
+    )
 
-```swift
-// you can add sub views on body area
-self.bodyArea.addSubview(yourView)
+    // add your view to bodyArea
+    self.bodyArea.addSubview(yourView)
+}
 ```
 
 ## in parent view controller
@@ -72,12 +71,27 @@ func removeDraggableFloatingViewController() {
 
 
 # Please edit "info.plist"
-* Please edit "info.plist" to hide status bar to disable Swipe Down Gesture of Notification Center.
+To disable swipe down gesture of Notification Center, you need to edit "info.plist" to hide status bar.
 http://stackoverflow.com/questions/18059703/cannot-hide-status-bar-in-ios7
 ![editInfoPlist](http://i.stack.imgur.com/dM32P.png "editInfoPlist")
 
 
 --------------------------------------------------
+
+--------------------------------------------------
+
+--------------------------------------------------
+# please override if you want
+```swift
+override func onExpand() {
+    showVideoControl()
+}
+override func onMinimized() {
+    hideVideoControl()
+}
+```
+
+-------------------------------------------------------
 
 ## Please see demo app
 If you want to use this, you have to check this demo app.
