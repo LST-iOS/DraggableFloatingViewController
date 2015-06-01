@@ -13,12 +13,11 @@
 		253F2E381A7F5907007FD89E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 253F2E371A7F5907007FD89E /* Images.xcassets */; };
 		253F2E3B1A7F5907007FD89E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253F2E391A7F5907007FD89E /* LaunchScreen.xib */; };
 		253F2E471A7F5907007FD89E /* YouTubeDraggableVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 253F2E461A7F5907007FD89E /* YouTubeDraggableVideoTests.m */; };
-		253F2E581A7F5A4A007FD89E /* FirstVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 253F2E541A7F5A4A007FD89E /* FirstVC.m */; };
-		253F2E591A7F5A4A007FD89E /* DraggableFloatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 253F2E571A7F5A4A007FD89E /* DraggableFloatingViewController.m */; };
 		253F2E5C1A7F6027007FD89E /* profilePhoto.png in Resources */ = {isa = PBXBuildFile; fileRef = 253F2E5B1A7F6027007FD89E /* profilePhoto.png */; };
+		B0125D7B1B1BD88B005FF053 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0125D781B1BD88B005FF053 /* FirstViewController.swift */; };
+		B0125D7C1B1BD88B005FF053 /* VideoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0125D791B1BD88B005FF053 /* VideoDetailViewController.swift */; };
+		B0125D801B1BD897005FF053 /* DraggableFloatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0125D7F1B1BD897005FF053 /* DraggableFloatingViewController.m */; };
 		B04E93C31B168CEB004384E8 /* test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B04E93C21B168CEB004384E8 /* test.mp4 */; };
-		B04E93CB1B16946A004384E8 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04E93C81B16946A004384E8 /* FirstViewController.swift */; };
-		B04E93CC1B16946A004384E8 /* VideoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04E93C91B16946A004384E8 /* VideoDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,16 +42,14 @@
 		253F2E401A7F5907007FD89E /* YouTubeDraggableVideoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YouTubeDraggableVideoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		253F2E451A7F5907007FD89E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		253F2E461A7F5907007FD89E /* YouTubeDraggableVideoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YouTubeDraggableVideoTests.m; sourceTree = "<group>"; };
-		253F2E531A7F5A4A007FD89E /* FirstVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstVC.h; sourceTree = "<group>"; };
-		253F2E541A7F5A4A007FD89E /* FirstVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstVC.m; sourceTree = "<group>"; };
-		253F2E561A7F5A4A007FD89E /* DraggableFloatingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DraggableFloatingViewController.h; sourceTree = "<group>"; };
-		253F2E571A7F5A4A007FD89E /* DraggableFloatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DraggableFloatingViewController.m; sourceTree = "<group>"; };
 		253F2E5B1A7F6027007FD89E /* profilePhoto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profilePhoto.png; sourceTree = "<group>"; };
+		B0125D781B1BD88B005FF053 /* FirstViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
+		B0125D791B1BD88B005FF053 /* VideoDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailViewController.swift; sourceTree = "<group>"; };
+		B0125D7A1B1BD88B005FF053 /* YouTubeDraggableVideo-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YouTubeDraggableVideo-Bridging-Header.h"; sourceTree = "<group>"; };
+		B0125D7E1B1BD897005FF053 /* DraggableFloatingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DraggableFloatingViewController.h; sourceTree = "<group>"; };
+		B0125D7F1B1BD897005FF053 /* DraggableFloatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DraggableFloatingViewController.m; sourceTree = "<group>"; };
 		B04E93C21B168CEB004384E8 /* test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.mp4; sourceTree = "<group>"; };
 		B04E93C41B168D16004384E8 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
-		B04E93C81B16946A004384E8 /* FirstViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		B04E93C91B16946A004384E8 /* VideoDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailViewController.swift; sourceTree = "<group>"; };
-		B04E93CA1B16946A004384E8 /* YouTubeDraggableVideo-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YouTubeDraggableVideo-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,13 +91,12 @@
 		253F2E291A7F5907007FD89E /* YouTubeDraggableVideo */ = {
 			isa = PBXGroup;
 			children = (
+				B0125D7D1B1BD897005FF053 /* Source */,
+				B0125D771B1BD88B005FF053 /* Demo */,
 				253F2E5A1A7F5A68007FD89E /* AppDelegate */,
-				B04E93C71B16946A004384E8 /* Swift */,
-				253F2E551A7F5A4A007FD89E /* VideoController */,
 				253F2E341A7F5907007FD89E /* Main.storyboard */,
 				253F2E371A7F5907007FD89E /* Images.xcassets */,
 				253F2E391A7F5907007FD89E /* LaunchScreen.xib */,
-				253F2E521A7F5A4A007FD89E /* FirstController */,
 				B04E93C11B168CEB004384E8 /* sampleMovies */,
 				253F2E2A1A7F5907007FD89E /* Supporting Files */,
 			);
@@ -134,24 +130,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		253F2E521A7F5A4A007FD89E /* FirstController */ = {
-			isa = PBXGroup;
-			children = (
-				253F2E531A7F5A4A007FD89E /* FirstVC.h */,
-				253F2E541A7F5A4A007FD89E /* FirstVC.m */,
-			);
-			path = FirstController;
-			sourceTree = "<group>";
-		};
-		253F2E551A7F5A4A007FD89E /* VideoController */ = {
-			isa = PBXGroup;
-			children = (
-				253F2E561A7F5A4A007FD89E /* DraggableFloatingViewController.h */,
-				253F2E571A7F5A4A007FD89E /* DraggableFloatingViewController.m */,
-			);
-			path = VideoController;
-			sourceTree = "<group>";
-		};
 		253F2E5A1A7F5A68007FD89E /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +139,25 @@
 			path = AppDelegate;
 			sourceTree = "<group>";
 		};
+		B0125D771B1BD88B005FF053 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				B0125D781B1BD88B005FF053 /* FirstViewController.swift */,
+				B0125D791B1BD88B005FF053 /* VideoDetailViewController.swift */,
+				B0125D7A1B1BD88B005FF053 /* YouTubeDraggableVideo-Bridging-Header.h */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		B0125D7D1B1BD897005FF053 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				B0125D7E1B1BD897005FF053 /* DraggableFloatingViewController.h */,
+				B0125D7F1B1BD897005FF053 /* DraggableFloatingViewController.m */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
 		B04E93C11B168CEB004384E8 /* sampleMovies */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,16 +165,6 @@
 				B04E93C21B168CEB004384E8 /* test.mp4 */,
 			);
 			path = sampleMovies;
-			sourceTree = "<group>";
-		};
-		B04E93C71B16946A004384E8 /* Swift */ = {
-			isa = PBXGroup;
-			children = (
-				B04E93C81B16946A004384E8 /* FirstViewController.swift */,
-				B04E93C91B16946A004384E8 /* VideoDetailViewController.swift */,
-				B04E93CA1B16946A004384E8 /* YouTubeDraggableVideo-Bridging-Header.h */,
-			);
-			path = Swift;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -283,12 +270,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B04E93CB1B16946A004384E8 /* FirstViewController.swift in Sources */,
-				B04E93CC1B16946A004384E8 /* VideoDetailViewController.swift in Sources */,
-				253F2E581A7F5A4A007FD89E /* FirstVC.m in Sources */,
 				253F2E301A7F5907007FD89E /* AppDelegate.m in Sources */,
 				253F2E2D1A7F5907007FD89E /* main.m in Sources */,
-				253F2E591A7F5A4A007FD89E /* DraggableFloatingViewController.m in Sources */,
+				B0125D7C1B1BD88B005FF053 /* VideoDetailViewController.swift in Sources */,
+				B0125D801B1BD897005FF053 /* DraggableFloatingViewController.m in Sources */,
+				B0125D7B1B1BD88B005FF053 /* FirstViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,7 +403,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "YouTubeDraggableVideo/Swift/YouTubeDraggableVideo-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "YouTubeDraggableVideo/Demo/YouTubeDraggableVideo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -433,7 +419,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "YouTubeDraggableVideo/Swift/YouTubeDraggableVideo-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "YouTubeDraggableVideo/Demo/YouTubeDraggableVideo-Bridging-Header.h";
 			};
 			name = Release;
 		};
