@@ -139,7 +139,7 @@ const CGFloat flickVelocity = 1000;
 // VIEW DID LOAD
 - (void) setupViewsWithVideoView: (UIView *)vView
             videoViewHeight: (CGFloat) videoHeight
-                 foldButton: (UIButton *)foldBtn
+                 minimizeButton: (UIButton *)foldBtn
 {
     NSLog(@"setupViewsWithVideoView");
 

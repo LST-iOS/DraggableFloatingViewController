@@ -29,7 +29,7 @@
 // please call from "viewDidLoad" from sub class
 - (void) setupViewsWithVideoView: (UIView *)vView
                  videoViewHeight: (CGFloat) videoHeight
-                      foldButton: (UIButton *)ibFoldBtn;
+                      minimizeButton: (UIButton *)ibFoldBtn;
 
 // please call from parent view controller
 - (void) showVideoViewControllerOnParentVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC;
