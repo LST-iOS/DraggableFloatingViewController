@@ -34,8 +34,8 @@ override func viewDidLoad() {
         foldButton: yourFoldButton //UIButton
     )
 
-    // add your view to bodyArea
-    self.bodyArea.addSubview(yourView)
+    // add your view to bodyView
+    self.bodyView.addSubview(yourView)
 }
 ```
 
@@ -83,10 +83,10 @@ http://stackoverflow.com/questions/18059703/cannot-hide-status-bar-in-ios7
 --------------------------------------------------
 # please override if you want
 ```swift
-override func onExpand() {
+override func didExpand() {
     showVideoControl()
 }
-override func onMinimized() {
+override func didMinimize() {
     hideVideoControl()
 }
 ```
@@ -96,6 +96,8 @@ override func onMinimized() {
 ## Please see demo app
 If you want to use this, you have to check this demo app.
 
+
+<!--
 ## Minimam example Classes
 
 ### Minimam subclass
@@ -122,18 +124,18 @@ class VideoDetailViewController: DraggableFloatingViewController {
             foldButton: foldBtn
         );
 
-        // you can add sub views on body area
+        // you can add sub views on bodyView
         let testView = UILabel()
         testView.frame = CGRect(x: 20, y: 20, width: 100, height: 40)
         testView.text = "test view"
-        self.bodyArea.addSubview(testView)
+        self.bodyView.addSubview(testView)
     }
 
     // please override if you want
-    override func onExpand() {
+    override func didExpand() {
         showVideoControl()
     }
-    override func onMinimized() {
+    override func didMinimize() {
         hideVideoControl()
     }
 }
@@ -174,3 +176,4 @@ class FirstViewController: UIViewController , DraggableFloatingViewControllerDel
     }
 }
 ```
+-->
