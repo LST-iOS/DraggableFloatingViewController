@@ -31,7 +31,7 @@ override func viewDidLoad() {
 
     self.setupViewsWithVideoView(yourMoivePlayer.view, //UIView
         videoViewHeight: yourPlayerHeight, //CGFloat
-        foldButton: yourFoldButton //UIButton
+        minimizeButton: yourButton //UIButton
     )
 
     // add your view to bodyView
