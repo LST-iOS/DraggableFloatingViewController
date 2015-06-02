@@ -39,4 +39,9 @@
 // please override if you want
 - (void) didExpand;
 - (void) didMinimize;
+
+// please call if you want
+- (void) minimizeViewOnPan;
+- (void) expandViewOnPan;
+
 @end

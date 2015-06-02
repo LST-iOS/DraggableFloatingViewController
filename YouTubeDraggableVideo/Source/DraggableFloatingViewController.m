@@ -282,19 +282,11 @@ const CGFloat flickVelocity = 1000;
 # pragma  mark - tap action
 - (void) onTapDownButton {
     [self minimizeViewOnPan];
-    NSLog(@"onTapButons");
 }
 
 
 - (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
-    NSLog(@"expandViewOnTap");
     [self expandViewOnPan];
-    for (UIGestureRecognizer *recognizer in videoWrapper.gestureRecognizers) {
-        
-        if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-            [videoWrapper removeGestureRecognizer:recognizer];
-        }
-    }
 }
 
 
@@ -676,8 +668,15 @@ const CGFloat flickVelocity = 1000;
 
                      }
                      completion:^(BOOL finished) {
+                         
+                         for (UIGestureRecognizer *recognizer in videoWrapper.gestureRecognizers) {
+                             if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+                                 [videoWrapper removeGestureRecognizer:recognizer];
+                             }
+                         }
+
                          //                         player.controlStyle = MPMovieControlStyleDefault;
-//                         [self showVideoControl];
+                         //                         [self showVideoControl];
                          [self didExpand];
                          isExpandedMode = TRUE;
                          foldButton.hidden = FALSE;
