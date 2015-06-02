@@ -234,7 +234,7 @@ const CGFloat flickVelocity = 1000;
     self.view.hidden = TRUE;
 
     [videoView addSubview:borderView];
-    [videoView addSubview:foldButton];
+    [videoWrapper addSubview:foldButton];
 
     vFrame = videoWrapperFrame;
     wFrame = pageWrapperFrame;
