@@ -107,6 +107,14 @@ const CGFloat flickVelocity = 1000;
 }
 
 
+- (id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.bodyView = [[UIView alloc] init];
+    }
+    return self;
+}
+
 
 
 # pragma mark - init
