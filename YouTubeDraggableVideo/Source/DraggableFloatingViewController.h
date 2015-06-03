@@ -25,6 +25,8 @@
 
 // please add subview on this
 @property(nonatomic, strong) UIView *bodyView;
+//please add controller on this
+@property(nonatomic, strong) UIView *controllerView;
 
 // please call from "viewDidLoad" from sub class
 - (void) setupViewsWithVideoView: (UIView *)vView
@@ -41,7 +43,7 @@
 - (void) didMinimize;
 
 // please call if you want
-- (void) minimizeViewOnPan;
-- (void) expandViewOnPan;
+- (void) minimizeView;
+- (void) expandView;
 
 @end

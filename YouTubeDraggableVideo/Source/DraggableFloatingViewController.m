@@ -152,7 +152,7 @@ const CGFloat flickVelocity = 1000;
     NSLog(@"setupViewsWithVideoView");
 
     videoView = vView;
-    foldButton = foldBtn;
+    foldButton = foldBtn;//control show and hide
     
     CGRect window = [[UIScreen mainScreen] bounds];
     maxH = window.size.height;
@@ -167,7 +167,9 @@ const CGFloat flickVelocity = 1000;
     videoWrapper.frame = CGRectMake(0, 0, videoWidth, videoHeight);
     
     videoView.frame = videoWrapper.frame;
-
+    self.controllerView = [[UIView alloc] init];
+    self.controllerView.frame = videoWrapper.frame;
+    
     pageWrapper = [[UIView alloc] init];
     pageWrapper.frame = CGRectMake(0, 0, maxW, maxH);
     
@@ -234,6 +236,8 @@ const CGFloat flickVelocity = 1000;
     self.view.hidden = TRUE;
 
     [videoView addSubview:borderView];
+    
+    [videoWrapper addSubview:self.controllerView];
     [videoWrapper addSubview:foldButton];
 
     vFrame = videoWrapperFrame;
@@ -281,12 +285,12 @@ const CGFloat flickVelocity = 1000;
 
 # pragma  mark - tap action
 - (void) onTapDownButton {
-    [self minimizeViewOnPan];
+    [self minimizeView];
 }
 
 
 - (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
-    [self expandViewOnPan];
+    [self expandView];
 }
 
 
@@ -340,32 +344,32 @@ const CGFloat flickVelocity = 1000;
             if(velocity.y < -flickVelocity)
             {
                 NSLog(@"flick up");
-                [self expandViewOnPan];
+                [self expandView];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
             else if(velocity.y > flickVelocity)
             {
                 NSLog(@"flick down");
-                [self minimizeViewOnPan];
+                [self minimizeView];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
             else if(recognizer.view.frame.origin.y < 0)
             {
-                [self expandViewOnPan];
+                [self expandView];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
             else if(recognizer.view.frame.origin.y>(parentView.frame.size.width/2))
             {
-                [self minimizeViewOnPan];
+                [self minimizeView];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
             else if(recognizer.view.frame.origin.y < (parentView.frame.size.width/2))
             {
-                [self expandViewOnPan];
+                [self expandView];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
@@ -637,9 +641,9 @@ const CGFloat flickVelocity = 1000;
 
 # pragma mark - animations
 
--(void)expandViewOnPan
+-(void)expandView
 {
-    NSLog(@"expandViewOnPan");
+    NSLog(@"expandView");
     //        [self.txtViewGrowing resignFirstResponder];
     [UIView animateWithDuration:0.5
                           delay:0.0
@@ -685,7 +689,7 @@ const CGFloat flickVelocity = 1000;
 
 
 
--(void)minimizeViewOnPan
+-(void)minimizeView
 {
     foldButton.hidden = TRUE;
     
