@@ -82,11 +82,11 @@ const CGFloat flickVelocity = 1000;
 
 
 
-
-
 // please override if you want
-- (void) didExpand{}
-- (void) didMinimize{}
+- (void) didExpand {}
+- (void) didMinimize {}
+- (void) didStartMinimizeGesture {}
+
 
 
 - (void)dealloc
@@ -114,7 +114,6 @@ const CGFloat flickVelocity = 1000;
     }
     return self;
 }
-
 
 
 # pragma mark - init
@@ -302,6 +301,7 @@ const CGFloat flickVelocity = 1000;
     CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
     
     if(recognizer.state == UIGestureRecognizerStateBegan) {
+
         direction = UIPanGestureRecognizerDirectionUndefined;
         //storing direction
         CGPoint velocity = [recognizer velocityInView:recognizer.view];
@@ -310,9 +310,13 @@ const CGFloat flickVelocity = 1000;
         //Snag the Y position of the touch when panning begins
         _touchPositionInHeaderY = [recognizer locationInView:videoWrapper].y;
         _touchPositionInHeaderX = [recognizer locationInView:videoWrapper].x;
-        if(direction==UIPanGestureRecognizerDirectionDown) {
-            // player.controlStyle = MPMovieControlStyleNone;
-//            [self hideVideoControl];
+        if(direction == UIPanGestureRecognizerDirectionDown) {
+            if(videoView.frame.size.height > minimamVideoHeight) {
+                // player.controlStyle = MPMovieControlStyleNone;
+//                NSLog(@"minimize gesture start");
+                [self didStartMinimizeGesture];
+                
+            }
         }
     }
 
@@ -335,7 +339,7 @@ const CGFloat flickVelocity = 1000;
 
 
     
-    else if(recognizer.state == UIGestureRecognizerStateEnded){
+    else if(recognizer.state == UIGestureRecognizerStateEnded) {
 
         CGPoint velocity = [recognizer velocityInView:recognizer.view];
 
@@ -343,14 +347,14 @@ const CGFloat flickVelocity = 1000;
         {
             if(velocity.y < -flickVelocity)
             {
-                NSLog(@"flick up");
+//                NSLog(@"flick up");
                 [self expandView];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
             else if(velocity.y > flickVelocity)
             {
-                NSLog(@"flick down");
+//                NSLog(@"flick down");
                 [self minimizeView];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
@@ -643,7 +647,6 @@ const CGFloat flickVelocity = 1000;
 
 -(void)expandView
 {
-    NSLog(@"expandView");
     //        [self.txtViewGrowing resignFirstResponder];
     [UIView animateWithDuration:0.5
                           delay:0.0
@@ -657,33 +660,28 @@ const CGFloat flickVelocity = 1000;
                          transparentBlackSheet.alpha = 1.0;
                          borderView.alpha = 0.0;
 
-                         self.bodyView.frame = CGRectMake(
-                                                     0,
-                                                     videoView.frame.size.height,// keep stay on bottom of videoView
-                                                     self.bodyView.frame.size.width,
-                                                     self.bodyView.frame.size.height
-                                                     );
+                         self.bodyView.frame = CGRectMake(0,
+                                                          videoView.frame.size.height,// keep stay on bottom of videoView
+                                                          self.bodyView.frame.size.width,
+                                                          self.bodyView.frame.size.height);
 
                          borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
                                                        videoView.frame.origin.x - 1,
                                                        videoView.frame.size.width + 1,
                                                        videoView.frame.size.height + 1);
-                         
-
                      }
                      completion:^(BOOL finished) {
-                         
+
                          for (UIGestureRecognizer *recognizer in videoWrapper.gestureRecognizers) {
                              if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
                                  [videoWrapper removeGestureRecognizer:recognizer];
                              }
                          }
-
-                         //                         player.controlStyle = MPMovieControlStyleDefault;
-                         //                         [self showVideoControl];
-                         [self didExpand];
+                         // player.controlStyle = MPMovieControlStyleDefault;
+                         // [self showVideoControl];
                          isExpandedMode = TRUE;
                          foldButton.hidden = FALSE;
+                         [self didExpand];
                      }];
 }
 

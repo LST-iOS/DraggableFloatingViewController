@@ -44,10 +44,16 @@ class VideoDetailViewController: DraggableFloatingViewController {
     }
     
     override func didExpand() {
+        println("didExpand")
         showVideoControl()
     }
     override func didMinimize() {
+        println("didMinimized")
         hideVideoControl()
+    }
+    
+    override func didStartMinimizeGesture() {
+        println("didStartMinimizeGesture")
     }
     
     

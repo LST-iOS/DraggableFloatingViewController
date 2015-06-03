@@ -42,6 +42,8 @@
 - (void) didExpand;
 - (void) didMinimize;
 
+- (void) didStartMinimizeGesture;
+
 // please call if you want
 - (void) minimizeView;
 - (void) expandView;
