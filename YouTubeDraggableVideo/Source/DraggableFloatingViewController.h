@@ -46,5 +46,7 @@
 // please call if you want
 - (void) minimizeView;
 - (void) expandView;
+-(void) hideControllerView;
+-(void) showControllerView;
 
 @end
