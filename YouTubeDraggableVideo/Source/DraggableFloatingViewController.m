@@ -60,7 +60,7 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     
     UIView *pageWrapper;
     UIView *videoWrapper;
-    UIButton *foldButton;
+//    UIButton *foldButton;
 
     UIView *videoView;
     // border of mini vieo view
@@ -73,6 +73,11 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     CGFloat minimamVideoHeight;
 
     UIView *parentView;
+    
+    BOOL isDisplayController;
+    NSTimer *hideControllerTimer;
+    
+    BOOL isMinimizingByGesture;
 }
 
 
@@ -146,12 +151,12 @@ const CGFloat flickVelocity = 1000;
 // VIEW DID LOAD
 - (void) setupViewsWithVideoView: (UIView *)vView
             videoViewHeight: (CGFloat) videoHeight
-                 minimizeButton: (UIButton *)foldBtn
+//                 minimizeButton: (UIButton *)foldBtn
 {
     NSLog(@"setupViewsWithVideoView");
 
     videoView = vView;
-    foldButton = foldBtn;//control show and hide
+//    foldButton = foldBtn;//control show and hide
     
     CGRect window = [[UIScreen mainScreen] bounds];
     maxH = window.size.height;
@@ -168,6 +173,7 @@ const CGFloat flickVelocity = 1000;
     videoView.frame = videoWrapper.frame;
     self.controllerView = [[UIView alloc] init];
     self.controllerView.frame = videoWrapper.frame;
+    self.controllerView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.4];
     
     pageWrapper = [[UIView alloc] init];
     pageWrapper.frame = CGRectMake(0, 0, maxW, maxH);
@@ -237,7 +243,15 @@ const CGFloat flickVelocity = 1000;
     [videoView addSubview:borderView];
     
     [videoWrapper addSubview:self.controllerView];
-    [videoWrapper addSubview:foldButton];
+
+    [self showControllerView];
+    
+    UITapGestureRecognizer* expandedTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapExpandedVideoView)];
+    expandedTap.numberOfTapsRequired = 1;
+    expandedTap.delegate = self;
+    [videoWrapper addGestureRecognizer:expandedTap];
+
+//    [videoWrapper addSubview:foldButton];
 
     vFrame = videoWrapperFrame;
     wFrame = pageWrapperFrame;
@@ -247,7 +261,7 @@ const CGFloat flickVelocity = 1000;
     pan.delegate = self;
     [videoWrapper addGestureRecognizer:pan];
     
-    [foldButton addTarget:self action:@selector(onTapDownButton) forControlEvents:UIControlEventTouchUpInside];
+//    [foldButton addTarget:self action:@selector(onTapDownButton) forControlEvents:UIControlEventTouchUpInside];
 
     isExpandedMode = TRUE;
 }
@@ -255,6 +269,48 @@ const CGFloat flickVelocity = 1000;
 
 
 
+
+-(void) setHideControllerTimer {
+    if ([hideControllerTimer isValid]) {
+        [hideControllerTimer invalidate];
+    }
+    hideControllerTimer = [NSTimer scheduledTimerWithTimeInterval:3.0f
+                                                           target:self
+                                                         selector:@selector(hideControllerView)
+                                                         userInfo:nil
+                                                          repeats:NO];
+}
+
+-(void) showControllerView {
+    NSLog(@"showControllerView");
+    isDisplayController = true;
+    [self setHideControllerTimer];
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         self.controllerView.alpha = 1.0;
+                     }
+                     completion:^(BOOL finished) {
+                     }];
+
+}
+
+-(void) hideControllerView {
+    NSLog(@"hideControllerView");
+    isDisplayController = false;
+    if ([hideControllerTimer isValid]) {
+        [hideControllerTimer invalidate];
+    }
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         self.controllerView.alpha = 0.0;
+                     }
+                     completion:^(BOOL finished) {
+                     }];
+}
 
 
 -(void)removeAllViews
@@ -277,19 +333,37 @@ const CGFloat flickVelocity = 1000;
 
 
 
-
+- (void) showControllerAfterExpanded {
+    [NSTimer scheduledTimerWithTimeInterval:0.5f
+                                     target:self
+                                   selector:@selector(showControllerView)
+                                   userInfo:nil
+                                    repeats:NO];
+}
 
 
 
 
 # pragma  mark - tap action
-- (void) onTapDownButton {
-    [self minimizeView];
-}
+//- (void) onTapDownButton {
+//    [self minimizeView];
+//}
 
+
+- (void) onTapExpandedVideoView {
+    NSLog(@"onTapExpandedVideoView");
+    if (self.controllerView.alpha == 0.0) {
+        [self showControllerView];
+    }
+    else if (self.controllerView.alpha == 1.0){
+        [self hideControllerView];
+    }
+}
 
 - (void)expandViewOnTap:(UITapGestureRecognizer*)sender {
     [self expandView];
+    [self showControllerAfterExpanded];
+    
 }
 
 
@@ -300,6 +374,7 @@ const CGFloat flickVelocity = 1000;
 {
     CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
     
+    
     if(recognizer.state == UIGestureRecognizerStateBegan) {
 
         direction = UIPanGestureRecognizerDirectionUndefined;
@@ -307,15 +382,16 @@ const CGFloat flickVelocity = 1000;
         CGPoint velocity = [recognizer velocityInView:recognizer.view];
         [self detectPanDirection:velocity];
         
+        isMinimizingByGesture = false;
         //Snag the Y position of the touch when panning begins
         _touchPositionInHeaderY = [recognizer locationInView:videoWrapper].y;
         _touchPositionInHeaderX = [recognizer locationInView:videoWrapper].x;
         if(direction == UIPanGestureRecognizerDirectionDown) {
             if(videoView.frame.size.height > minimamVideoHeight) {
                 // player.controlStyle = MPMovieControlStyleNone;
-//                NSLog(@"minimize gesture start");
+                NSLog(@"minimize gesture start");
+                isMinimizingByGesture = true;
                 [self didStartMinimizeGesture];
-                
             }
         }
     }
@@ -349,6 +425,9 @@ const CGFloat flickVelocity = 1000;
             {
 //                NSLog(@"flick up");
                 [self expandView];
+                if (isMinimizingByGesture == false) {
+                    [self showControllerAfterExpanded];
+                }
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
@@ -359,21 +438,18 @@ const CGFloat flickVelocity = 1000;
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
-            else if(recognizer.view.frame.origin.y < 0)
-            {
-                [self expandView];
-                [recognizer setTranslation:CGPointZero inView:recognizer.view];
-                return;
-            }
             else if(recognizer.view.frame.origin.y>(parentView.frame.size.width/2))
             {
                 [self minimizeView];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
-            else if(recognizer.view.frame.origin.y < (parentView.frame.size.width/2))
+            else if(recognizer.view.frame.origin.y < (parentView.frame.size.width/2) || recognizer.view.frame.origin.y < 0)
             {
                 [self expandView];
+                if (isMinimizingByGesture == false) {
+                    [self showControllerAfterExpanded];
+                }
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
@@ -423,13 +499,15 @@ const CGFloat flickVelocity = 1000;
                 }
             }
         }
+
+        isMinimizingByGesture = false;
     }
 }
 
 
 -(void)detectPanDirection:(CGPoint )velocity
 {
-    foldButton.hidden=TRUE;
+//    foldButton.hidden=TRUE;
     BOOL isVerticalGesture = fabs(velocity.y) > fabs(velocity.x);
     
     if (isVerticalGesture)
@@ -459,7 +537,7 @@ const CGFloat flickVelocity = 1000;
 -(void)adjustViewOnVerticalPan:(CGFloat)newOffsetY recognizer:(UIPanGestureRecognizer *)recognizer
 {
     CGFloat touchPosInViewY = [recognizer locationInView:self.view].y;
-
+    
     CGFloat progressRate = newOffsetY / finalViewOffsetY;
     
     if(progressRate >= 0.99) {
@@ -468,74 +546,71 @@ const CGFloat flickVelocity = 1000;
     }
     
     [self calcNewFrameWithParsentage:progressRate newOffsetY:newOffsetY];
-
-//    if (pageWrapper.frame.origin.y < finalViewOffsetY && pageWrapper.frame.origin.y > 0) {
+    
     if (progressRate <= 1 && pageWrapper.frame.origin.y > 0) {
-//        [UIView animateWithDuration:0.03
-//                              delay:0.0
-//                            options:UIViewAnimationOptionCurveEaseInOut
-//                         animations:^ {
-                             pageWrapper.frame = wFrame;
-                             videoWrapper.frame = vFrame;
-                             videoView.frame = CGRectMake(
-                                                          videoView.frame.origin.x,  videoView.frame.origin.x,
-                                                          vFrame.size.width, vFrame.size.height
-                                                          );
-                             self.bodyView.frame = CGRectMake(
-                                                         0,
-                                                         videoView.frame.size.height,// keep stay on bottom of videoView
-                                                         self.bodyView.frame.size.width,
-                                                         self.bodyView.frame.size.height
-                                                         );
-                             
-                             borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
-                                                           videoView.frame.origin.x - 1,
-                                                           videoView.frame.size.width + 1,
-                                                           videoView.frame.size.height + 1);
-                             
-                             
-                             CGFloat percentage = touchPosInViewY / parentView.frame.size.height;
-                             pageWrapper.alpha = transparentBlackSheet.alpha = 1.0 - (percentage * 1.5);
-                             if (percentage > 0.2) borderView.alpha = percentage;
-                             else borderView.alpha = 0;
-//                         }
-//                         completion:^(BOOL finished) {
-                             if(direction==UIPanGestureRecognizerDirectionDown)
-                             {
-                                 [parentView bringSubviewToFront:self.view];
-                             }
-//                         }];
+        pageWrapper.frame = wFrame;
+        videoWrapper.frame = vFrame;
+        videoView.frame = CGRectMake(
+                                     videoView.frame.origin.x,  videoView.frame.origin.x,
+                                     vFrame.size.width, vFrame.size.height
+                                     );
+        self.bodyView.frame = CGRectMake(
+                                         0,
+                                         videoView.frame.size.height,// keep stay on bottom of videoView
+                                         self.bodyView.frame.size.width,
+                                         self.bodyView.frame.size.height
+                                         );
+        
+        borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
+                                      videoView.frame.origin.x - 1,
+                                      videoView.frame.size.width + 1,
+                                      videoView.frame.size.height + 1);
+        
+        self.controllerView.frame = videoView.frame;
+        
+        CGFloat percentage = touchPosInViewY / parentView.frame.size.height;
+        
+        pageWrapper.alpha = transparentBlackSheet.alpha = 1.0 - (percentage * 1.5);
+        if (percentage > 0.2) borderView.alpha = percentage;
+        else borderView.alpha = 0;
+        
+        if (isDisplayController) {
+            self.controllerView.alpha = 1.0 - (percentage * 2);
+//            if (percentage > 0.2) borderView.alpha = percentage;
+//            else borderView.alpha = 0;
+        }
+        
+        if(direction==UIPanGestureRecognizerDirectionDown)
+        {
+            [parentView bringSubviewToFront:self.view];
+        }
     }
     // what is this case...?
     else if (wFrame.origin.y < finalViewOffsetY && wFrame.origin.y > 0)
     {
-//        [UIView animateWithDuration:0.09
-//                              delay:0.0
-//                            options:UIViewAnimationOptionCurveEaseInOut
-//                         animations:^ {
-                             pageWrapper.frame = wFrame;
-                             videoWrapper.frame = vFrame;
-                             videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
-                             
-                             self.bodyView.frame = CGRectMake(
-                                                         0,
-                                                         videoView.frame.size.height,// keep stay on bottom of videoView
-                                                         self.bodyView.frame.size.width,
-                                                         self.bodyView.frame.size.height
-                                                         );
-                             borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
-                                                           videoView.frame.origin.x - 1,
-                                                           videoView.frame.size.width + 1,
-                                                           videoView.frame.size.height + 1);
-                             
-                             borderView.alpha = progressRate;
-//                         }completion:nil];
+        pageWrapper.frame = wFrame;
+        videoWrapper.frame = vFrame;
+        videoView.frame=CGRectMake( videoView.frame.origin.x,  videoView.frame.origin.x, vFrame.size.width, vFrame.size.height);
+        
+        self.bodyView.frame = CGRectMake(
+                                         0,
+                                         videoView.frame.size.height,// keep stay on bottom of videoView
+                                         self.bodyView.frame.size.width,
+                                         self.bodyView.frame.size.height
+                                         );
+        borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
+                                      videoView.frame.origin.x - 1,
+                                      videoView.frame.size.width + 1,
+                                      videoView.frame.size.height + 1);
+        
+        borderView.alpha = progressRate;
+        
+        self.controllerView.frame = videoView.frame;
     }
-
+    
     
     [recognizer setTranslation:CGPointZero inView:recognizer.view];
-
-    //    }
+    
 }
 
 
@@ -669,6 +744,8 @@ const CGFloat flickVelocity = 1000;
                                                        videoView.frame.origin.x - 1,
                                                        videoView.frame.size.width + 1,
                                                        videoView.frame.size.height + 1);
+                         
+                         self.controllerView.frame = videoView.frame;
                      }
                      completion:^(BOOL finished) {
 
@@ -677,10 +754,17 @@ const CGFloat flickVelocity = 1000;
                                  [videoWrapper removeGestureRecognizer:recognizer];
                              }
                          }
+                         
+                         UITapGestureRecognizer* expandedTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapExpandedVideoView)];
+                         expandedTap.numberOfTapsRequired = 1;
+                         expandedTap.delegate = self;
+                         [videoWrapper addGestureRecognizer:expandedTap];
+
+                         
                          // player.controlStyle = MPMovieControlStyleDefault;
                          // [self showVideoControl];
                          isExpandedMode = TRUE;
-                         foldButton.hidden = FALSE;
+//                         self.controllerView.hidden = FALSE;
                          [self didExpand];
                      }];
 }
@@ -689,10 +773,11 @@ const CGFloat flickVelocity = 1000;
 
 -(void)minimizeView
 {
-    foldButton.hidden = TRUE;
+//    self.controllerView.hidden = TRUE;
     
     [self setFinalFrame];
-    
+    [self hideControllerView];
+
     [UIView animateWithDuration:0.5
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
@@ -709,23 +794,30 @@ const CGFloat flickVelocity = 1000;
                                                        videoView.frame.size.width + 1,
                                                        videoView.frame.size.height + 1);
 
+                         self.controllerView.frame = videoView.frame;
                      }
                      completion:^(BOOL finished) {
 //                         [self hideVideoControl];
                          [self didMinimize];
                          //add tap gesture
-                         tapRecognizer=nil;
-                         if(tapRecognizer==nil)
+                         tapRecognizer = nil;
+                         if(tapRecognizer == nil)
                          {
+                             
+                             for (UIGestureRecognizer *recognizer in videoWrapper.gestureRecognizers) {
+                                 if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+                                     [videoWrapper removeGestureRecognizer:recognizer];
+                                 }
+                             }
+                             
                              tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandViewOnTap:)];
                              tapRecognizer.numberOfTapsRequired = 1;
                              tapRecognizer.delegate = self;
-//                             tapRecognizer.minimumPressDuration = 0.1;
                              [videoWrapper addGestureRecognizer:tapRecognizer];
                          }
                          
                          isExpandedMode=FALSE;
-                         minimizedVideoFrame=videoWrapper.frame;
+                         minimizedVideoFrame = videoWrapper.frame;
                          
                          if(direction==UIPanGestureRecognizerDirectionDown)
                          {
@@ -753,6 +845,8 @@ const CGFloat flickVelocity = 1000;
                          pageWrapper.alpha = 0;
                          videoWrapper.alpha = 1;
                          borderView.alpha = 1;
+                         
+                         self.controllerView.frame = videoView.frame;
                      }
                      completion:^(BOOL finished) {
                          if (completion) completion();
@@ -776,6 +870,8 @@ const CGFloat flickVelocity = 1000;
                          pageWrapper.alpha = 0;
                          videoWrapper.alpha = 0;
                          borderView.alpha = 0;
+                         
+                         self.controllerView.frame = videoView.frame;
                      }
                      completion:^(BOOL finished) {
                          if (completion) completion();
@@ -799,6 +895,8 @@ const CGFloat flickVelocity = 1000;
                          pageWrapper.alpha = 0;
                          videoWrapper.alpha = 0;
                          borderView.alpha = 0;
+                         
+                         self.controllerView.frame = videoView.frame;
                      }
                      completion:^(BOOL finished) {
                          if (completion) completion();

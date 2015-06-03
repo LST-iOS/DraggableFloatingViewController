@@ -18,13 +18,13 @@ class VideoDetailViewController: DraggableFloatingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let minimizeButton = UIButton()
-        minimizeButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-        minimizeButton.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
+//        let minimizeButton = UIButton()
+//        minimizeButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+//        minimizeButton.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
 
         moviePlayer = MPMoviePlayerController()
 
-        self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160, minimizeButton: minimizeButton)
+        self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160)//, minimizeButton: minimizeButton)
 
         // add sub views on body area
         let testView = UILabel()
