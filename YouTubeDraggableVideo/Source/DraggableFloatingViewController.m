@@ -107,6 +107,7 @@ const CGFloat flickVelocity = 1000;
     self = [super init];
     if (self) {
         self.bodyView = [[UIView alloc] init];
+        self.controllerView = [[UIView alloc] init];
     }
     return self;
 }
@@ -116,6 +117,7 @@ const CGFloat flickVelocity = 1000;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.bodyView = [[UIView alloc] init];
+        self.controllerView = [[UIView alloc] init];
     }
     return self;
 }
@@ -171,9 +173,7 @@ const CGFloat flickVelocity = 1000;
     videoWrapper.frame = CGRectMake(0, 0, videoWidth, videoHeight);
     
     videoView.frame = videoWrapper.frame;
-    self.controllerView = [[UIView alloc] init];
     self.controllerView.frame = videoWrapper.frame;
-    self.controllerView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.4];
     
     pageWrapper = [[UIView alloc] init];
     pageWrapper.frame = CGRectMake(0, 0, maxW, maxH);

@@ -18,10 +18,18 @@ class VideoDetailViewController: DraggableFloatingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        let minimizeButton = UIButton()
-//        minimizeButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-//        minimizeButton.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
+        let minimizeButton = UIButton()
+        minimizeButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        minimizeButton.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
+        minimizeButton.addTarget(self, action: "onTapMinimizeButton", forControlEvents: UIControlEvents.TouchUpInside)
+        self.controllerView.addSubview(minimizeButton)
 
+        let testControl = UILabel()
+        testControl.frame = CGRect(x: 100, y: 5, width: 150, height: 40)
+        testControl.text = "controller view"
+        testControl.textColor = UIColor.whiteColor()
+        self.controllerView.addSubview(testControl)
+        
         moviePlayer = MPMoviePlayerController()
 
         self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160)//, minimizeButton: minimizeButton)
@@ -57,7 +65,9 @@ class VideoDetailViewController: DraggableFloatingViewController {
     }
     
     
-    
+    func onTapMinimizeButton() {
+        self.minimizeView()
+    }
     
     
     
