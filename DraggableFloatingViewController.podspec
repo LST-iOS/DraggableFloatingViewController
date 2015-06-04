@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "DraggableFloatingViewController"
-  s.version      = "1.0.0"
+  # s.version      = "v1.0"
   s.summary      = "A short description of DraggableFloatingViewController."
 
   s.description  = <<-DESC
@@ -72,23 +72,7 @@ Pod::Spec.new do |s|
   # s.osx.deployment_target = "10.7"
 
 
-  # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  #
-  #  Specify the location from where the source should be retrieved.
-  #  Supports git, hg, bzr, svn and HTTP.
-  #
-
   s.source       = { :git => "http://github.com/entotsu/DraggableFloatingViewController.git", :tag => "v1.0" }
-
-
-  # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  #
-  #  CocoaPods is smart about how it includes source code. For source files
-  #  giving a folder will include any swift, h, m, mm, c & cpp files.
-  #  For header files it will include any header in the folder.
-  #  Not including the public_header_files will make all headers public.
-  #
-
   s.source_files  = "Classes", "YouTubeDraggableVideo/Source/*.{h,m}"
   # s.exclude_files = "Classes/Exclude"
 
