@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "DraggableFloatingViewController"
-  s.version      = "0.0.1"
+  s.version      = "1.0.0"
   s.summary      = "A short description of DraggableFloatingViewController."
 
   s.description  = <<-DESC
@@ -78,7 +78,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "http://github.com/entotsu/DraggableFloatingViewController.git"}#, :tag => "0.0.1" }
+  s.source       = { :git => "http://github.com/entotsu/DraggableFloatingViewController.git", :tag => "v1.0" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
