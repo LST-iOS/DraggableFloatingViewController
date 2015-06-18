@@ -12,43 +12,57 @@ import UIKit
 class VideoDetailViewController: DraggableFloatingViewController {
 
     var moviePlayer: MPMoviePlayerController!
-    
-    
+    private let loadingSpinner = UIActivityIndicatorView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        moviePlayer = MPMoviePlayerController()
+
+        self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160)//, minimizeButton: minimizeButton)
+
+        setupMoviePlayer()
+
+        addObserver(selector: "onOrientationChanged", name: UIDeviceOrientationDidChangeNotification)
+        
+        // design controller view
         let minimizeButton = UIButton()
         minimizeButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         minimizeButton.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
         minimizeButton.addTarget(self, action: "onTapMinimizeButton", forControlEvents: UIControlEvents.TouchUpInside)
         self.controllerView.addSubview(minimizeButton)
-
         let testControl = UILabel()
         testControl.frame = CGRect(x: 100, y: 5, width: 150, height: 40)
         testControl.text = "controller view"
         testControl.textColor = UIColor.whiteColor()
         self.controllerView.addSubview(testControl)
         
-        moviePlayer = MPMoviePlayerController()
-
-        self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160)//, minimizeButton: minimizeButton)
-
-        // add sub views on body area
+        // design body view
+        self.bodyView.backgroundColor = UIColor.whiteColor()
+        self.bodyView.layer.borderColor = UIColor.redColor().CGColor
+        self.bodyView.layer.borderWidth = 10.0
         let testView = UILabel()
         testView.frame = CGRect(x: 20, y: 10, width: 100, height: 40)
         testView.text = "body view"
         testView.textColor = UIColor.redColor()
         self.bodyView.addSubview(testView)
-        self.bodyView.backgroundColor = UIColor.whiteColor()
 
-        //dev
-        self.bodyView.layer.borderColor = UIColor.redColor().CGColor
-        self.bodyView.layer.borderWidth = 10.0
-
-        
-        setupMoviePlayer()
-        addObserver(selector: "onOrientationChanged", name: UIDeviceOrientationDidChangeNotification)
+        // design message view
+        self.messageView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        loadingSpinner.frame = CGRectMake(0, 0, 50, 50)
+        loadingSpinner.center = self.messageView.center
+        loadingSpinner.hidesWhenStopped = false
+        loadingSpinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.White
+        self.messageView.addSubview(loadingSpinner)
+    }
+    
+    override func showMessageView() {
+        loadingSpinner.startAnimating()
+        super.showMessageView()
+    }
+    override func hideMessageView() {
+        super.hideMessageView()
+        loadingSpinner.stopAnimating()
     }
     
     override func didExpand() {
@@ -63,7 +77,6 @@ class VideoDetailViewController: DraggableFloatingViewController {
     override func didStartMinimizeGesture() {
         println("didStartMinimizeGesture")
     }
-    
     
     func onTapMinimizeButton() {
         self.minimizeView()

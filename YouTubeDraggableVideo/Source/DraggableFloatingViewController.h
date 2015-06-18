@@ -27,6 +27,8 @@
 @property(nonatomic, strong) UIView *bodyView;
 //please add controller on this
 @property(nonatomic, strong) UIView *controllerView;
+//please add loading spiner on this
+@property(nonatomic, strong) UIView *messageView;
 
 // please call from "viewDidLoad" from sub class
 - (void) setupViewsWithVideoView: (UIView *)vView
@@ -48,5 +50,7 @@
 - (void) expandView;
 - (void) hideControllerView;
 - (void) showControllerView;
+- (void) showMessageView;
+- (void) hideMessageView;
 
 @end

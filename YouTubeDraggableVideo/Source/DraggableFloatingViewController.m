@@ -108,6 +108,7 @@ const CGFloat flickVelocity = 1000;
     if (self) {
         self.bodyView = [[UIView alloc] init];
         self.controllerView = [[UIView alloc] init];
+        self.messageView = [[UIView alloc] init];
     }
     return self;
 }
@@ -174,6 +175,7 @@ const CGFloat flickVelocity = 1000;
     
     videoView.frame = videoWrapper.frame;
     self.controllerView.frame = videoWrapper.frame;
+    self.messageView.frame = videoWrapper.frame;
     
     pageWrapper = [[UIView alloc] init];
     pageWrapper.frame = CGRectMake(0, 0, maxW, maxH);
@@ -244,7 +246,10 @@ const CGFloat flickVelocity = 1000;
     [videoView addSubview:borderView];
     
     [videoWrapper addSubview:self.controllerView];
-
+    
+    self.messageView.hidden = TRUE;
+    [videoWrapper addSubview:self.messageView];
+    
     [self showControllerView];
     
     UITapGestureRecognizer* expandedTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapExpandedVideoView)];
@@ -267,7 +272,12 @@ const CGFloat flickVelocity = 1000;
     isExpandedMode = TRUE;
 }
 
-
+-(void) showMessageView {
+    self.messageView.hidden = FALSE;
+}
+-(void) hideMessageView {
+    self.messageView.hidden = TRUE;
+}
 
 
 
