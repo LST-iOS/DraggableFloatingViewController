@@ -187,10 +187,10 @@ const CGFloat flickVelocity = 1000;
     borderView.layer.masksToBounds = NO;
     borderView.layer.borderColor = [[UIColor whiteColor] CGColor];
     borderView.layer.borderWidth = 0.5f;
-    borderView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-    borderView.layer.shadowColor = [UIColor blackColor].CGColor;
-    borderView.layer.shadowRadius = 1.0;
-    borderView.layer.shadowOpacity = 1.0;
+//    borderView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+//    borderView.layer.shadowColor = [UIColor blackColor].CGColor;
+//    borderView.layer.shadowRadius = 1.0;
+//    borderView.layer.shadowOpacity = 1.0;
     borderView.alpha = 0;
     borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
                                   videoView.frame.origin.x - 1,
@@ -204,6 +204,7 @@ const CGFloat flickVelocity = 1000;
     // only first time, SubViews add to "self.view".
     // After animation, they move to "parentView"
     videoView.backgroundColor = [UIColor blackColor];
+    videoWrapper.backgroundColor = [UIColor blackColor];
     [pageWrapper addSubview:self.bodyView];
     [videoWrapper addSubview:videoView];
     [self.view addSubview:pageWrapper];
