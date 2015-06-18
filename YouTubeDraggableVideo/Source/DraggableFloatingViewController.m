@@ -96,7 +96,7 @@ const CGFloat flickVelocity = 1000;
 
 - (void)dealloc
 {
-    NSLog(@"dealloc DraggableFloatingViewController");
+//    NSLog(@"dealloc DraggableFloatingViewController");
 }
 
 
@@ -112,16 +112,16 @@ const CGFloat flickVelocity = 1000;
     }
     return self;
 }
-
-
 - (id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.bodyView = [[UIView alloc] init];
         self.controllerView = [[UIView alloc] init];
+        self.messageView = [[UIView alloc] init];
     }
     return self;
 }
+
 
 
 # pragma mark - init
