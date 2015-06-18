@@ -229,7 +229,7 @@ const CGFloat flickVelocity = 1000;
 
     transparentBlackSheet = [[UIView alloc] initWithFrame:parentView.frame];
     transparentBlackSheet.backgroundColor = [UIColor blackColor];
-    transparentBlackSheet.alpha = 0.9;
+    transparentBlackSheet.alpha = 1;
 }
 // ↓
 -(void) afterAppearAnimation {
