@@ -19,6 +19,7 @@
 		B0125D7C1B1BD88B005FF053 /* VideoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0125D791B1BD88B005FF053 /* VideoDetailViewController.swift */; };
 		B0125D801B1BD897005FF053 /* DraggableFloatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0125D7F1B1BD897005FF053 /* DraggableFloatingViewController.m */; };
 		B04E93C31B168CEB004384E8 /* test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B04E93C21B168CEB004384E8 /* test.mp4 */; };
+		B0B076F01B33F36A004A027A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B076EF1B33F36A004A027A /* AppDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		B0125D7F1B1BD897005FF053 /* DraggableFloatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DraggableFloatingViewController.m; sourceTree = "<group>"; };
 		B04E93C21B168CEB004384E8 /* test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.mp4; sourceTree = "<group>"; };
 		B04E93C41B168D16004384E8 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
+		B0B076EE1B33F36A004A027A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		B0B076EF1B33F36A004A027A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +147,8 @@
 				B0125D781B1BD88B005FF053 /* FirstViewController.swift */,
 				B01147D91B33D56900D4CEB6 /* SecondViewController.swift */,
 				B01147DB1B33DAC700D4CEB6 /* NSTimerHelper.swift */,
+				B0B076EE1B33F36A004A027A /* AppDelegate.h */,
+				B0B076EF1B33F36A004A027A /* AppDelegate.m */,
 				B01147D71B33B30300D4CEB6 /* AppDelegate.swift */,
 				B0125D7A1B1BD88B005FF053 /* YouTubeDraggableVideo-Bridging-Header.h */,
 			);
@@ -274,6 +279,7 @@
 				B01147D81B33B30300D4CEB6 /* AppDelegate.swift in Sources */,
 				253F2E2D1A7F5907007FD89E /* main.m in Sources */,
 				B0125D7C1B1BD88B005FF053 /* VideoDetailViewController.swift in Sources */,
+				B0B076F01B33F36A004A027A /* AppDelegate.m in Sources */,
 				B0125D801B1BD897005FF053 /* DraggableFloatingViewController.m in Sources */,
 				B0125D7B1B1BD88B005FF053 /* FirstViewController.swift in Sources */,
 				B01147DC1B33DAC700D4CEB6 /* NSTimerHelper.swift in Sources */,

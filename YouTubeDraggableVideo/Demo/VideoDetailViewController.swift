@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class VideoDetailViewController: DraggableFloatingViewController {
+@objc class VideoDetailViewController: DraggableFloatingViewController {
 
     var moviePlayer: MPMoviePlayerController!
     private let loadingSpinner = UIActivityIndicatorView()

@@ -12,7 +12,7 @@ class SecondViewController: UIViewController {
     
     
     func onTapButton() {
-        AppDelegate.videoController().show()//👈
+//        AppDelegate.videoController().show()//👈
     }
 
     func onTapDismissButton() {

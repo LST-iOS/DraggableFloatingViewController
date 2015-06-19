@@ -10,10 +10,6 @@
 #import "DraggableFloatingViewController.h"
 #import "QuartzCore/CALayer.h"
 
-#if DEBUG
-#import "YouTubeDraggableVideo-Swift.h"
-#endif
-
 typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     UIPanGestureRecognizerDirectionUndefined,
     UIPanGestureRecognizerDirectionUp,
@@ -167,7 +163,7 @@ const CGFloat flickVelocity = 1000;
     
 //    parentView = parentVC.view;
 //    [parentView addSubview:self.view];// then, "viewDidLoad" called
-    [[AppDelegate getWindow] addSubview:self.view];
+    [[self getWindow] addSubview:self.view];
     
     // wait to run "viewDidLoad" before "showThisView"
     [self performSelector:@selector(showThisView) withObject:nil afterDelay:0.0];
@@ -276,9 +272,9 @@ const CGFloat flickVelocity = 1000;
 //    [parentView addSubview:pageWrapper];
 //    [parentView addSubview:videoWrapper];
 
-    [[AppDelegate getWindow] addSubview:transparentBlackSheet];
-    [[AppDelegate getWindow] addSubview:pageWrapper];
-    [[AppDelegate getWindow] addSubview:videoWrapper];
+    [[self getWindow] addSubview:transparentBlackSheet];
+    [[self getWindow] addSubview:pageWrapper];
+    [[self getWindow] addSubview:videoWrapper];
 
     
     self.view.hidden = TRUE;
@@ -401,10 +397,10 @@ const CGFloat flickVelocity = 1000;
 //    [parentView addSubview:pageWrapper];
 //    [parentView addSubview:videoWrapper];
     if (isSetuped) {
-        [[AppDelegate getWindow] bringSubviewToFront:self.view];
-        [[AppDelegate getWindow] bringSubviewToFront:transparentBlackSheet];
-        [[AppDelegate getWindow] bringSubviewToFront:pageWrapper];
-        [[AppDelegate getWindow] bringSubviewToFront:videoWrapper];
+        [[self getWindow] bringSubviewToFront:self.view];
+        [[self getWindow] bringSubviewToFront:transparentBlackSheet];
+        [[self getWindow] bringSubviewToFront:pageWrapper];
+        [[self getWindow] bringSubviewToFront:videoWrapper];
     }
 }
 //
@@ -419,6 +415,9 @@ const CGFloat flickVelocity = 1000;
 //}
 //
 
+- (UIWindow *) getWindow {
+    return [[[UIApplication sharedApplication] delegate] window];
+}
 
 
 -(void)removeAllViews
