@@ -1,17 +1,17 @@
+////
+////  AppDelegate.h
+////  YouTubeDraggableVideo
+////
+////  Created by Sandeep Mukherjee on 02/02/15.
+////  Copyright (c) 2015 Sandeep Mukherjee. All rights reserved.
+////
 //
-//  AppDelegate.h
-//  YouTubeDraggableVideo
+//#import <UIKit/UIKit.h>
 //
-//  Created by Sandeep Mukherjee on 02/02/15.
-//  Copyright (c) 2015 Sandeep Mukherjee. All rights reserved.
+//@interface AppDelegate : UIResponder <UIApplicationDelegate>
 //
-
-#import <UIKit/UIKit.h>
-
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (strong, nonatomic) UIWindow *window;
-
-
-@end
-
+//@property (strong, nonatomic) UIWindow *window;
+//
+//
+//@end
+//
