@@ -36,11 +36,11 @@
 //                      minimizeButton: (UIButton *)ibFoldBtn;
 
 // please call from parent view controller
-- (void) showVideoViewControllerOnParentVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC;
+- (void) show: (UIViewController*) parentVC;
+- (void) changeParentVC: (UIViewController*) parentVC;
 - (void) removeAllViews;
 //@property (nonatomic, assign) id <DraggableFloatingViewControllerDelegate> delegate;
 
-- (void) changeParentVC: (UIViewController*) parentVC;
 
 // please override if you want
 - (void) didExpand;

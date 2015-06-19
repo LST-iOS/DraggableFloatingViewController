@@ -128,7 +128,7 @@ const CGFloat flickVelocity = 1000;
 
 # pragma mark - init
 
-- (void) showVideoViewControllerOnParentVC: (UIViewController*) parentVC {
+- (void) show: (UIViewController*) parentVC {
     if (!isSetuped) {
         [self setup:parentVC];
     }

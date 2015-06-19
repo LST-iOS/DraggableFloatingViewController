@@ -10,14 +10,13 @@ import UIKit
 
 class FirstViewController: UIViewController  {
     
-    
     @IBAction func onTapShowSecondVCButton(sender: AnyObject) {
         let secondVC = SecondViewController()
-        AppDelegate.videoController().changeParentVC(secondVC)
+        AppDelegate.videoController().changeParentVC(secondVC)//👈
         self.presentViewController(secondVC, animated: true, completion: nil)
     }
     @IBAction func onTapButton(sender: AnyObject) {
-        AppDelegate.videoController().showVideoViewControllerOnParentVC(self)
+        AppDelegate.videoController().show(self)//👈
     }
     
 }

@@ -12,14 +12,14 @@ class SecondViewController: UIViewController {
     
     
     func onTapButton() {
-        AppDelegate.videoController().showVideoViewControllerOnParentVC(self)
+        AppDelegate.videoController().show(self)//👈
     }
 
     func onTapDismissButton() {
         let parentVC = self.presentingViewController
         self.dismissViewControllerAnimated(true, completion: nil)
         NSTimer.schedule(delay: 0.2) { timer in
-            AppDelegate.videoController().changeParentVC(parentVC)
+            AppDelegate.videoController().changeParentVC(parentVC)//👈
         }
     }
     
