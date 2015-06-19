@@ -9,6 +9,8 @@
 
 #import "DraggableFloatingViewController.h"
 #import "QuartzCore/CALayer.h"
+#import "YouTubeDraggableVideo-Swift.h"
+
 
 typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     UIPanGestureRecognizerDirectionUndefined,
@@ -81,6 +83,7 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     BOOL isAppear;
     BOOL isSetuped;
 
+    CGRect windowFrame;
 }
 
 const CGFloat finalMargin = 3.0;
@@ -100,8 +103,10 @@ const CGFloat flickVelocity = 1000;
 // please override if you want
 - (void) didExpand {}
 - (void) didMinimize {}
-- (void) didStartMinimizeGesture {}
-
+- (void) didStartMinimizeGesture {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+}
+- (void) didFullExpandByGesture {}
 
 
 - (id)init
@@ -128,18 +133,18 @@ const CGFloat flickVelocity = 1000;
 
 # pragma mark - init
 
-- (void) show: (UIViewController*) parentVC {
+- (void) show {
     if (!isSetuped) {
-        [self setup:parentVC];
+        [self setup];
     }
     else {
-        [self changeParentVC:parentVC];
+//        [self changeParentVC:parentVC];
         [self reAppearWithAnimation];
     }
 }
 
 
-- (void) setup: (UIViewController*) parentVC {
+- (void) setup {
     
     isSetuped = true;
     
@@ -157,9 +162,9 @@ const CGFloat flickVelocity = 1000;
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
     
-    parentView = parentVC.view;
-    
-    [parentView addSubview:self.view];// then, "viewDidLoad" called
+//    parentView = parentVC.view;
+//    [parentView addSubview:self.view];// then, "viewDidLoad" called
+    [[AppDelegate getWindow] addSubview:self.view];
     
     // wait to run "viewDidLoad" before "showThisView"
     [self performSelector:@selector(showThisView) withObject:nil afterDelay:0.0];
@@ -177,9 +182,9 @@ const CGFloat flickVelocity = 1000;
     videoView = vView;
 //    foldButton = foldBtn;//control show and hide
     
-    CGRect window = [[UIScreen mainScreen] bounds];
-    maxH = window.size.height;
-    maxW = window.size.width;
+    windowFrame = [[UIScreen mainScreen] bounds];
+    maxH = windowFrame.size.height;
+    maxW = windowFrame.size.width;
     CGFloat videoWidth = maxW;
     videoHeightRatio = videoHeight / videoWidth;
     minimamVideoHeight = minimamVideoWidth * videoHeightRatio;
@@ -228,7 +233,7 @@ const CGFloat flickVelocity = 1000;
     [self.view addSubview:pageWrapper];
     [self.view addSubview:videoWrapper];
     
-    transparentBlackSheet = [[UIView alloc] initWithFrame:parentView.frame];
+    transparentBlackSheet = [[UIView alloc] initWithFrame:windowFrame];
     transparentBlackSheet.backgroundColor = [UIColor blackColor];
     transparentBlackSheet.alpha = 1;
     
@@ -237,10 +242,10 @@ const CGFloat flickVelocity = 1000;
 // ↓
 - (void) appearAnimation {
     
-    self.view.frame = CGRectMake(parentView.frame.size.width - 50,
-                                 parentView.frame.size.height - 50,
-                                 parentView.frame.size.width,
-                                 parentView.frame.size.height);
+    self.view.frame = CGRectMake(windowFrame.size.width - 50,
+                                 windowFrame.size.height - 50,
+                                 windowFrame.size.width,
+                                 windowFrame.size.height);
     self.view.transform = CGAffineTransformMakeScale(0.2, 0.2);
     self.view.alpha = 0;
     [UIView animateWithDuration:0.2
@@ -249,10 +254,10 @@ const CGFloat flickVelocity = 1000;
                      animations:^ {
                          self.view.transform = CGAffineTransformMakeScale(1.0, 1.0);
                          self.view.alpha = 1;
-                         self.view.frame = CGRectMake(parentView.frame.origin.x,
-                                                      parentView.frame.origin.y,
-                                                      parentView.frame.size.width,
-                                                      parentView.frame.size.height);
+                         self.view.frame = CGRectMake(windowFrame.origin.x,
+                                                      windowFrame.origin.y,
+                                                      windowFrame.size.width,
+                                                      windowFrame.size.height);
                      }
                      completion:^(BOOL finished) {
                          [self afterAppearAnimation];
@@ -263,11 +268,16 @@ const CGFloat flickVelocity = 1000;
     videoView.backgroundColor = videoWrapper.backgroundColor = [UIColor clearColor];
 
     
-    [parentView addSubview:transparentBlackSheet];
+//    [parentView addSubview:transparentBlackSheet];
     // move from self.view
-    [parentView addSubview:pageWrapper];
-    [parentView addSubview:videoWrapper];
+//    [parentView addSubview:pageWrapper];
+//    [parentView addSubview:videoWrapper];
 
+    [[AppDelegate getWindow] addSubview:transparentBlackSheet];
+    [[AppDelegate getWindow] addSubview:pageWrapper];
+    [[AppDelegate getWindow] addSubview:videoWrapper];
+
+    
     self.view.hidden = TRUE;
 
     [videoView addSubview:borderView];
@@ -329,14 +339,14 @@ const CGFloat flickVelocity = 1000;
     // parentViewにのってるViewは pageWrapper と videoWrapper と transparentView
     // pageWrapper と videoWrapper をself.viewと同様のアニメーションをさせた後に、parentViewに戻す
     // transparentView は あとで1にすればいい
-    pageWrapper.frame = CGRectMake(parentView.frame.size.width - 50,
-                                 parentView.frame.size.height - 150,
+    pageWrapper.frame = CGRectMake(windowFrame.size.width - 50,
+                                 windowFrame.size.height - 150,
                                  pageWrapper.frame.size.width,
                                  pageWrapper.frame.size.height);
 //    pageWrapper.transform = CGAffineTransformMakeScale(0.2, 0.2);
 
-    videoWrapper.frame = CGRectMake(parentView.frame.size.width - 50,
-                                   parentView.frame.size.height - 150,
+    videoWrapper.frame = CGRectMake(windowFrame.size.width - 50,
+                                   windowFrame.size.height - 150,
                                    videoWrapper.frame.size.width,
                                    videoWrapper.frame.size.height);
 //    videoWrapper.transform = CGAffineTransformMakeScale(0.2, 0.2);
@@ -347,15 +357,15 @@ const CGFloat flickVelocity = 1000;
                      animations:^ {
 //                         pageWrapper.transform = CGAffineTransformMakeScale(1.0, 1.0);
                          pageWrapper.alpha = 1;
-                         pageWrapper.frame = CGRectMake(parentView.frame.origin.x,
-                                                         parentView.frame.origin.y,
+                         pageWrapper.frame = CGRectMake(windowFrame.origin.x,
+                                                         windowFrame.origin.y,
                                                          pageWrapper.frame.size.width,
                                                          pageWrapper.frame.size.height);
 
 //                         videoWrapper.transform = CGAffineTransformMakeScale(1.0, 1.0);
                          videoWrapper.alpha = 1;
-                         videoWrapper.frame = CGRectMake(parentView.frame.origin.x,
-                                                      parentView.frame.origin.y,
+                         videoWrapper.frame = CGRectMake(windowFrame.origin.x,
+                                                      windowFrame.origin.y,
                                                       videoWrapper.frame.size.width,
                                                       videoWrapper.frame.size.height);
                          
@@ -381,16 +391,27 @@ const CGFloat flickVelocity = 1000;
 
 
 
-- (void) changeParentVC: (UIViewController*) parentVC {
-    if (isSetuped) {
-        parentView = parentVC.view;
-        [parentView addSubview:self.view];// then, "viewDidLoad" called
-        [parentView addSubview:transparentBlackSheet];
-        [parentView addSubview:pageWrapper];
-        [parentView addSubview:videoWrapper];
-    }
+- (void) bringToFront {
+//    [parentView addSubview:self.view];// then, "viewDidLoad" called
+//    [parentView addSubview:transparentBlackSheet];
+//    [parentView addSubview:pageWrapper];
+//    [parentView addSubview:videoWrapper];
+    [[AppDelegate getWindow] bringSubviewToFront:self.view];
+    [[AppDelegate getWindow] bringSubviewToFront:transparentBlackSheet];
+    [[AppDelegate getWindow] bringSubviewToFront:pageWrapper];
+    [[AppDelegate getWindow] bringSubviewToFront:videoWrapper];
 }
-
+//
+//- (void) changeParentVC: (UIViewController*) parentVC {
+////    if (isSetuped) {
+////        parentView = parentVC.view;
+////        [parentView addSubview:self.view];// then, "viewDidLoad" called
+////        [parentView addSubview:transparentBlackSheet];
+////        [parentView addSubview:pageWrapper];
+////        [parentView addSubview:videoWrapper];
+////    }
+//}
+//
 
 
 
@@ -580,13 +601,13 @@ const CGFloat flickVelocity = 1000;
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
-            else if(recognizer.view.frame.origin.y>(parentView.frame.size.width/2))
+            else if(recognizer.view.frame.origin.y>(windowFrame.size.width/2))
             {
                 [self minimizeView];
                 [recognizer setTranslation:CGPointZero inView:recognizer.view];
                 return;
             }
-            else if(recognizer.view.frame.origin.y < (parentView.frame.size.width/2) || recognizer.view.frame.origin.y < 0)
+            else if(recognizer.view.frame.origin.y < (windowFrame.size.width/2) || recognizer.view.frame.origin.y < 0)
             {
                 [self expandView];
                 if (isMinimizingByGesture == false) {
@@ -631,7 +652,7 @@ const CGFloat flickVelocity = 1000;
                     }];
                     return;
                 }
-                if(recognizer.view.frame.origin.x > parentView.frame.size.width - 50)
+                if(recognizer.view.frame.origin.x > windowFrame.size.width - 50)
                 {
                     [self disappear];
                 }
@@ -689,7 +710,7 @@ const CGFloat flickVelocity = 1000;
     
     [self calcNewFrameWithParsentage:progressRate newOffsetY:newOffsetY];
     
-    if (progressRate <= 1 && pageWrapper.frame.origin.y > 0) {
+    if (progressRate <= 1 && pageWrapper.frame.origin.y >= 0) {
         pageWrapper.frame = wFrame;
         videoWrapper.frame = vFrame;
         videoView.frame = CGRectMake(
@@ -710,7 +731,7 @@ const CGFloat flickVelocity = 1000;
         
         self.controllerView.frame = videoView.frame;
         
-        CGFloat percentage = touchPosInViewY / parentView.frame.size.height;
+        CGFloat percentage = touchPosInViewY / windowFrame.size.height;
         
         pageWrapper.alpha = transparentBlackSheet.alpha = 1.0 - (percentage * 1.5);
         if (percentage > 0.2) borderView.alpha = percentage;
@@ -724,7 +745,14 @@ const CGFloat flickVelocity = 1000;
         
         if(direction==UIPanGestureRecognizerDirectionDown)
         {
-            [parentView bringSubviewToFront:self.view];
+//            [parentView bringSubviewToFront:self.view];
+            [self bringToFront];
+        }
+        
+        
+        if(direction==UIPanGestureRecognizerDirectionUp && videoView.frame.origin.y <= 10)
+        {
+            [self didFullExpandByGesture];
         }
     }
     // what is this case...?
@@ -780,7 +808,7 @@ const CGFloat flickVelocity = 1000;
             
             if (!isVerticalGesture) {
                 
-                CGFloat percentage = (x/parentView.frame.size.width);
+                CGFloat percentage = (x/windowFrame.size.width);
                 
                 recognizer.view.alpha = percentage;
                 
@@ -805,11 +833,11 @@ const CGFloat flickVelocity = 1000;
                 if(velocity.x > 0)
                 {
                     
-                    CGFloat percentage = (x/parentView.frame.size.width);
+                    CGFloat percentage = (x/windowFrame.size.width);
                     recognizer.view.alpha =1.0- percentage;                }
                 else
                 {
-                    CGFloat percentage = (x/parentView.frame.size.width);
+                    CGFloat percentage = (x/windowFrame.size.width);
                     recognizer.view.alpha =percentage;
                     
                     
@@ -963,7 +991,8 @@ const CGFloat flickVelocity = 1000;
                          
                          if(direction==UIPanGestureRecognizerDirectionDown)
                          {
-                             [parentView bringSubviewToFront:self.view];
+//                             [parentView bringSubviewToFront:self.view];
+                             [self bringToFront];
                          }
                      }];
 }

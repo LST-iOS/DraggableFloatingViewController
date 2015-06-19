@@ -23,6 +23,10 @@
 // please extend
 @interface DraggableFloatingViewController : UIViewController<UIGestureRecognizerDelegate>
 
+
+
+// ---------- use from SubClass ------------------------
+
 // please add subview on this
 @property(nonatomic, strong) UIView *bodyView;
 //please add controller on this
@@ -33,19 +37,12 @@
 // please call from "viewDidLoad" from sub class
 - (void) setupViewsWithVideoView: (UIView *)vView
                  videoViewHeight: (CGFloat) videoHeight;
-//                      minimizeButton: (UIButton *)ibFoldBtn;
-
-// please call from parent view controller
-- (void) show: (UIViewController*) parentVC;
-- (void) changeParentVC: (UIViewController*) parentVC;
-- (void) removeAllViews;
-//@property (nonatomic, assign) id <DraggableFloatingViewControllerDelegate> delegate;
-
 
 // please override if you want
 - (void) didExpand;
 - (void) didMinimize;
 - (void) didStartMinimizeGesture;
+- (void) didFullExpandByGesture;//stil dev
 
 // please call if you want
 - (void) minimizeView;
@@ -54,5 +51,12 @@
 - (void) showControllerView;
 - (void) showMessageView;
 - (void) hideMessageView;
+
+
+// ---------- use from other class ------------------------
+// please call from parent view controller
+- (void) show;
+- (void) bringToFront;
+
 
 @end

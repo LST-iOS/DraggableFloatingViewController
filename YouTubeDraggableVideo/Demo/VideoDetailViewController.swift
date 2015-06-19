@@ -69,8 +69,14 @@ class VideoDetailViewController: DraggableFloatingViewController {
         loadingSpinner.stopAnimating()
     }
     
+    override func didFullExpandByGesture() {
+        UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: UIStatusBarAnimation.None)
+        showVideoControl()
+    }
     override func didExpand() {
         println("didExpand")
+//        [[UIApplication sharedApplication] setStatusBarHidden:YES];
+        UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: UIStatusBarAnimation.None)
         showVideoControl()
     }
     override func didMinimize() {
@@ -80,9 +86,12 @@ class VideoDetailViewController: DraggableFloatingViewController {
     
     override func didStartMinimizeGesture() {
         println("didStartMinimizeGesture")
+        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.None)
     }
     
+    
     func onTapMinimizeButton() {
+        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.None)
         self.minimizeView()
     }
     

@@ -29,12 +29,12 @@ class FirstViewController: UIViewController  {
     }
 
     func onTapShowButton() {
-        AppDelegate.videoController().show(self)//👈
+        AppDelegate.videoController().show()//👈
     }
 
     func onTapShowSecondVCButton() {
+        AppDelegate.videoController().bringToFront()
         let secondVC = SecondViewController()
-        AppDelegate.videoController().changeParentVC(secondVC)//👈
         self.presentViewController(secondVC, animated: true, completion: nil)
     }
     

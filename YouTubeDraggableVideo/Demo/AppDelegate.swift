@@ -12,17 +12,20 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var videoViewController = VideoDetailViewController()
 
     
     static func appDelegate() -> AppDelegate? {
         return UIApplication.sharedApplication().delegate as? AppDelegate
     }
 
-    var videoViewController = VideoDetailViewController()
     static func videoController() -> VideoDetailViewController {
         return appDelegate()!.videoViewController
     }
     
+    static func getWindow() -> UIWindow {
+        return appDelegate()!.window!
+    }
     
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
