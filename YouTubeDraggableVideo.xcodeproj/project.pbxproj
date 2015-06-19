@@ -14,6 +14,8 @@
 		253F2E471A7F5907007FD89E /* YouTubeDraggableVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 253F2E461A7F5907007FD89E /* YouTubeDraggableVideoTests.m */; };
 		253F2E5C1A7F6027007FD89E /* profilePhoto.png in Resources */ = {isa = PBXBuildFile; fileRef = 253F2E5B1A7F6027007FD89E /* profilePhoto.png */; };
 		B01147D81B33B30300D4CEB6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01147D71B33B30300D4CEB6 /* AppDelegate.swift */; };
+		B01147DA1B33D56900D4CEB6 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01147D91B33D56900D4CEB6 /* SecondViewController.swift */; };
+		B01147DC1B33DAC700D4CEB6 /* NSTimerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01147DB1B33DAC700D4CEB6 /* NSTimerHelper.swift */; };
 		B0125D7B1B1BD88B005FF053 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0125D781B1BD88B005FF053 /* FirstViewController.swift */; };
 		B0125D7C1B1BD88B005FF053 /* VideoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0125D791B1BD88B005FF053 /* VideoDetailViewController.swift */; };
 		B0125D801B1BD897005FF053 /* DraggableFloatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0125D7F1B1BD897005FF053 /* DraggableFloatingViewController.m */; };
@@ -42,6 +44,8 @@
 		253F2E461A7F5907007FD89E /* YouTubeDraggableVideoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YouTubeDraggableVideoTests.m; sourceTree = "<group>"; };
 		253F2E5B1A7F6027007FD89E /* profilePhoto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profilePhoto.png; sourceTree = "<group>"; };
 		B01147D71B33B30300D4CEB6 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B01147D91B33D56900D4CEB6 /* SecondViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		B01147DB1B33DAC700D4CEB6 /* NSTimerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSTimerHelper.swift; sourceTree = "<group>"; };
 		B0125D781B1BD88B005FF053 /* FirstViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
 		B0125D791B1BD88B005FF053 /* VideoDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailViewController.swift; sourceTree = "<group>"; };
 		B0125D7A1B1BD88B005FF053 /* YouTubeDraggableVideo-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YouTubeDraggableVideo-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -139,10 +143,12 @@
 		B0125D771B1BD88B005FF053 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				B0125D781B1BD88B005FF053 /* FirstViewController.swift */,
 				B0125D791B1BD88B005FF053 /* VideoDetailViewController.swift */,
-				B0125D7A1B1BD88B005FF053 /* YouTubeDraggableVideo-Bridging-Header.h */,
+				B0125D781B1BD88B005FF053 /* FirstViewController.swift */,
+				B01147D91B33D56900D4CEB6 /* SecondViewController.swift */,
+				B01147DB1B33DAC700D4CEB6 /* NSTimerHelper.swift */,
 				B01147D71B33B30300D4CEB6 /* AppDelegate.swift */,
+				B0125D7A1B1BD88B005FF053 /* YouTubeDraggableVideo-Bridging-Header.h */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -268,11 +274,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B01147DA1B33D56900D4CEB6 /* SecondViewController.swift in Sources */,
 				B01147D81B33B30300D4CEB6 /* AppDelegate.swift in Sources */,
 				253F2E2D1A7F5907007FD89E /* main.m in Sources */,
 				B0125D7C1B1BD88B005FF053 /* VideoDetailViewController.swift in Sources */,
 				B0125D801B1BD897005FF053 /* DraggableFloatingViewController.m in Sources */,
 				B0125D7B1B1BD88B005FF053 /* FirstViewController.swift in Sources */,
+				B01147DC1B33DAC700D4CEB6 /* NSTimerHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

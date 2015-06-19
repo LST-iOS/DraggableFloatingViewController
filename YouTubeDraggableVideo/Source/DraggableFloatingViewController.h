@@ -38,7 +38,7 @@
 // please call from parent view controller
 - (void) showVideoViewControllerOnParentVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC;
 - (void) removeAllViews;
-@property (nonatomic, assign) id <DraggableFloatingViewControllerDelegate> delegate;
+//@property (nonatomic, assign) id <DraggableFloatingViewControllerDelegate> delegate;
 
 - (void) changeParentVC: (UIViewController*) parentVC;
 

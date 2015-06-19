@@ -13,7 +13,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    
+    static func appDelegate() -> AppDelegate? {
+        return UIApplication.sharedApplication().delegate as? AppDelegate
+    }
 
+    var videoViewController = VideoDetailViewController()
+    static func videoController() -> VideoDetailViewController {
+        return appDelegate()!.videoViewController
+    }
+    
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         return true

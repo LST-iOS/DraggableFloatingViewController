@@ -10,9 +10,6 @@
 #import "DraggableFloatingViewController.h"
 #import "QuartzCore/CALayer.h"
 
-
-
-
 typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     UIPanGestureRecognizerDirectionUndefined,
     UIPanGestureRecognizerDirectionUp,
@@ -20,6 +17,8 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     UIPanGestureRecognizerDirectionLeft,
     UIPanGestureRecognizerDirectionRight
 };
+
+
 
 
 
@@ -78,8 +77,11 @@ typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     NSTimer *hideControllerTimer;
     
     BOOL isMinimizingByGesture;
-}
+    
+    BOOL isAppear;
+    BOOL isSetuped;
 
+}
 
 const CGFloat finalMargin = 3.0;
 const CGFloat minimamVideoWidth = 140;
@@ -87,18 +89,18 @@ const CGFloat flickVelocity = 1000;
 
 
 
+
+
+
+
+
+
+
+
 // please override if you want
 - (void) didExpand {}
 - (void) didMinimize {}
 - (void) didStartMinimizeGesture {}
-
-
-
-- (void)dealloc
-{
-//    NSLog(@"dealloc DraggableFloatingViewController");
-}
-
 
 
 
@@ -126,14 +128,27 @@ const CGFloat flickVelocity = 1000;
 
 # pragma mark - init
 
-- (void) showVideoViewControllerOnParentVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC {
+- (void) showVideoViewControllerOnParentVC: (UIViewController*) parentVC {
+    if (!isSetuped) {
+        [self setup:parentVC];
+    }
+    else {
+        [self changeParentVC:parentVC];
+        [self reAppearWithAnimation];
+    }
+}
+
+
+- (void) setup: (UIViewController*) parentVC {
+    
+    isSetuped = true;
     
     NSLog(@"showVideoViewControllerOnParentVC");
-//    
-    if( ![parentVC conformsToProtocol:@protocol(DraggableFloatingViewControllerDelegate)] ) {
-        NSAssert(NO, @"Parent view controller must confirm to protocol <DraggableFloatingViewControllerDelegate>.");
-    }
-    self.delegate = parentVC;
+    
+//    if( ![parentVC conformsToProtocol:@protocol(DraggableFloatingViewControllerDelegate)] ) {
+//        NSAssert(NO, @"❌❌Parent view controller must confirm to protocol <DraggableFloatingViewControllerDelegate>.❌❌");
+//    }
+//    self.delegate = parentVC;
     
     // set portrait
     if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])) {
@@ -148,6 +163,8 @@ const CGFloat flickVelocity = 1000;
     
     // wait to run "viewDidLoad" before "showThisView"
     [self performSelector:@selector(showThisView) withObject:nil afterDelay:0.0];
+    
+    isAppear = true;
 }
 // ↓
 // VIEW DID LOAD
@@ -156,7 +173,7 @@ const CGFloat flickVelocity = 1000;
 //                 minimizeButton: (UIButton *)foldBtn
 {
     NSLog(@"setupViewsWithVideoView");
-
+    
     videoView = vView;
 //    foldButton = foldBtn;//control show and hide
     
@@ -167,7 +184,6 @@ const CGFloat flickVelocity = 1000;
     videoHeightRatio = videoHeight / videoWidth;
     minimamVideoHeight = minimamVideoWidth * videoHeightRatio;
     finalViewOffsetY = maxH - minimamVideoHeight - finalMargin;
-
     
     videoWrapper = [[UIView alloc] init];
     videoWrapper.frame = CGRectMake(0, 0, videoWidth, videoHeight);
@@ -208,9 +224,18 @@ const CGFloat flickVelocity = 1000;
     videoWrapper.backgroundColor = [UIColor blackColor];
     [pageWrapper addSubview:self.bodyView];
     [videoWrapper addSubview:videoView];
-    // move to parentView after
+    // move subviews from "self.view" to "parentView" after animation
     [self.view addSubview:pageWrapper];
     [self.view addSubview:videoWrapper];
+    
+    transparentBlackSheet = [[UIView alloc] initWithFrame:parentView.frame];
+    transparentBlackSheet.backgroundColor = [UIColor blackColor];
+    transparentBlackSheet.alpha = 1;
+    
+    [self appearAnimation];
+}
+// ↓
+- (void) appearAnimation {
     
     self.view.frame = CGRectMake(parentView.frame.size.width - 50,
                                  parentView.frame.size.height - 50,
@@ -218,25 +243,26 @@ const CGFloat flickVelocity = 1000;
                                  parentView.frame.size.height);
     self.view.transform = CGAffineTransformMakeScale(0.2, 0.2);
     self.view.alpha = 0;
-    
-    [UIView animateWithDuration:0.2 animations:^ {
-        self.view.transform = CGAffineTransformMakeScale(1.0, 1.0);
-        self.view.alpha = 1;
-        self.view.frame = CGRectMake(parentView.frame.origin.x,   parentView.frame.origin.y,
-                                     parentView.frame.size.width, parentView.frame.size.height);
-    }];
-    
-    // move subviews from "self.view" to "parentView"
-    [self performSelector:@selector(afterAppearAnimation) withObject:nil afterDelay:0.25];
-
-    transparentBlackSheet = [[UIView alloc] initWithFrame:parentView.frame];
-    transparentBlackSheet.backgroundColor = [UIColor blackColor];
-    transparentBlackSheet.alpha = 1;
+    [UIView animateWithDuration:0.2
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+                         self.view.transform = CGAffineTransformMakeScale(1.0, 1.0);
+                         self.view.alpha = 1;
+                         self.view.frame = CGRectMake(parentView.frame.origin.x,
+                                                      parentView.frame.origin.y,
+                                                      parentView.frame.size.width,
+                                                      parentView.frame.size.height);
+                     }
+                     completion:^(BOOL finished) {
+                         [self afterAppearAnimation];
+                     }];
 }
 // ↓
 -(void) afterAppearAnimation {
     videoView.backgroundColor = videoWrapper.backgroundColor = [UIColor clearColor];
 
+    
     [parentView addSubview:transparentBlackSheet];
     // move from self.view
     [parentView addSubview:pageWrapper];
@@ -258,8 +284,6 @@ const CGFloat flickVelocity = 1000;
     expandedTap.delegate = self;
     [videoWrapper addGestureRecognizer:expandedTap];
 
-//    [videoWrapper addSubview:foldButton];
-
     vFrame = videoWrapperFrame;
     wFrame = pageWrapperFrame;
     
@@ -268,21 +292,128 @@ const CGFloat flickVelocity = 1000;
     pan.delegate = self;
     [videoWrapper addGestureRecognizer:pan];
     
-//    [foldButton addTarget:self action:@selector(onTapDownButton) forControlEvents:UIControlEventTouchUpInside];
-
     isExpandedMode = TRUE;
 }
 
 
 
 
-- (void) changeParentVC: (UIViewController*) parentVC {
-    parentView = parentVC.view;
-    [parentView addSubview:self.view];// then, "viewDidLoad" called
-    [parentView addSubview:transparentBlackSheet];
-    [parentView addSubview:pageWrapper];
-    [parentView addSubview:videoWrapper];
+
+
+- (void) disappear {
+    isAppear = false;
+//    [self.delegate removeDraggableFloatingViewController];
 }
+
+
+- (void) reAppearWithAnimation {
+    borderView.alpha = 0;
+    transparentBlackSheet.alpha = 0;
+
+    videoWrapper.alpha = 0;
+    pageWrapper.alpha = 0;
+
+    pageWrapper.frame = pageWrapperFrame;
+    videoWrapper.frame = videoWrapperFrame;
+    videoView.frame = videoWrapperFrame;
+    self.controllerView.frame = videoView.frame;
+    self.bodyView.frame = CGRectMake(0,
+                                     videoView.frame.size.height,// keep stay on bottom of videoView
+                                     self.bodyView.frame.size.width,
+                                     self.bodyView.frame.size.height);
+    borderView.frame = CGRectMake(videoView.frame.origin.y - 1,
+                                  videoView.frame.origin.x - 1,
+                                  videoView.frame.size.width + 1,
+                                  videoView.frame.size.height + 1);
+
+    // parentViewにのってるViewは pageWrapper と videoWrapper と transparentView
+    // pageWrapper と videoWrapper をself.viewと同様のアニメーションをさせた後に、parentViewに戻す
+    // transparentView は あとで1にすればいい
+    pageWrapper.frame = CGRectMake(parentView.frame.size.width - 50,
+                                 parentView.frame.size.height - 150,
+                                 pageWrapper.frame.size.width,
+                                 pageWrapper.frame.size.height);
+//    pageWrapper.transform = CGAffineTransformMakeScale(0.2, 0.2);
+
+    videoWrapper.frame = CGRectMake(parentView.frame.size.width - 50,
+                                   parentView.frame.size.height - 150,
+                                   videoWrapper.frame.size.width,
+                                   videoWrapper.frame.size.height);
+//    videoWrapper.transform = CGAffineTransformMakeScale(0.2, 0.2);
+    
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^ {
+//                         pageWrapper.transform = CGAffineTransformMakeScale(1.0, 1.0);
+                         pageWrapper.alpha = 1;
+                         pageWrapper.frame = CGRectMake(parentView.frame.origin.x,
+                                                         parentView.frame.origin.y,
+                                                         pageWrapper.frame.size.width,
+                                                         pageWrapper.frame.size.height);
+
+//                         videoWrapper.transform = CGAffineTransformMakeScale(1.0, 1.0);
+                         videoWrapper.alpha = 1;
+                         videoWrapper.frame = CGRectMake(parentView.frame.origin.x,
+                                                      parentView.frame.origin.y,
+                                                      videoWrapper.frame.size.width,
+                                                      videoWrapper.frame.size.height);
+                         
+                     }
+                     completion:^(BOOL finished) {
+                         
+                         transparentBlackSheet.alpha = 1.0;
+
+                         for (UIGestureRecognizer *recognizer in videoWrapper.gestureRecognizers) {
+                             if([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+                                 [videoWrapper removeGestureRecognizer:recognizer];
+                             }
+                         }
+                         UITapGestureRecognizer* expandedTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapExpandedVideoView)];
+                         expandedTap.numberOfTapsRequired = 1;
+                         expandedTap.delegate = self;
+                         [videoWrapper addGestureRecognizer:expandedTap];
+
+                         isExpandedMode = TRUE;
+                         [self didExpand];
+                     }];
+}
+
+
+
+- (void) changeParentVC: (UIViewController*) parentVC {
+    if (isSetuped) {
+        parentView = parentVC.view;
+        [parentView addSubview:self.view];// then, "viewDidLoad" called
+        [parentView addSubview:transparentBlackSheet];
+        [parentView addSubview:pageWrapper];
+        [parentView addSubview:videoWrapper];
+    }
+}
+
+
+
+
+-(void)removeAllViews
+{
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+    [videoWrapper removeFromSuperview];
+    [pageWrapper removeFromSuperview];
+    [transparentBlackSheet removeFromSuperview];
+    [self.view removeFromSuperview];
+}
+
+- (void)dealloc
+{
+    //    NSLog(@"dealloc DraggableFloatingViewController");
+}
+
+
+
+
+
+
+
 
 
 -(void) showMessageView {
@@ -304,7 +435,6 @@ const CGFloat flickVelocity = 1000;
                                                          userInfo:nil
                                                           repeats:NO];
 }
-
 -(void) showControllerView {
     NSLog(@"showControllerView");
     isDisplayController = true;
@@ -317,9 +447,7 @@ const CGFloat flickVelocity = 1000;
                      }
                      completion:^(BOOL finished) {
                      }];
-
 }
-
 -(void) hideControllerView {
     NSLog(@"hideControllerView");
     isDisplayController = false;
@@ -334,16 +462,6 @@ const CGFloat flickVelocity = 1000;
                      }
                      completion:^(BOOL finished) {
                      }];
-}
-
-
--(void)removeAllViews
-{
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-    [videoWrapper removeFromSuperview];
-    [pageWrapper removeFromSuperview];
-    [transparentBlackSheet removeFromSuperview];
-    [self.view removeFromSuperview];
 }
 
 
@@ -483,16 +601,16 @@ const CGFloat flickVelocity = 1000;
         {
             if(pageWrapper.alpha <= 0)
             {
-                if(velocity.x < -flickVelocity)
+                if(velocity.x < -flickVelocity || pageWrapper.alpha < 0.3)
                 {
                     [self fadeOutViewToLeft:recognizer completion: ^{
-                        [self.delegate removeDraggableFloatingViewController];
+                        [self disappear];
                     }];
                     return;
                 }
                 else if(recognizer.view.frame.origin.x < 0)
                 {
-                    [self.delegate removeDraggableFloatingViewController];
+                    [self disappear];
                 }
                 else
                 {
@@ -509,13 +627,13 @@ const CGFloat flickVelocity = 1000;
                 if(velocity.x > flickVelocity)
                 {
                     [self fadeOutViewToRight:recognizer completion: ^{
-                        [self.delegate removeDraggableFloatingViewController];
+                        [self disappear];
                     }];
                     return;
                 }
                 if(recognizer.view.frame.origin.x > parentView.frame.size.width - 50)
                 {
-                    [self.delegate removeDraggableFloatingViewController];
+                    [self disappear];
                 }
                 else
                 {
