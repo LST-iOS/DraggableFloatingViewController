@@ -65,6 +65,7 @@ class VideoDetailViewController: DraggableFloatingViewController {
     }
 
     
+    
     func onTapButton() {
         println("onTapButton")
     }
