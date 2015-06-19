@@ -137,8 +137,9 @@ const CGFloat flickVelocity = 1000;
         [self setup];
     }
     else {
-//        [self changeParentVC:parentVC];
-        [self reAppearWithAnimation];
+        if (!isAppear) {
+            [self reAppearWithAnimation];
+        }
     }
 }
 
