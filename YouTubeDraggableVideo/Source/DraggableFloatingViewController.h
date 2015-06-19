@@ -20,6 +20,9 @@
 
 
 
+
+
+
 // please extend
 @interface DraggableFloatingViewController : UIViewController<UIGestureRecognizerDelegate>
 
@@ -43,6 +46,9 @@
 - (void) didMinimize;
 - (void) didStartMinimizeGesture;
 - (void) didFullExpandByGesture;//stil dev
+- (void) didDisappear;
+- (void) didReAppear;
+
 
 // please call if you want
 - (void) minimizeView;
@@ -53,10 +59,12 @@
 - (void) hideMessageView;
 
 
+
 // ---------- use from other class ------------------------
 // please call from parent view controller
 - (void) show;
 - (void) bringToFront;
+
 
 
 @end

@@ -106,8 +106,9 @@ const CGFloat flickVelocity = 1000;
 - (void) didStartMinimizeGesture {
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
-- (void) didFullExpandByGesture {}
-
+- (void) didFullExpandByGesture {}// TODO: meke this stable
+- (void) didDisappear{}
+- (void) didReAppear{}
 
 - (id)init
 {
@@ -386,6 +387,7 @@ const CGFloat flickVelocity = 1000;
 
                          isExpandedMode = TRUE;
                          [self didExpand];
+                         [self didReAppear];
                      }];
 }
 
@@ -396,10 +398,12 @@ const CGFloat flickVelocity = 1000;
 //    [parentView addSubview:transparentBlackSheet];
 //    [parentView addSubview:pageWrapper];
 //    [parentView addSubview:videoWrapper];
-    [[AppDelegate getWindow] bringSubviewToFront:self.view];
-    [[AppDelegate getWindow] bringSubviewToFront:transparentBlackSheet];
-    [[AppDelegate getWindow] bringSubviewToFront:pageWrapper];
-    [[AppDelegate getWindow] bringSubviewToFront:videoWrapper];
+    if (isSetuped) {
+        [[AppDelegate getWindow] bringSubviewToFront:self.view];
+        [[AppDelegate getWindow] bringSubviewToFront:transparentBlackSheet];
+        [[AppDelegate getWindow] bringSubviewToFront:pageWrapper];
+        [[AppDelegate getWindow] bringSubviewToFront:videoWrapper];
+    }
 }
 //
 //- (void) changeParentVC: (UIViewController*) parentVC {
@@ -1046,6 +1050,7 @@ const CGFloat flickVelocity = 1000;
                      }
                      completion:^(BOOL finished) {
                          if (completion) completion();
+                         [self didDisappear];
                      }];
     [recognizer setTranslation:CGPointZero inView:recognizer.view];
 }
@@ -1071,6 +1076,7 @@ const CGFloat flickVelocity = 1000;
                      }
                      completion:^(BOOL finished) {
                          if (completion) completion();
+                         [self didDisappear];
                      }];
     
     [recognizer setTranslation:CGPointZero inView:recognizer.view];

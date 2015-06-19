@@ -56,6 +56,15 @@ class VideoDetailViewController: DraggableFloatingViewController {
         self.messageView.addSubview(loadingSpinner)
     }
     
+    override func didDisappear() {
+        moviePlayer.pause()
+    }
+
+    override func didReAppear() {
+        setupMoviePlayer()
+    }
+
+    
     func onTapButton() {
         println("onTapButton")
     }
