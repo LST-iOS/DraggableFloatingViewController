@@ -10,31 +10,33 @@ import UIKit
 
 class FirstViewController: UIViewController , DraggableFloatingViewControllerDelegate {
     
-    var videoViewController: VideoDetailViewController!
+    var videoViewController: VideoDetailViewController?
     
     @IBAction func onTapButton(sender: AnyObject) {
-        self.showSecondController()
+        self.showVideoViewController()
     }
 
     override func viewWillDisappear(animated: Bool) {
         // when go to fullscreen, this is also called
-        if !self.videoViewController.isFullScreen() {
-            removeDraggableFloatingViewController()
+        if (self.videoViewController != nil) {
+            if (!self.videoViewController!.isFullScreen()) {
+                removeDraggableFloatingViewController()
+            }
         }
     }
 
-    func showSecondController() {
+    func showVideoViewController() {
         removeDraggableFloatingViewController()
         self.videoViewController = VideoDetailViewController()
-        self.videoViewController.delegate = self
-        self.videoViewController.showVideoViewControllerOnParentVC(self)
+        self.videoViewController!.delegate = self
+        self.videoViewController!.showVideoViewControllerOnParentVC(self)
     }
 
     // DraggableFloatingViewControllerDelegate
     func removeDraggableFloatingViewController() {
         println("removeDraggableFloatingViewController")
         if self.videoViewController != nil {
-            self.videoViewController.removeAllViews()
+            self.videoViewController!.removeAllViews()
             self.videoViewController = nil
         }
     }

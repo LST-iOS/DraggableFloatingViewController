@@ -40,6 +40,8 @@
 - (void) removeAllViews;
 @property (nonatomic, assign) id <DraggableFloatingViewControllerDelegate> delegate;
 
+- (void) changeParentVC: (UIViewController*) parentVC;
+
 // please override if you want
 - (void) didExpand;
 - (void) didMinimize;

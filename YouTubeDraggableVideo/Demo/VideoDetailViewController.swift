@@ -46,7 +46,7 @@ class VideoDetailViewController: DraggableFloatingViewController {
         testView.text = "body view"
         testView.textColor = UIColor.redColor()
         self.bodyView.addSubview(testView)
-
+        
         // design message view
         self.messageView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         loadingSpinner.frame = CGRectMake(0, 0, 50, 50)
@@ -54,6 +54,10 @@ class VideoDetailViewController: DraggableFloatingViewController {
         loadingSpinner.hidesWhenStopped = false
         loadingSpinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.White
         self.messageView.addSubview(loadingSpinner)
+    }
+    
+    func onTapButton() {
+        println("onTapButton")
     }
     
     override func showMessageView() {

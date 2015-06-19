@@ -129,11 +129,11 @@ const CGFloat flickVelocity = 1000;
 - (void) showVideoViewControllerOnParentVC: (UIViewController<DraggableFloatingViewControllerDelegate>*) parentVC {
     
     NSLog(@"showVideoViewControllerOnParentVC");
-    
+//    
     if( ![parentVC conformsToProtocol:@protocol(DraggableFloatingViewControllerDelegate)] ) {
         NSAssert(NO, @"Parent view controller must confirm to protocol <DraggableFloatingViewControllerDelegate>.");
     }
-//    self.delegate = parentVC;
+    self.delegate = parentVC;
     
     // set portrait
     if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])) {
@@ -208,6 +208,7 @@ const CGFloat flickVelocity = 1000;
     videoWrapper.backgroundColor = [UIColor blackColor];
     [pageWrapper addSubview:self.bodyView];
     [videoWrapper addSubview:videoView];
+    // move to parentView after
     [self.view addSubview:pageWrapper];
     [self.view addSubview:videoWrapper];
     
@@ -235,8 +236,9 @@ const CGFloat flickVelocity = 1000;
 // ↓
 -(void) afterAppearAnimation {
     videoView.backgroundColor = videoWrapper.backgroundColor = [UIColor clearColor];
+
     [parentView addSubview:transparentBlackSheet];
-    
+    // move from self.view
     [parentView addSubview:pageWrapper];
     [parentView addSubview:videoWrapper];
 
@@ -270,6 +272,18 @@ const CGFloat flickVelocity = 1000;
 
     isExpandedMode = TRUE;
 }
+
+
+
+
+- (void) changeParentVC: (UIViewController*) parentVC {
+    parentView = parentVC.view;
+    [parentView addSubview:self.view];// then, "viewDidLoad" called
+    [parentView addSubview:transparentBlackSheet];
+    [parentView addSubview:pageWrapper];
+    [parentView addSubview:videoWrapper];
+}
+
 
 -(void) showMessageView {
     self.messageView.hidden = FALSE;
