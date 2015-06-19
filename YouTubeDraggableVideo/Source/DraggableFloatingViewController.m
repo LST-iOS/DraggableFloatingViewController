@@ -9,8 +9,10 @@
 
 #import "DraggableFloatingViewController.h"
 #import "QuartzCore/CALayer.h"
-#import "YouTubeDraggableVideo-Swift.h"
 
+#if DEBUG
+#import "YouTubeDraggableVideo-Swift.h"
+#endif
 
 typedef NS_ENUM(NSUInteger, UIPanGestureRecognizerDirection) {
     UIPanGestureRecognizerDirectionUndefined,
