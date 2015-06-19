@@ -133,8 +133,7 @@ const CGFloat flickVelocity = 1000;
     if( ![parentVC conformsToProtocol:@protocol(DraggableFloatingViewControllerDelegate)] ) {
         NSAssert(NO, @"Parent view controller must confirm to protocol <DraggableFloatingViewControllerDelegate>.");
     }
-    self.delegate = parentVC;
-
+//    self.delegate = parentVC;
     
     // set portrait
     if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])) {
