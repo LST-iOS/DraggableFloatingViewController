@@ -19,40 +19,40 @@ import UIKit
 
         moviePlayer = MPMoviePlayerController()
 
-        self.setupViewsWithVideoView(moviePlayer.view, videoViewHeight: 160)//, minimizeButton: minimizeButton)
+        self.setupViews(withVideoView: moviePlayer.view, videoViewHeight: 160)//, minimizeButton: minimizeButton)
 
         setupMoviePlayer()
 
-        addObserver(selector: "onOrientationChanged", name: UIDeviceOrientationDidChangeNotification)
+        addObserver(selector: #selector(onOrientationChanged), name: NSNotification.Name.UIDeviceOrientationDidChange.rawValue)
         
         // design controller view
         let minimizeButton = UIButton()
         minimizeButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-        minimizeButton.setImage(UIImage(named: "DownArrow"), forState: UIControlState.Normal)
-        minimizeButton.addTarget(self, action: "onTapMinimizeButton", forControlEvents: UIControlEvents.TouchUpInside)
+        minimizeButton.setImage(UIImage(named: "DownArrow"), for: .normal)
+        minimizeButton.addTarget(self, action: #selector(onTapMinimizeButton), for: .touchUpInside)
         self.controllerView.addSubview(minimizeButton)
         let testControl = UILabel()
         testControl.frame = CGRect(x: 100, y: 5, width: 150, height: 40)
         testControl.text = "controller view"
-        testControl.textColor = UIColor.whiteColor()
+        testControl.textColor = .white
         self.controllerView.addSubview(testControl)
         
         // design body view
-        self.bodyView.backgroundColor = UIColor.whiteColor()
-        self.bodyView.layer.borderColor = UIColor.redColor().CGColor
+        self.bodyView.backgroundColor = .white
+        self.bodyView.layer.borderColor = UIColor.red.cgColor
         self.bodyView.layer.borderWidth = 10.0
         let testView = UILabel()
         testView.frame = CGRect(x: 20, y: 10, width: 100, height: 40)
         testView.text = "body view"
-        testView.textColor = UIColor.redColor()
+        testView.textColor = .red
         self.bodyView.addSubview(testView)
         
         // design message view
-        self.messageView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
-        loadingSpinner.frame = CGRectMake(0, 0, 50, 50)
+        self.messageView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        loadingSpinner.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         loadingSpinner.center = self.messageView.center
         loadingSpinner.hidesWhenStopped = false
-        loadingSpinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.White
+        loadingSpinner.activityIndicatorViewStyle = .white
         self.messageView.addSubview(loadingSpinner)
     }
     
@@ -67,7 +67,7 @@ import UIKit
     
     
     func onTapButton() {
-        println("onTapButton")
+        print("onTapButton")
     }
     
     override func showMessageView() {
@@ -80,28 +80,28 @@ import UIKit
     }
     
     override func didFullExpandByGesture() {
-        UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: UIStatusBarAnimation.None)
+        UIApplication.shared.setStatusBarHidden(true, with: .none)
         showVideoControl()
     }
     override func didExpand() {
-        println("didExpand")
+        print("didExpand")
 //        [[UIApplication sharedApplication] setStatusBarHidden:YES];
-        UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: UIStatusBarAnimation.None)
+        UIApplication.shared.setStatusBarHidden(true, with: .none)
         showVideoControl()
     }
     override func didMinimize() {
-        println("didMinimized")
+        print("didMinimized")
         hideVideoControl()
     }
     
     override func didStartMinimizeGesture() {
-        println("didStartMinimizeGesture")
-        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.None)
+        print("didStartMinimizeGesture")
+        UIApplication.shared.setStatusBarHidden(false, with: .none)
     }
     
     
-    func onTapMinimizeButton() {
-        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.None)
+    @objc func onTapMinimizeButton() {
+        UIApplication.shared.setStatusBarHidden(false, with: .none)
         self.minimizeView()
     }
     
@@ -111,32 +111,32 @@ import UIKit
     
     func setupMoviePlayer() {
         // setupMovie
-        var url = NSURL.fileURLWithPath(NSBundle.mainBundle().pathForResource("test", ofType: "mp4")!)
+        let url = NSURL.fileURL(withPath: Bundle.main.path(forResource: "test", ofType: "mp4")!)
         moviePlayer.contentURL = url
-        moviePlayer.fullscreen = false
-        moviePlayer.controlStyle = MPMovieControlStyle.None
-        moviePlayer.repeatMode = MPMovieRepeatMode.None
+        moviePlayer.isFullscreen = false
+        moviePlayer.controlStyle = .none
+        moviePlayer.repeatMode = .none
         moviePlayer.prepareToPlay()
         
         // play
         let seconds = 1.0
         let delay = seconds * Double(NSEC_PER_SEC)// nanoseconds per seconds
-        var dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             self.moviePlayer.play()
-        })
+        }
 
         // for movie loop
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "moviePlayBackDidFinish:",
-            name: MPMoviePlayerPlaybackDidFinishNotification,
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(moviePlayBackDidFinish),
+                                               name: NSNotification.Name.MPMoviePlayerPlaybackDidFinish,
             object: moviePlayer)
     }
 
     // movie loop
-    func moviePlayBackDidFinish(notification: NSNotification) {
-        println("moviePlayBackDidFinish:")
+    @objc func moviePlayBackDidFinish(notification: NSNotification) {
+        print("moviePlayBackDidFinish:")
         moviePlayer.play()
-        removeObserver(MPMoviePlayerPlaybackDidFinishNotification)
+        removeObserver(aName: NSNotification.Name.MPMoviePlayerPlaybackDidFinish.rawValue)
     }
     
     
@@ -145,21 +145,21 @@ import UIKit
     // ----------------------------- events -----------------------------------------------
     
     // MARK: Orientation
-    func onOrientationChanged() {
+    @objc func onOrientationChanged() {
         let orientation: UIInterfaceOrientation = getOrientation()
         
         switch orientation {
         
-        case .Portrait, .PortraitUpsideDown:
-            println("portrait")
+        case .portrait, .portraitUpsideDown:
+            print("portrait")
             exitFullScreen()
 
-        case .LandscapeLeft, .LandscapeRight:
-            println("landscape")
+        case .landscapeLeft, .landscapeRight:
+            print("landscape")
             goFullScreen()
 
         default:
-            println("no action for this orientation:" + orientation.rawValue.description)
+            print("no action for this orientation:" + orientation.rawValue.description)
         }
         
     }
@@ -177,43 +177,44 @@ import UIKit
     // MARK: FullScreen Method
     func isFullScreen() -> Bool {
 //        println("isFullScreen: " + String(stringInterpolationSegment: moviePlayer.fullscreen))
-        return moviePlayer.fullscreen
+        return moviePlayer.isFullscreen
     }
     func goFullScreen() {
         if !isFullScreen() {
 //            println("goFullScreen")
-            moviePlayer.controlStyle = MPMovieControlStyle.Fullscreen
-            moviePlayer.fullscreen = true
-            addObserver(selector: "willExitFullScreen", name: MPMoviePlayerWillExitFullscreenNotification)
+            moviePlayer.controlStyle = MPMovieControlStyle.fullscreen
+            moviePlayer.isFullscreen = true
+            addObserver(selector: #selector(willExitFullScreen), name: NSNotification.Name.MPMoviePlayerWillExitFullscreen.rawValue)
         }
     }
     func exitFullScreen() {
         if isFullScreen() {
 //            println("exit fullscreen");
-            moviePlayer.fullscreen = false
+            moviePlayer.isFullscreen = false
         }
     }
-    func willExitFullScreen() {
+    @objc func willExitFullScreen() {
 //        println("willExitFullScreen")
         if isLandscape()
         {
-            setOrientation(.Portrait)
+            setOrientation(orientation: .portrait)
         }
 
-        removeObserver(MPMoviePlayerWillExitFullscreenNotification)
+        
+        removeObserver(aName: NSNotification.Name.MPMoviePlayerWillExitFullscreen.rawValue)
     }
 
     
     // FIXIT: Don't work
     func showVideoControl() {
 //        println("showVideoControl");
-        moviePlayer.controlStyle = MPMovieControlStyle.None
+        moviePlayer.controlStyle = .none
     }
     
     // FIXIT: Don't work
     func hideVideoControl() {
 //        println("hideVideoControl")
-        moviePlayer.controlStyle = MPMovieControlStyle.None
+        moviePlayer.controlStyle = .none
     }
     
     
@@ -222,25 +223,24 @@ import UIKit
     //-----------------------------------------------------------------------------------
     
     func getOrientation() -> UIInterfaceOrientation {
-        return UIApplication.sharedApplication().statusBarOrientation
+        return UIApplication.shared.statusBarOrientation
     }
     
     func setOrientation(orientation: UIInterfaceOrientation) {
-        var orientationNum: NSNumber = NSNumber(integer: orientation.rawValue)
-        UIDevice.currentDevice().setValue(orientationNum, forKey: "orientation")
+        let orientationNum: NSNumber = NSNumber(value: orientation.rawValue)
+        UIDevice.current.setValue(orientationNum, forKey: "orientation")
     }
     
-    func addObserver(selector aSelector: Selector, name aName: String? ) {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: aSelector, name:aName, object: nil)
-
+    func addObserver(selector aSelector: Selector, name aName: String) {
+        NotificationCenter.default.addObserver(self, selector: aSelector, name:NSNotification.Name(aName), object: nil)
     }
     
-    func removeObserver(aName: String?) {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: aName, object: nil)
+    func removeObserver(aName: String) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(aName), object: nil)
     }
     
     func isLandscape() -> Bool {
-        if (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication().statusBarOrientation)) {
+        if (UIInterfaceOrientationIsLandscape(UIApplication.shared.statusBarOrientation)) {
             return true
         }
         else {

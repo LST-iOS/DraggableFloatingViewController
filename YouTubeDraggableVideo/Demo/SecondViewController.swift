@@ -11,31 +11,31 @@ import Foundation
 class SecondViewController: UIViewController {
     
     
-    func onTapButton() {
-//        AppDelegate.videoController().show()//👈
+    @objc func onTapButton() {
+        (UIApplication.shared.delegate as! AppDelegate).videoViewController.show()//👈
     }
 
-    func onTapDismissButton() {
+    @objc func onTapDismissButton() {
         let parentVC = self.presentingViewController
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
 //        NSTimer.schedule(delay: 0.2) { timer in
 //            AppDelegate.videoController().changeParentVC(parentVC)//👈
 //        }
     }
     
     override func viewDidLoad() {
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = .white
 
         let btn = UIButton()
         btn.frame = CGRect(x: 10, y: 10, width: 100, height: 100)
-        btn.backgroundColor = UIColor.blueColor()
-        btn.addTarget(self, action: "onTapButton", forControlEvents: UIControlEvents.TouchUpInside)
+        btn.backgroundColor = .blue
+        btn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
         self.view.addSubview(btn)
         
         let dismissBtn = UIButton()
         dismissBtn.frame = CGRect(x: 150, y: 150, width: 100, height: 100)
-        dismissBtn.backgroundColor = UIColor.orangeColor()
-        dismissBtn.addTarget(self, action: "onTapDismissButton", forControlEvents: UIControlEvents.TouchUpInside)
+        dismissBtn.backgroundColor = .orange
+        dismissBtn.addTarget(self, action: #selector(onTapDismissButton), for: .touchUpInside)
         self.view.addSubview(dismissBtn)
 
     }
