@@ -14,7 +14,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) id videoViewController;
+@property (strong, nonatomic) VideoDetailViewController *videoViewController;
 
 @end
 

@@ -12,31 +12,30 @@ class FirstViewController: UIViewController  {
     
     
     override func viewDidLoad() {
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = .white
 
         let btn = UIButton()
         btn.frame = CGRect(x: 10, y: 10, width: 100, height: 100)
-        btn.backgroundColor = UIColor.redColor()
-        btn.addTarget(self, action: "onTapShowButton", forControlEvents: UIControlEvents.TouchUpInside)
+        btn.backgroundColor = .red
+        btn.addTarget(self, action: #selector(onTapShowButton), for: .touchUpInside)
         self.view.addSubview(btn)
         
         let dismissBtn = UIButton()
         dismissBtn.frame = CGRect(x: 150, y: 150, width: 100, height: 100)
-        dismissBtn.backgroundColor = UIColor.greenColor()
-        dismissBtn.addTarget(self, action: "onTapShowSecondVCButton", forControlEvents: UIControlEvents.TouchUpInside)
+        dismissBtn.backgroundColor = .green
+        dismissBtn.addTarget(self, action: #selector(onTapShowSecondVCButton), for: .touchUpInside)
         self.view.addSubview(dismissBtn)
         
     }
 
-    func onTapShowButton() {
-//        AppDelegate.videoController().show()//👈
-//        AppDelegate.video
+    @objc func onTapShowButton() {
+        (UIApplication.shared.delegate as! AppDelegate).videoViewController.show() //👈
     }
 
-    func onTapShowSecondVCButton() {
-//        AppDelegate.videoController().bringToFront()
+    @objc func onTapShowSecondVCButton() {
+        (UIApplication.shared.delegate as! AppDelegate).videoViewController.bringToFront()//👈
         let secondVC = SecondViewController()
-        self.presentViewController(secondVC, animated: true, completion: nil)
+        self.present(secondVC, animated: true, completion: nil)
     }
     
 }
